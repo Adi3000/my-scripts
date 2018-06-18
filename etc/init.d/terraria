@@ -1,0 +1,105 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: terraria
+# Required-Start: apache2
+# Required-Stop: apache2
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Terraria
+# Description: Terraria server
+### END INIT INFO
+#############
+###<Notes>###
+#############
+# This script depends on screen.
+# For the stop function to work, you must set an
+# explicit session directory using absolute paths in your rtorrent.rc.
+# If you typically just start rtorrent with just "rtorrent" on the
+# command line, all you need to change is the "user" option.
+# Attach to the screen session as your user with
+# "screen -dr rtorrent". Change "rtorrent" with srnname option.
+# If you are running multiple instances of rtorrent,
+# all options should be made respective to one another. so the first option for
+# config should be related to the same first option for options.
+##############
+###</Notes>###
+##############
+
+#######################
+##Start Configuration##
+#######################
+# system user to run as (can only use one)
+user=adi
+
+# config file(s) separate multiple with newlines
+terraria_home="/home/$user/terraria"
+
+#set of options to run with each instance, separated by a new line
+options=""
+# Examples:
+# starts one instance, sourcing both .rtorrent.rc and .rtorrent2.rc
+# options="-o import=/home/$user/.rtorrent2.rc"
+# starts two instances, ignoring .rtorrent.rc for both, and using
+# .rtorrent2.rc for the first, and .rtorrent3.rc for the second
+# we do not check for valid options
+# options="-n -o import=~/.rtorrent2.rc
+# -n -o import=rtorrent3.rc"
+
+# default directory for screen, needs to be an absolute path
+base=/home/${user}
+
+# name of screen session, no whitespace allowed
+srnname=terraria
+#######################
+###END CONFIGURATION###
+#######################
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DESC="terraria"
+NAME=terraria
+DAEMON=$terraria_home/start_server.sh
+DAEMON_STOP=$terraria_home/stop_server.sh
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Gracefully exit if the package has been removed.
+test -x $DAEMON || exit 0
+
+d_start() {
+  [ -d "$base" ] && cd "$base" || echo "fail to get into $base"
+  stty stop undef && stty start undef
+  echo "Checking for the screen $user/$srnname"
+  sudo -u $user screen -ls | grep "\.${srnname}[[:space:]]" > /dev/null || sudo -u $user screen -dm -S $srnname
+  sleep 5
+  echo -n "Starting $NAME..."
+  sudo -u $user screen -S $srnname -X screen $DAEMON
+}
+
+d_stop() {
+        echo -n "Stopping $NAME..."
+        sudo -u $user screen -S $srnname -X screen $DAEMON_STOP
+}
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: $NAME"
+        d_start
+        echo "."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: $NAME"
+        d_stop
+        echo "."
+        ;;
+  restart|force-reload)
+        echo -n "Restarting $DESC: $NAME"
+        d_stop
+        sleep 1
+        d_start
+        echo "."
+        ;;
+  *)
+        echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+        exit 1
+        ;;
+esac
+echo "Log-DAEMON Service $(date): $0 $1"  >> /var/log/syslog
+exit 0
