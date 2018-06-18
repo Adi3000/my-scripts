@@ -1,0 +1,84 @@
+srnname=rtorrent
+#######################
+###END CONFIGURATION###
+#######################
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+DESC="rtorrent"
+NAME=rtorrent
+DAEMON=$(which $NAME)
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Gracefully exit if the package has been removed.
+test -x $DAEMON || exit 0
+
+checkcnfg() {
+  for i in $config ; do
+        session=$(cat "$i" | grep "^[[:space:]]*session" | sed "s/^[[:space:]]*session[[:space:]]*=[[:space:]]*//")
+        if ! [ -r $i ] ; then
+                echo "cannot find readable config $i. check that it is there and permissions are appropriate">&2
+                exit 3
+        elif ! [ -r $session ] ; then
+                echo "cannot find readable session directory $i. check permissions">&2
+                exit 3
+        fi
+  done
+}
+
+d_start() {
+  [ -d "$base" ] && cd "$base" || echo "fail to get into $base"
+  stty stop undef && stty start undef
+  echo -e "\nChecking screen session..."
+  sudo -u $user screen -ls | grep "\.${srnname}[[:space:]]" > /dev/null || sudo -u $user screen -dm -S $srnname
+  sleep 3
+  echo -n "Starting rtorrent..."
+  sudo -u $user screen -S $srnname -X setenv LD_LIBRARY_PATH $LD_LIBRARY_PATH
+  sudo -u $user screen -S $srnname -X screen $DAEMON
+}
+
+d_stop() {
+  for i in $config ; do
+        session=$(cat "$i" | grep "^[[:space:]]*session" | sed "s/^[[:space:]]*session[[:space:]]*=[[:space:]]*//")
+        pid=$(cat ${session}/rtorrent.lock | cut -d: -f2 | sed "s/[^0-9]//g")
+        # make sure the pid doesn't belong to another process
+        # skip the pid otherwise
+
+        #if ps -A | grep ${pid}.*rtorrent > /dev/null ; then
+        if kill -s INT $pid ; then
+                while ps -e -p ${pid} | grep ${pid} > /dev/null; do
+                        sleep 2
+                        echo -n "."
+                done
+                echo -n ". rtorrent stopped"
+        fi
+
+  done
+}
+
+checkcnfg
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: $NAME"
+        d_start
+        echo "."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: $NAME"
+        d_stop
+        echo "."
+        ;;
+  restart|force-reload)
+        echo -n "Restarting $DESC: $NAME"
+        d_stop
+        sleep 1
+        d_start
+        echo "."
+        ;;
+  *)
+        echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+        exit 1
+        ;;
+esac
+echo "Log-DAEMON Service $(date): $0 $1"  >> /var/log/syslog
+exit 0
