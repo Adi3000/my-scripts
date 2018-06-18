@@ -1,0 +1,50 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:        tomcat
+# Required-Start: apache2
+# Required-Stop: apache2
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Interactive:     true
+# Short-Description: Start/stop tomcat web server
+### END INIT INFO
+
+DAEMON_DIR=/opt/tomcat/bin
+DAEMON_START=$DAEMON_DIR/startup.sh
+DAEMON_STOP=$DAEMON_DIR/shutdown.sh
+DAEMON_USER=www-data
+#export CATALINA_OPTS="-Xms1024M -Xmx2048M"
+#export CATALINA_HOME=/opt/tomcat
+#export CATALINA_PID=$CATALINA_HOME/catalina.pid
+#export CATALINA_OPTS="-Dorg.apache.el.parser.COERCE_TO_ZERO=false"
+#export JAVA_OPTS="-Xms1536M -Xmx1536M -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/apr/lib
+
+
+# Start the service FOO
+start() {
+        su -s /bin/bash $DAEMON_USER -c "$DAEMON_START"
+}
+# Restart the service FOO
+stop() {
+        su -s /bin/bash $DAEMON_USER -c "$DAEMON_STOP 5 -force"
+}
+### main logic ###
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|reload)
+        stop
+        sleep 1; echo -ne .; sleep 1; echo -ne .;sleep 1; echo -ne .;sleep 1; echo -ne .;sleep 1; echo -ne .;sleep 1; echo -ne .;
+        sleep 1; echo -ne .; sleep 1; echo -ne .;sleep 1; echo -ne .;sleep 1; echo -ne .;sleep 1; echo -ne .;sleep 1; echo -ne .;
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload}"
+        exit 1
+esac
+exit 0
