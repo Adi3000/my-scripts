@@ -4,7 +4,7 @@
 #shopt -o -s xtrace
 
 # Define Nexus Configuration
-NEXUS_BASE=http://code.adi3000.com/nexus
+NEXUS_BASE=http://localhost/nexus
 REST_PATH=/service/local
 ART_REDIR=/artifact/maven/redirect
 
