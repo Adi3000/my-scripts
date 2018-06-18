@@ -1,3 +1,54 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: rtorrent
+# Required-Start: apache2
+# Required-Stop: apache2
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Rtorrent
+# Description: Rtorrent server
+### END INIT INFO
+#############
+###<Notes>###
+#############
+# This script depends on screen.
+# For the stop function to work, you must set an
+# explicit session directory using absolute paths in your rtorrent.rc.
+# If you typically just start rtorrent with just "rtorrent" on the
+# command line, all you need to change is the "user" option.
+# Attach to the screen session as your user with
+# "screen -dr rtorrent". Change "rtorrent" with srnname option.
+# If you are running multiple instances of rtorrent,
+# all options should be made respective to one another. so the first option for
+# config should be related to the same first option for options.
+##############
+###</Notes>###
+##############
+
+#######################
+##Start Configuration##
+#######################
+# system user to run as (can only use one)
+user=p2p
+
+# config file(s) separate multiple with newlines
+config="/home/$user/.rtorrent.rc"
+
+#set of options to run with each instance, separated by a new line
+options=""
+# Examples:
+# starts one instance, sourcing both .rtorrent.rc and .rtorrent2.rc
+# options="-o import=/home/$user/.rtorrent2.rc"
+# starts two instances, ignoring .rtorrent.rc for both, and using
+# .rtorrent2.rc for the first, and .rtorrent3.rc for the second
+# we do not check for valid options
+# options="-n -o import=~/.rtorrent2.rc
+# -n -o import=rtorrent3.rc"
+
+# default directory for screen, needs to be an absolute path
+base=/home/${user}
+
+# name of screen session, no whitespace allowed
 srnname=rtorrent
 #######################
 ###END CONFIGURATION###
