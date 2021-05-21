@@ -5,7 +5,7 @@ if [ -z "$1" ]; then
         exit 1
 fi
 . $1
-url="https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeancesGetActivites"
+url="https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance"
 jq_query='.listeSeances[] |  select ( .IdLieu == '$PP_CENTRE') | select( .NbPlacesRestantes > 0) | select(.ListeDates[0].DatDebutSeance  | test("^'$PP_YYYYMM'[0-2][0-9]10000")) | [.IdSeance, .LibPublication, .NbPlacesRestantes, .NbPlacesRestantesListeAttente,.ListeDates[0].DatDebutSeance] | @tsv'
 if [ -z "$TOKEN" ]; then
 	echo "TOKEN variable was not found, pleas define it onto the config file provided" 1>&2
@@ -22,10 +22,6 @@ fi
 if [ -z "$PP_SESSION_ID" ]; then
         echo "PP_SESSION_ID variable was not found, pleas define it onto the config file provided" 1>&2
         exit 7
-fi
-if [ -z "$PP_INSCRIPTION_ID" ]; then
-        echo "PP_INSCRIPTION_ID variable was not found, pleas define it onto the config file provided" 1>&2
-        exit 8
 fi
 if [ -z "$PP_CENTRE" ]; then
         echo "PP_CENTRE variable was not found, pleas define it onto the config file provided" 1>&2
@@ -57,7 +53,7 @@ sendNoMoreAppointment() {
         curl -s "https://api.telegram.org/bot${TOKEN}/sendMessage" -d parse_mode="html" -d chat_id="$CHAT" \
 -d text="Les places ont disparues pour :
 <b>${centerName}</b>
-<i>date</i> : $aptDate
+<i>date</i> : $lastApt
 Ils y a <b>$nbWaiting</b> places en attente" > /dev/null
 }
 
@@ -69,8 +65,14 @@ $1
 </pre>" > /dev/null
 }
 
+idInscription=$( curl -s "$url/NouvelleDemandeReservationSeancesGetInscriptions" -H "Cookie: ASP.NET_SessionIdEC=$PP_SESSION_ID;"  | jq -e -r " .[0].Inscription.IdIns "  2> "$FILE.err")
+if [ -n "$(cat $FILE.err)" ]; then
+        sendError "$(cat $FILE.err)"
+        rm "$FILE.err"
+        exit 5
+fi
 
-response=$(curl -s "$url" -H "Cookie: ASP.NET_SessionIdEC=$PP_SESSION_ID;" --data-raw "inscriptions=%22${PP_INSCRIPTION_ID}%22"| jq -e -r "$jq_query" 2> "$FILE.err" )
+response=$(curl -s "$url/NouvelleDemandeReservationSeancesGetActivites" -H "Cookie: ASP.NET_SessionIdEC=$PP_SESSION_ID;" --data-raw "inscriptions=%22${idInscription}%22"| jq -e -r "$jq_query" 2> "$FILE.err" )
 
 if [ -n "$(cat $FILE.err)" ]; then
 	sendError "$(cat $FILE.err)"
