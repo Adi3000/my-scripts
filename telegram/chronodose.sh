@@ -1,7 +1,7 @@
 #!/bin/bash
 
 url="https://vitemadose.gitlab.io/vitemadose"
-jq_query='(.centres_disponibles[] | del( .appointment_schedules[] | select ( .name != "chronodose" )) | select( .appointment_schedules[].total > 0) )| [.internal_id,.last_scan_with_availabilities,.nom,.url,.metadata.address,.appointment_schedules[0].total,.prochain_rdv] | @tsv '
+jq_query='(.centres_disponibles[] | del( .appointment_schedules[] | select ( .name != "chronodose" )) | select( .appointment_schedules[].total > 0) )| select ( .vaccine_type[] == "Moderna") | [.internal_id,.last_scan_with_availabilities,.nom,.url,.metadata.address,.appointment_schedules[0].total,.prochain_rdv] | @tsv '
 if [ -z "$1" ]; then
 	echo -e "Error : Usage $0 <config-file> : You must provide a config file" 1>&2
         exit 1
