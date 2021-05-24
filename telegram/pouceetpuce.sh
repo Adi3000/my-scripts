@@ -67,15 +67,14 @@ $1
 
 idInscription=$( curl -s "$url/NouvelleDemandeReservationSeancesGetInscriptions" -H "Cookie: ASP.NET_SessionIdEC=$PP_SESSION_ID;"  | jq -e -r " .[0].Inscription.IdIns "  2> "$FILE.err")
 if [ -n "$(cat $FILE.err)" ]; then
-        sendError "$(cat $FILE.err)"
+        sendError "$( curl -s -L $url/NouvelleDemandeReservationSeancesGetInscriptions -H 'Cookie: ASP.NET_SessionIdEC=$PP_SESSION_ID;') /n $(cat $FILE.err)"
         rm "$FILE.err"
-        exit 5
+        exit 9
 fi
 
 response=$(curl -s "$url/NouvelleDemandeReservationSeancesGetActivites" -H "Cookie: ASP.NET_SessionIdEC=$PP_SESSION_ID;" --data-raw "inscriptions=%22${idInscription}%22"| jq -e -r "$jq_query" 2> "$FILE.err" )
-
 if [ -n "$(cat $FILE.err)" ]; then
-	sendError "$(cat $FILE.err)"
+	sendError "$(curl -s -L $url/NouvelleDemandeReservationSeancesGetActivites -H 'Cookie: ASP.NET_SessionIdEC=$PP_SESSION_ID;' --data-raw 'inscriptions=%22'$idInscription'%22') \n $(cat $FILE.err)"
 	rm "$FILE.err"
 	exit 5
 fi
