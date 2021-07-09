@@ -14,11 +14,11 @@ function synchDevice(state, index, deviceName, domoticz)
         if( state == '1' and targetedDevice.state ~= 'On' )
         then
 		    domoticz.log('IPX800 ['..index..'] set to On ', domoticz.LOG_INFO)
-            domoticz.devices(deviceName).switchOn().silent()
+            domoticz.devices(deviceName).quietOn()
         elseif ( state == '0' and targetedDevice.state ~= 'Off' )
         then
 		    domoticz.log('IPX800 ['..index..'] set to Off ', domoticz.LOG_INFO)
-            domoticz.devices(deviceName).switchOff().silent()
+            domoticz.devices(deviceName).quietOff()
         end
     end
 end
