@@ -58,11 +58,13 @@ Ils y a <b>$nbWaiting</b> places en attente" > /dev/null
 }
 
 sendError() {
-	echo "Error $1"
-        curl -s "https://api.telegram.org/bot${TOKEN}/sendMessage" -d parse_mode="html" -d chat_id="$CHAT" -d text="<b>Pouce et Puces ne repond pas correctement ! ça risque de spammer </b> :
+	error_prev=$(echo "$1" | sed -e 's/[#&!=><./]/ /g' | sed -e 's/-/ /g' | tail -c 1000)
+	echo "$error_prev"
+        curl -s "https://api.telegram.org/bot${TOKEN}/sendMessage" -d parse_mode="html" -d chat_id="$CHAT" \
+-d text="Pouce et Puces ne repond pas correctement ça risque de spammer
 <pre>
-$1
-</pre>" > /dev/null
+$error_prev
+</pre>"
 }
 
 idInscription=$( curl -s "$url/NouvelleDemandeReservationSeancesGetInscriptions" -H "Cookie: ASP.NET_SessionIdEC=$PP_SESSION_ID;"  | jq -e -r " .[0].Inscription.IdIns "  2> "$FILE.err")
