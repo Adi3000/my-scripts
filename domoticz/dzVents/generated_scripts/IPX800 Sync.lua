@@ -1,0 +1,1 @@
+/home/pi/git/my-scripts/ipx800/scripts/domoticz_IPX800_states.lua
