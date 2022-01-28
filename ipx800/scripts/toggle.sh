@@ -6,9 +6,20 @@ fi
 plugId=$1
 ipx800="http://ipx800:2623"
 shift
+inOut="$1"
+inOutCode=$(test "$inOut" = "IN" && echo 10 || echo 20)
 endpoint="$ipx800/leds.cgi?led=${plugId}"
+checkendpoint="$ipx800/api/xdevices.json?cmd=$inOutCode"
+shift
+jsonpath=".${inOut}${plugId}"
+check=$(curl -s -XGET "$checkendpoint" | jq $jsonpath)
+
 if [ -n "$1" ]; then
         onOff=$1
+	if [ $onOff -eq $check ]; then
+		echo "Nothing to do with <$inOut$plugId> : $check"
+		exit 0
+	fi
 	endpoint="$ipx800/preset.htm?set${plugId}=$1"
 fi
 
