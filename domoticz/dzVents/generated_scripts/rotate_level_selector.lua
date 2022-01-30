@@ -21,8 +21,7 @@ return {
 	    local states =  device.levelNames
 	    local actualStateIdx = indexOf(states,device.sValue)
 	    local nextStateIdx 
-	    if actualStateIdx == #states 
-	    then 
+	    if actualStateIdx == #states  then 
 	        nextStateIdx = 1 
 	    else 
 	        nextStateIdx = actualStateIdx + 1 

@@ -12,11 +12,9 @@ return {
 		if(device.state == "Double Click")
 		then
 		    domoticz.devices("PiZiGate - Prise Salon").switchOn().checkFirst()
-        elseif ( device.state == "Click" )
-        then
+        elseif device.state == "Click"  then
 		    domoticz.devices("Salon").toggleSwitch()
-        elseif ( device.state == "Long Click" )
-        then
+        elseif device.state == "Long Click"  then
 		    domoticz.scenes("Night").switchOn()
 	    end
 	end
