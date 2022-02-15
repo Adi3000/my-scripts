@@ -4,7 +4,7 @@ if [ -z "$1" ]; then
         exit 3
 fi
 plugId=$1
-ipx800="http://ipx800:2623"
+ipx800="http://adi-home.adi3000.com:2623"
 shift
 inOut="$1"
 inOutCode=$(test "$inOut" = "IN" && echo 10 || echo 20)
