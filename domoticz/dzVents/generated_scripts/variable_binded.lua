@@ -4,6 +4,10 @@ return {
 			'Variable - *'
 		}
 	},
+	logging = {
+		level = domoticz.DEBUG,
+		marker = 'template',
+	},
 	execute = function(domoticz, device)
 	    local prefix = "Variable - "
 	    local variableName = device.name:sub(#prefix+1, #device.name)

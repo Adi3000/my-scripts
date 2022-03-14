@@ -16,6 +16,10 @@ return {
     data = {
         previousState = { initial = { idx360 = 1 } }
     },
+	logging = {
+		level = domoticz.DEBUG,
+		marker = 'template',
+	},
 	execute = function(domoticz, event)
 	    local device = domoticz.devices(event.data)
 	    local states =  device.levelNames
