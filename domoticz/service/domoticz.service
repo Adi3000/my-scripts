@@ -1,0 +1,12 @@
+[Unit]
+Description=Domoticz distants service start
+After=default.target ssh.target socat.target remotedomopi.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -t -t -i $SSH_KEY_FILE $SSH_USER '/home/adi/git/domoticz_linux/domoticz -www 26366 -sslwww 0 -nowwwpwd'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

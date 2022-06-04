@@ -1,0 +1,9 @@
+[Unit]
+Description=Zigate openning connection
+
+[Service]
+ExecStart=/home/pi/git/my-scripts/pizigate/pizigate-tcp.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
