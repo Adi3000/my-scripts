@@ -18,7 +18,7 @@ return {
 	        if device.state == 'Click' then
 		        domoticz.devices("PiZiGate - Prise PC").switchOn().checkFirst()
             elseif device.state == "Double Click" then
-    		    domoticz.devices("PC Salon").switchOn()
+    		    domoticz.devices("WoL PC Salon").switchOn()
             elseif device.state == "Long Click"  then
     		    domoticz.scenes("Night").switchOn()
     		else
@@ -28,7 +28,7 @@ return {
 	        if device.state == 'Click' then
 		        domoticz.devices("Salle à manger").toggleSwitch()
             elseif device.state == "Double Click" then
-    		    domoticz.devices("Mode dodo").switchOn()
+    		    domoticz.devices("PiZiGate - Prise Lave-Vaisselle").toggleSwitch()
             elseif device.state == "Long Click"  then
 		        domoticz.devices("SafeSwitch - Chauffage").toggleSwitch()
     		else

@@ -6,6 +6,7 @@ function split(s, delimiter)
     return result
 end
 
+
 function synchDevice(state, index, deviceName, domoticz)
     if deviceName ~= 'null' then
         local targetedDevice = domoticz.devices(deviceName)

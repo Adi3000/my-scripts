@@ -12,7 +12,7 @@ return {
 		domoticz.log('Ringing ' .. device.name , domoticz.LOG_INFO)
 		local ringGroup = domoticz.groups("Sonette")
         ringGroup.devices().forEach(function(switch)
-            switch.switchOn().forSec(2).repeatAfterSec(2, 3)
+            switch.toggleSwitch().forSec(2).repeatAfterSec(2, 3)
         end)
 	end
 }

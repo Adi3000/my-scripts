@@ -17,7 +17,7 @@ return {
             elseif device.state == "Double Click" then
     		    domoticz.devices("PiZiGate - Prise Hifi").switchOn().checkFirst()
             elseif device.state == "Long Click"  then
-    		    domoticz.scenes("PiZiGate - Prise Canape").toggleSwitch()
+    		    domoticz.devices("PiZiGate - Prise Canape").toggleSwitch()
     		else
                 domoticz.log('Cannot perform Wall button : '..device.name..' : '..device.state, domoticz.LOG_INFO)
     	    end
