@@ -16,6 +16,6 @@ ampli_power=26004800000122991113123812131213133713121312121313121213123813121238
 
 # REMOTE INFO
 
-remote_host=192.168.0.10
+remote_host=adi-home.adi3000.com
 remote_mac=a043b0ba00f5
 remote_type=0x653a
