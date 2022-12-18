@@ -1,0 +1,3 @@
+FROM domoticz/domoticz:stable
+
+

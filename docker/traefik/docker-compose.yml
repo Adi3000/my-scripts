@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+  traefik:
+    image: "traefik:v2.9"
+    restart: always
+    container_name: "traefik"
+    ports:
+    - "${PUB_FO}:80:80"
+    - "${PUB_FO}:443:443"
+    - "5500:5500"
+    volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    - "/etc/traefik:/etc/traefik:ro"
+    - "/etc/letsencrypt:/etc/ssl:ro"
+    extra_hosts:
+    - "host.docker.internal:host-gateway"

@@ -28,9 +28,10 @@ return {
 	        if device.state == 'Click' then
 		        domoticz.devices("Salle à manger").toggleSwitch()
             elseif device.state == "Double Click" then
-    		    domoticz.devices("PiZiGate - Prise Lave-Vaisselle").toggleSwitch()
+    	        domoticz.devices("SafeSwitch - Chauffage").toggleSwitch()
             elseif device.state == "Long Click"  then
-		        domoticz.devices("SafeSwitch - Chauffage").toggleSwitch()
+    		    domoticz.devices("PiZiGate - Prise Lave-Vaisselle").switchOn()
+    		    domoticz.devices("PiZiGate - Prise Lave-Vaisselle").switchOff().afterMin(80)
     		else
                 domoticz.log('Cannot perform Wall button : '..targetButton..' : '..device.state, domoticz.LOG_INFO)
     	    end
