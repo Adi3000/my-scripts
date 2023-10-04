@@ -1,0 +1,192 @@
+__RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31
+
+
+curl 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/Home/Logon' \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'Cookie: __RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31d' \
+  -H 'Origin: https://www.espace-citoyens.net' \
+  -H 'Pragma: no-cache' \
+  -H 'Referer: https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/' \
+  -H 'Sec-Fetch-Dest: document' \
+  -H 'Sec-Fetch-Mode: navigate' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-Fetch-User: ?1' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw '__RequestVerificationToken=XBva9M54-2zPRcJxqkANRCH6rZ5CMr9a1k8xw42gqSL9BVXcu9JDQxj79R5yMHI57ZI8v4Knj4MeOXWoWaFL9Gyb-8CCkrIq9yklJiwNPAs1&username=************&password=************' \
+  --compressed
+
+
+  curl 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/CompteCitoyen' \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Cookie: __RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31d' \
+  -H 'Pragma: no-cache' \
+  -H 'Referer: https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/' \
+  -H 'Sec-Fetch-Dest: document' \
+  -H 'Sec-Fetch-Mode: navigate' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-Fetch-User: ?1' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --compressed
+
+  //*[@id="divDalleDetail_Reservation"]
+
+  <td id="tdDalleDetail_ReservationActivite_2" colspan="2">Centre de loisirs traditionnel ou culturel</td>
+
+  <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/79" id="lnkDalleDetail_Reservation_2"><img alt="reservation" class="reservation" id="imgDalleDetail_Reservation_2" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+
+
+  <input type="checkbox" name="choixPersonne" id="chk1265453" value="1265453">
+  <input type="checkbox" name="choixPersonne" id="chk1271603" value="1271603">
+
+  curl 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeancesGetActivites' \
+  -H 'Accept: application/json, text/javascript, */*; q=0.01' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
+  -H 'Cookie: __RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31d' \
+  -H 'Origin: https://www.espace-citoyens.net' \
+  -H 'Pragma: no-cache' \
+  -H 'Referer: https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/79' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw 'inscriptions=%221265453%2C1271603%22' \
+  --compressed
+
+curl 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeancesModifierReservations' \
+  -H 'Accept: application/json, text/javascript, */*; q=0.01' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
+  -H 'Cookie: __RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31d' \
+  -H 'Origin: https://www.espace-citoyens.net' \
+  -H 'Pragma: no-cache' \
+  -H 'Referer: https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/79' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw 'IdIns=1265453&IdSeance=4888&typeAction=INSCRIPTION&Date=20231023' \
+  --compressed
+
+
+
+  curl 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeancesModifierReservations' \
+  -H 'Accept: application/json, text/javascript, */*; q=0.01' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
+  -H 'Cookie: __RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31d' \
+  -H 'Origin: https://www.espace-citoyens.net' \
+  -H 'Pragma: no-cache' \
+  -H 'Referer: https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/79' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw 'IdIns=1271603&IdSeance=4887&typeAction=INSCRIPTION&Date=20231023' \
+  --compressed
+
+  curl 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeancesModifierReservations' \
+  -H 'Accept: application/json, text/javascript, */*; q=0.01' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
+  -H 'Cookie: __RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31d' \
+  -H 'Origin: https://www.espace-citoyens.net' \
+  -H 'Pragma: no-cache' \
+  -H 'Referer: https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/79' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw 'IdIns=1265453&IdSeance=4922&typeAction=INSCRIPTION&Date=20231030' \
+  --compressed
+
+
+
+curl 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeancesModifierReservations' \
+  -H 'Accept: application/json, text/javascript, */*; q=0.01' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
+  -H 'Cookie: __RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31d' \
+  -H 'Origin: https://www.espace-citoyens.net' \
+  -H 'Pragma: no-cache' \
+  -H 'Referer: https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/79' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw 'IdIns=1271603&IdSeance=4923&typeAction=INSCRIPTION&Date=20231030' \
+  --compressed
+
+
+
+curl 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/ObtenirDevisSeance' \
+  -H 'Accept: application/json, text/javascript, */*; q=0.01' \
+  -H 'Accept-Language: fr-FR,fr;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
+  -H 'Cookie: __RequestVerificationToken_L3BvdWNlZXRwdWNlL2VzcGFjZS1jaXRveWVucw2=nGclnO-WXpYHMwC3cPuRlzAO2OTiakCpYbdCoTQDBNUjVpTsSKT9hb2uggw407QcLSBXzvynJrUtFx-HNmTXdVdlOjlFzqLOtWtzYarwvjE1; ASP.NET_SessionIdEC=kpyuavz0kuw2lefcvbeiu31d' \
+  -H 'Origin: https://www.espace-citoyens.net' \
+  -H 'Pragma: no-cache' \
+  -H 'Referer: https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/79' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw '__RequestVerificationToken=gO_Ud6JD5KrbCsiyaAuxkTygKfUhMVcWhQaxwrO3jM9nhkLB0uEJNhKTTfje90F7ZihGjTeca9k5R3x0gaxnL6hzLFEngulA6kbutjKW12o1&typeHistorisation=EXISTING&choixpersonnevalidator=&choixPersonne=1265453&choixPersonne=1271603&resavalidator=&ListeSeancesPourRetourServeur=%5B%7B%22LibPublication%22%3A%22CHARLIE+CHAPLIN+Elementaire+du+23%2F10+au+27%2F10%2F23%22%2C%22ListeDatesSeances%22%3A%5B%7B%22DateSeance%22%3A%22lundi+23%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22mardi+24%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22mercredi+25%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22jeudi+26%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22vendredi+27%2F10%2F23%22%7D%5D%2C%22ListeInscription%22%3A%5B%7B%22IdDynamic%22%3A3%2C%22PrenomInscription%22%3A%22William%22%2C%22EtatInscription%22%3A%22Inscrit%22%2C%22EtatInscriptionOrigine%22%3A%22NonInscrit%22%2C%22DateInterruption%22%3A%22%22%7D%5D%7D%2C%7B%22LibPublication%22%3A%22CHARLIE+CHAPLIN+Maternel+du+23%2F10+au+27%2F10%2F23%22%2C%22ListeDatesSeances%22%3A%5B%7B%22DateSeance%22%3A%22lundi+23%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22mardi+24%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22mercredi+25%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22jeudi+26%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22vendredi+27%2F10%2F23%22%7D%5D%2C%22ListeInscription%22%3A%5B%7B%22IdDynamic%22%3A4%2C%22PrenomInscription%22%3A%22Raphael%22%2C%22EtatInscription%22%3A%22Inscrit%22%2C%22EtatInscriptionOrigine%22%3A%22NonInscrit%22%2C%22DateInterruption%22%3A%22%22%7D%5D%7D%2C%7B%22LibPublication%22%3A%22CHARLIE+CHAPLIN+Elementaire+du+30%2F10+au+03%2F11%2F23%22%2C%22ListeDatesSeances%22%3A%5B%7B%22DateSeance%22%3A%22lundi+30%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22mardi+31%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22jeudi+02%2F11%2F23%22%7D%2C%7B%22DateSeance%22%3A%22vendredi+03%2F11%2F23%22%7D%5D%2C%22ListeInscription%22%3A%5B%7B%22IdDynamic%22%3A3%2C%22PrenomInscription%22%3A%22William%22%2C%22EtatInscription%22%3A%22Inscrit%22%2C%22EtatInscriptionOrigine%22%3A%22NonInscrit%22%2C%22DateInterruption%22%3A%22%22%7D%5D%7D%2C%7B%22LibPublication%22%3A%22CHARLIE+CHAPLIN+Maternel+du+30%2F10+au+03%2F11%2F23%22%2C%22ListeDatesSeances%22%3A%5B%7B%22DateSeance%22%3A%22lundi+30%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22mardi+31%2F10%2F23%22%7D%2C%7B%22DateSeance%22%3A%22jeudi+02%2F11%2F23%22%7D%2C%7B%22DateSeance%22%3A%22vendredi+03%2F11%2F23%22%7D%5D%2C%22ListeInscription%22%3A%5B%7B%22IdDynamic%22%3A4%2C%22PrenomInscription%22%3A%22Raphael%22%2C%22EtatInscription%22%3A%22Inscrit%22%2C%22EtatInscriptionOrigine%22%3A%22NonInscrit%22%2C%22DateInterruption%22%3A%22%22%7D%5D%7D%5D&texteRecherche=&CourrielFacture=************00%40gmail.com' \
+  --compressed
+
+
+
+  
+
+  <a href="#" data-bind="attr: { id: parent.idSeance + '-' + idInscription() + '-' + 'notifs' }" id="4888-1265453-notifs"><img alt="bulle" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/bulle_liste_tableau.png" class="tooltip" title="Voir les notifications"></a>

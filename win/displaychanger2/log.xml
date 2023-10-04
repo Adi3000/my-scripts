@@ -1,0 +1,611 @@
+<sandbox app-version="1.7.3.128">
+    <display-configuration type="All Paths">
+        <paths count="36">
+            <path active="true" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24836" mode-info-index="0">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Identity</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="true" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24834" mode-info-index="2">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Identity</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="true" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24832" mode-info-index="3">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>HDMI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Identity</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24832" mode-info-index="3">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>HDMI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24832" mode-info-index="3">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>HDMI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24832" mode-info-index="3">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>HDMI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24834" mode-info-index="2">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24834" mode-info-index="2">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24834" mode-info-index="2">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24836" mode-info-index="0">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24836" mode-info-index="0">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24836" mode-info-index="0">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Preferred</scaling>
+                        <scan-line-ordering>Unspecified</scan-line-ordering>
+                        <refresh numerator="0" denominator="0"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24837">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24837">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24837">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24837">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24838">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24838">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24838">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="24838">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="25600">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="25600">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="25600">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="25600">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="25601">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="25601">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="25601">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="25601">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="25602">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="25602">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="25602">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="25602">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="25603">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="25603">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="2" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="25603">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+            <path active="false" virtual-mode="false">
+                <source id="3" in-use-by-one-or-more-paths="false">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-source-mode mode-info-index="invalid"/>
+                </source>
+                <target id="25603">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <path-target-mode mode-info-index="invalid"/>
+                </target>
+            </path>
+        </paths>
+        <modes count="5">
+            <mode-info-target type="target" index="0" adapter-high="0" adapter-low="79190" id="24836">
+                <name>PL2483H</name>
+                <device>\\?\DISPLAY#IVM6138#5&amp;1ce1b28a&amp;0&amp;UID24836#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-source type="source" index="1" adapter-high="0" adapter-low="79190" id="0">
+                <name>\\.\DISPLAY1</name>
+                <configuration width="1920" height="1080" left="0" top="0" pixel-format="32 bpp"/>
+            </mode-info-source>
+            <mode-info-target type="target" index="2" adapter-high="0" adapter-low="79190" id="24834">
+                <name>TOSHIBA-TV</name>
+                <device>\\?\DISPLAY#TSB010B#5&amp;1ce1b28a&amp;0&amp;UID24834#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-target type="target" index="3" adapter-high="0" adapter-low="79190" id="24832">
+                <name>SA300/SA350</name>
+                <device>\\?\DISPLAY#SAM0795#5&amp;1ce1b28a&amp;0&amp;UID24832#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-source type="source" index="4" adapter-high="0" adapter-low="79190" id="1">
+                <name>\\.\DISPLAY2</name>
+                <configuration width="1920" height="1080" left="-1920" top="0" pixel-format="32 bpp"/>
+            </mode-info-source>
+        </modes>
+    </display-configuration>
+    <display-configuration type="Only Active">
+        <paths count="3">
+            <path active="true" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24836" mode-info-index="0">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Identity</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="true" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24834" mode-info-index="2">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Identity</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="true" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24832" mode-info-index="3">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>HDMI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Identity</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+        </paths>
+        <modes count="5">
+            <mode-info-target type="target" index="0" adapter-high="0" adapter-low="79190" id="24836">
+                <name>PL2483H</name>
+                <device>\\?\DISPLAY#IVM6138#5&amp;1ce1b28a&amp;0&amp;UID24836#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-source type="source" index="1" adapter-high="0" adapter-low="79190" id="0">
+                <name>\\.\DISPLAY1</name>
+                <configuration width="1920" height="1080" left="0" top="0" pixel-format="32 bpp"/>
+            </mode-info-source>
+            <mode-info-target type="target" index="2" adapter-high="0" adapter-low="79190" id="24834">
+                <name>TOSHIBA-TV</name>
+                <device>\\?\DISPLAY#TSB010B#5&amp;1ce1b28a&amp;0&amp;UID24834#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-target type="target" index="3" adapter-high="0" adapter-low="79190" id="24832">
+                <name>SA300/SA350</name>
+                <device>\\?\DISPLAY#SAM0795#5&amp;1ce1b28a&amp;0&amp;UID24832#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-source type="source" index="4" adapter-high="0" adapter-low="79190" id="1">
+                <name>\\.\DISPLAY2</name>
+                <configuration width="1920" height="1080" left="-1920" top="0" pixel-format="32 bpp"/>
+            </mode-info-source>
+        </modes>
+    </display-configuration>
+    <display-configuration type="Database Current">
+        <paths count="3">
+            <path active="true" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24836" mode-info-index="0">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Aspect Ratio Centered Max</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="true" virtual-mode="false">
+                <source id="0" in-use-by-one-or-more-paths="true" mode-info-index="1">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24834" mode-info-index="2">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>DVI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Aspect Ratio Centered Max</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+            <path active="true" virtual-mode="false">
+                <source id="1" in-use-by-one-or-more-paths="true" mode-info-index="4">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                </source>
+                <target id="24832" mode-info-index="3">
+                    <adapter high="0" low="79190">\\?\PCI#VEN_10DE&amp;DEV_2482&amp;SUBSYS_138C196E&amp;REV_A1#4&amp;1fc990d7&amp;0&amp;0019#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}</adapter>
+                    <target-info available="true">
+                        <status>In Use</status>
+                        <connection>HDMI</connection>
+                        <rotation>Identity (landscape)</rotation>
+                        <scaling>Aspect Ratio Centered Max</scaling>
+                        <scan-line-ordering>Progressive</scan-line-ordering>
+                        <refresh numerator="60" denominator="1"/>
+                    </target-info>
+                </target>
+            </path>
+        </paths>
+        <modes count="5">
+            <mode-info-target type="target" index="0" adapter-high="0" adapter-low="79190" id="24836">
+                <name>PL2483H</name>
+                <device>\\?\DISPLAY#IVM6138#5&amp;1ce1b28a&amp;0&amp;UID24836#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-source type="source" index="1" adapter-high="0" adapter-low="79190" id="0">
+                <name>\\.\DISPLAY1</name>
+                <configuration width="1920" height="1080" left="0" top="0" pixel-format="32 bpp"/>
+            </mode-info-source>
+            <mode-info-target type="target" index="2" adapter-high="0" adapter-low="79190" id="24834">
+                <name>TOSHIBA-TV</name>
+                <device>\\?\DISPLAY#TSB010B#5&amp;1ce1b28a&amp;0&amp;UID24834#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-target type="target" index="3" adapter-high="0" adapter-low="79190" id="24832">
+                <name>SA300/SA350</name>
+                <device>\\?\DISPLAY#SAM0795#5&amp;1ce1b28a&amp;0&amp;UID24832#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</device>
+                <preferred-size width="1920" height="1080"/>
+            </mode-info-target>
+            <mode-info-source type="source" index="4" adapter-high="0" adapter-low="79190" id="1">
+                <name>\\.\DISPLAY2</name>
+                <configuration width="1920" height="1080" left="-1920" top="0" pixel-format="32 bpp"/>
+            </mode-info-source>
+        </modes>
+    </display-configuration>
+</sandbox>

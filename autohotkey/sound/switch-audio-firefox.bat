@@ -1,0 +1,1 @@
+G:\Utils\AppAudioConfig.exe /SetVolume 100 "firefox.exe" "{2}.\\?\hdaudio#func_01&ven_10de&dev_0093&subsys_1043868e&rev_1001#5&2a8aa1fb&0&0001#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\wave09"
