@@ -1,0 +1,2 @@
+Nom d’ordinateur,Cible de stratégie,Sous-catégorie,GUID de sous-catégorie,Paramètre d’inclusion,Paramètre d’exclusion,Valeur de paramètre
+,Système,Auditer d’autres événements d’ouverture/fermeture de session,{0cce921c-69ae-11d9-bed3-505054503030},Succès,,1
