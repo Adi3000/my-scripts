@@ -1,7 +1,7 @@
-version: "2.1"
+version: "3.3"
 services:
   blocky:
-    image: adi3000/blocky:fb-dns-cache-switch
+    image: adi3000/blocky:fb-dns-switch-and-cache #adi3000/blocky:fb-dns-cache-switch
     container_name: blocky
     restart: unless-stopped
     ports:
@@ -15,9 +15,14 @@ services:
       - /etc/blocky/config.yml:/app/config.yml
       - /etc/blocky/blacklists:/app/blacklists/
       - /etc/blocky/whitelists:/app/whitelists/
+    labels:
+      - "traefik.enable=true"
   blocky-frontend:
     depends_on:
       - blocky
-    image: ghcr.io/mozart409/blocky-frontend:latest
+    image: adi3000/blocky-frontend:main
     ports:
       - '4080:80'
+    labels:
+      - "traefik.enable=true"
+
