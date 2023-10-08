@@ -1,0 +1,21 @@
+version: "3.3"
+services:
+  godns-cano:
+    image: timothyye/godns:latest
+    container_name: godns-cano
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris # Optional to synchronize the log timestamp with host
+    volumes:
+#      # config file
+      - /etc/godns/cano-config.json:/config.json:ro
+
+  godns-adi3000:
+    image: timothyye/godns:latest
+    container_name: godns-adi3000
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris # Optional to synchronize the log timestamp with host
+    volumes:
+#      # config file
+      - /etc/godns/adi3000-config.json:/config.json:ro
