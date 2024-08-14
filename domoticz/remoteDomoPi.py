@@ -11,11 +11,13 @@ from switchbot_py3 import Driver
 
 HOST_NAME = "0.0.0.0"
 HOST_PORT = 9966
-SWITCH_BOT_DEVICE="C2:F6:28:47:F1:E3"
+#SWITCH_BOT_DEVICE="D7:35:34:35:46:69"
+SWITCH_BOT_DEVICE="F0:4A:DF:AA:72:AA"
 
 PC_SALON_MAC="B4-2E-99-D5-D6-2A"
 IP_WOL_BROADCAST="192.168.0.255"
-PHONE_IPS = [ ("Phone Adi 1", "192.168.0.34"), ("Phone Adi 2", "192.168.0.18"), ("Phone Adi 3", "192.168.0.28"), ("Phone Zuliz 1", "192.168.0.28"), ("Phone Zuliz 2", "192.168.0.33"), ("Phone PC", "192.168.0.21")]
+PHONE_IPS = [ ("Phone Adi 1", "192.168.0.34"), ("Phone Zuliz 2", "192.168.0.26"), ("Phone Zuliz 1", "192.168.0.27"), ("Phone PC", "192.168.0.21")]
+#PHONE_IPS = [ ("Phone Adi 1", "192.168.0.34"), ("Phone Adi 2", "192.168.0.18"), ("Phone Adi 3", "192.168.0.28"),("Phone PC", "192.168.0.21")]
 SWITCHBOT_SCRIPT="/home/pi/git/python-host/switchbot_py3.py"
 
 configs = Properties()
@@ -23,7 +25,7 @@ configs = Properties()
 
 def _pingPhone(idx):
     name, ip = PHONE_IPS[idx]
-    response = os.system("ping -q -w 5 -c 1 " + ip)
+    response = os.system("ping -q -W 20 -c 1 " + ip)
     status = "false"
     if response == 0:
         status = "true"
