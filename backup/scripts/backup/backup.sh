@@ -67,12 +67,6 @@ done
 
 sh $BACKUP_HOME/backup_upload.sh $DIRSAVESQL/pgsql-*.sql.gz || exit 11
 
-echo "$(date) - $0 - Saving all Mariadb database"
-sudo $MYSQL -A  | $GZIP -c > $DIRSAVESQL/mysql-all.sql.gz || exit 34
-sh $BACKUP_HOME/backup_upload.sh $DIRSAVESQL/mysql-all.sql.gz || exit 12
-
-
-
 echo "$(date) - $0 - Saving LDAP"
 $LDAP_BACKUP -v  | $GZIP -c > $DIRSAVESQL/ldap.diff.gz || exit 8
 
