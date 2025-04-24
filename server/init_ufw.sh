@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #define the
-#- PUBLIC_PORT_LIST
-#- PUBIF
+#- PUBLIC_PORT_LIST*
+#- PUBIF*
 #- VPS_FRONT
 #- TAP_IF
 #- BR_IF
@@ -49,19 +49,24 @@ ufw default deny routed
 ufw default allow outgoing
 
 #VPS Front traffic
-ufw allow in on ${VPS_FRONT}
-ufw allow out on ${VPS_FRONT}
-ufw route allow in on ${VPS_FRONT}
+if [ -n "${VPS_FRONT}" ]; then
+	ufw allow in on ${VPS_FRONT}
+	ufw allow out on ${VPS_FRONT}
+	ufw route allow in on ${VPS_FRONT}
+fi
 
 #VPN interfaces freedom
-ufw allow in on ${TAP_IF}
-ufw allow out on ${TAP_IF}
-ufw allow in on ${BR_IF}
-ufw allow out on ${BR_IF}
-ufw route allow in on ${TAP_IF}
-ufw route allow out on ${TAP_IF}
-ufw route allow in on ${BR_IF}
-ufw route allow out on ${BR_IF}
+if [ -n "${TAP_IF}" ]; then
+	ufw allow in on ${TAP_IF}
+	ufw allow out on ${TAP_IF}
+	ufw allow in on ${BR_IF}
+	ufw allow out on ${BR_IF}
+	ufw route allow in on ${TAP_IF}
+	ufw route allow out on ${TAP_IF}
+	ufw route allow in on ${BR_IF}
+	ufw route allow out on ${BR_IF}
+fi
+
 ufw allow in from 192.168.26.0/24 to 192.168.26.0/24
 ufw allow out from 192.168.26.0/24 to 192.168.26.0/24
 ufw allow in to 172.16.0.0/12
