@@ -34,6 +34,25 @@ echo '{
 }' | sudo tee /etc/docker/daemon.json
 ```
 
+### Add UFW rules
+
+execute `init_ufw.sh`
+create a `/etc/default/ufw-ipconfig` with the following content 
+```
+export SPAMLIST="blockedip"
+export SPAMDROPMSG="BLOCKED IP DROP"
+export SYSCTL="/sbin/sysctl"
+export BLOCKEDIPS="/root/scripts/blocked.ips.txt"
+# interface connected to the Internet
+export PUB_IF="eno1" # public/main WAN interface
+export VPN_IF="eno1.0"  OpenVpn (optional)
+export BR_IF="br0"  # OpenVpn (optional)
+export TAP_IF="tap0" # OpenVpn (optional)
+export PUB_IP="XX.XX.XX.XX" # public IP
+export PUB_FO="XX.XX.XX.XX" # failover ip / secondary ip
+export VPS_FRONT="XX.XX.XX.XX" # other front/bastion vps
+export PUBLIC_PORT_LIST="80 443 25 110 143" # add other if needed
+```
 ## Resources
 
 * [UFW docker rules](https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#tldr=)
