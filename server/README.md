@@ -25,13 +25,13 @@ sudo usermod -a -G sudo $user_to_add
 ### Reduce logs
 
 ```bash
-echo "{ 
+echo '{                    
   "log-driver": "json-file",
   "log-opts": {
     "max-size": "10m",
     "max-file": "3"
   }
-}" | sudo tee /etc/docker/daemon.json
+}' | sudo tee /etc/docker/daemon.json
 ```
 
 ## Resources
