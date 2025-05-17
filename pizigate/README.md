@@ -32,5 +32,7 @@ print(output)
 ```
 check that `17` is `3020000a`
 
-
+```
+apt-get install python3-usb
+```
 
