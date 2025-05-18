@@ -70,7 +70,6 @@ workspace "Adi3000 system" {
                 photoTagger = component "Auto tag photo"
             }
             metrics = container "Metrics gatherer" {
-                dnsMetrics = component "DNS metrics"
                 telegramNotifier = component "Alerting via Telegram"
             }
             mailAnalayer = container "Tool to analyze mails" {
@@ -116,6 +115,7 @@ workspace "Adi3000 system" {
         homeUser -> homeDomain "Call for HomeDomain"
         homeDomain -> gcpAuthentik "Ensure authentication"
         homeDomain -> rednode "Controle house"
+        rednode -> telegramNotifier "Send alerts"
         rednode -> homeZ2MQTT "Receive signals"
         
         streamUser -> plexDomain "Stream a movie"
@@ -133,6 +133,7 @@ workspace "Adi3000 system" {
         cerbinou -> cerbinouTranscript "Understand question"
         cerbinou -> cerbinouSpeech "Understand question"
         cerbinou -> cerbinouLLM "Formulate answer"
+        cerbinou -> telegramNotifier "Send answer and question"
         cerbinou -> cerbinouSpeech "Answer question"
         
         gamerUser -> homeAssistant "Wakeup computer"
