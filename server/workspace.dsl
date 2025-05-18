@@ -15,8 +15,12 @@ workspace "Adi3000 system" {
 
         cloudInstance = softwareSystem "Cloud Services" "Google Cloud Plateform" {
             cloudRun = container "GCP Cloud Run" "Serverless docker instances" {
-                gcpAuthentik = component "Authentik"
-                gcpNextCloud = component "Nextcloud"
+                gcpAuthentik = component "Authentik" {
+                    tags "In Progress"
+                }
+                gcpNextCloud = component "Nextcloud" {
+                    tags "In Progress"
+                }
                 gcpWordPress = component "Wordpress"
                 gcpPlex = component "Plex Server"
             }
@@ -56,13 +60,21 @@ workspace "Adi3000 system" {
 
         vps = softwareSystem "VPS" {
             homeAutomationServices = container "Home Automation" {
-                mqtt = component "Zigbee MQTT Server"
+                mqtt = component "Zigbee MQTT Server" {
+                    tags "In Progress"
+                }
                 rednode = component "Rednode for home"
-                homeAssistant = component "Home assistant for Maman-home"
+                homeAssistant = component "Home assistant for Maman-home" {
+                    tags "In Progress"
+                }
             }
             blocky = container "Blocky DNS" {
-                parentalControl = component "Parental DNS filtering"
-                adRemover = component "Ads DNS filtering"
+                parentalControl = component "Parental DNS filtering" {
+                    tags "Migrated"
+                }
+                adRemover = component "Ads DNS filtering" {
+                    tags "Migrated"
+                }
             }
             traefik = container "Traefik" {
                 authentikDomain = component "login.adi3000.com"
@@ -164,15 +176,7 @@ workspace "Adi3000 system" {
         
     }
     views {
-        styles {        
-            element "Component" {
-                background #96c2af
-                color #ffffff
-            }
-            element "Container" {
-                background #6894b9
-                color #ffffff
-            }
+        styles {
             element "Person" {
                 shape Person
                 background #08427b
@@ -181,10 +185,21 @@ workspace "Adi3000 system" {
             element "Software System" {
                 background #7cb2df
                 color #ffffff
+            }        
+            element "Container" {
+                background #6975da
+                color #ffffff
+            }
+            element "Component" {
+                background #96c2af
+                color #ffffff
             }
             element "Migrated" {
                 color #94ffa9
                 shape RoundedBox
+            }
+            element "In Progress" {
+                color #ffd8b8
             }
         }
     }
