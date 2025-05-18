@@ -113,15 +113,16 @@ workspace "Adi3000 system" {
             }
             zigbeeMesh = container "Zigbee Mesh" {
                 homeAutomationComponent = component "Components Zigbee" {
-                    tags "In progress"
+                    tags "In Progress"
                 }
+                tags "In Progress"
             }
             pizigbee = container "PiZigbee" {
                 homeZ2MQTT = component "Zigbee2MQTT" {
-                    tags "In progress"
+                    tags "In Progress"
                 }
                 remoteDomoPi = component "Remote Domo Pi" {
-                    tags "In progress"
+                    tags "In Progress"
                 }
                 cerbinou = component "Cerbinou"
                 ps4Trigger = component "PS4 controller"
@@ -146,6 +147,7 @@ workspace "Adi3000 system" {
         homeDomain -> rednode "Controle house"
         rednode -> telegramNotifier "Send alerts"
         rednode -> homeZ2MQTT "Receive signals"
+        zigbeeMesh ->  homeZ2MQTT "Emit signals"
         
         streamUser -> plexDomain "Stream a movie"
         plexDomain -> gcpAuthentik "Ensure authentication"
