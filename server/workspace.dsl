@@ -73,7 +73,7 @@ workspace "Adi3000 system" {
                     tags "Migrated"
                 }
                 adRemover = component "Ads DNS filtering" {
-                    tags "Migrated"
+                    tags "In Progress"
                 }
             }
             traefik = container "Traefik" {
