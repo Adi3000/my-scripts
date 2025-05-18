@@ -145,6 +145,9 @@ workspace "Adi3000 system" {
         
         downloaderUser -> fafnirDomain "Call for downloader"
         fafnirDomain -> rutorrent "Find some stuff to download"
+        rutorrent -> rtorrent "Control downloader"
+        rtorrent -> streamStorage "Save movies"
+        rtorrent -> fileStorage "Save files"
         
         mailUser -> freeMails "Receive mails"
         freeMails -> spamassassin "Filter SPAMs"
