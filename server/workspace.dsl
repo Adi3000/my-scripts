@@ -34,15 +34,24 @@ workspace "Adi3000 system" {
         
         aiven = softwareSystem "Aiven Data storage" {
             postgresql = container "PostgreSQL"  {
-                pgAuthentik = component "Postgresql Authentik"
-                pgNextcloud = component "Postgresql Nextcloud"
+                pgAuthentik = component "Postgresql Authentik" {
+                    tags "Migrated"
+                }
+                pgNextcloud = component "Postgresql Nextcloud" {
+                    tags "Migrated"
+                }
             }
             redis = container "Redis" {
-                redisAuthentik = component "Redis Authentik"
+                redisAuthentik = component "Redis Authentik" {
+                    tags "Migrated"
+                }
             }
             mySql = container "Cloud Run"  {
-                wpBlogs = component "MySQL Wordpress"
+                wpBlogs = component "MySQL Wordpress" {
+                    tags "Migrated"
+                }
             }
+            tags "Migrated"
         }
 
         vps = softwareSystem "VPS" {
@@ -168,6 +177,14 @@ workspace "Adi3000 system" {
                 shape Person
                 background #08427b
                 color #ffffff
+            }
+            element "Software System" {
+                background #7cb2df
+                color #ffffff
+            }
+            element "Migrated" {
+                color #94ffa9
+                shape RoundedBox
             }
         }
     }
