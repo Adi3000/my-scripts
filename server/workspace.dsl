@@ -13,7 +13,7 @@ workspace "Adi3000 system" {
         downloaderUser = person "Need a new download"
         mailUser = person "Need some mails"
 
-        cloudInstance = softwareSystem "Google Cloud" "Google Cloud Plateform" {
+        cloudInstance = softwareSystem "Cloud Services" "Google Cloud Plateform" {
             cloudRun = container "GCP Cloud Run" "Serverless docker instances" {
                 gcpAuthentik = component "Authentik"
                 gcpNextCloud = component "Nextcloud"
