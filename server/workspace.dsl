@@ -11,15 +11,26 @@ workspace "Adi3000 system" {
         gamerUser = person "Need to Game"
         computerUser = person "Need to use Internet"
         downloaderUser = person "Need a new download"
+        mailUser = person "Need some mails"
 
-        google = softwareSystem "Google Cloud" "Google Cloud Plateform" {
-            cloudRun = container "Cloud Run" "Serverless docker instances" {
+        cloudInstance = softwareSystem "Google Cloud" "Google Cloud Plateform" {
+            cloudRun = container "GCP Cloud Run" "Serverless docker instances" {
                 gcpAuthentik = component "Authentik"
                 gcpNextCloud = component "Nextcloud"
                 gcpWordPress = component "Wordpress"
                 gcpPlex = component "Plex Server"
             }
+            runPod = container "RunPod" "IA dedicated instances" {
+                cerbinouASR = component "ASR engine"
+                cerbinouTranscript = component "Transcript engine"
+                cerbinouLLM = component "LLM engine"
+                cerbinouSpeech = component "Audio speech engine"
+            }
+            mailbox = container "Mailboxes" {
+                freeMails = component "Mail from free.fr"
+            }
         }
+        
         
         aiven = softwareSystem "Aiven Data storage" {
             postgresql = container "PostgreSQL"  {
@@ -30,8 +41,7 @@ workspace "Adi3000 system" {
                 redisAuthentik = component "Redis Authentik"
             }
             mySql = container "Cloud Run"  {
-                wpPriseDeTete = component "MySQL Prise de tete"
-                wpZapette = component "MySQL LaZapette"
+                wpBlogs = component "MySQL Wordpress"
             }
         }
 
@@ -50,6 +60,7 @@ workspace "Adi3000 system" {
                 fafnirDomain = component "fafnir.adi3000.com"
                 homeDomain = component "adi-home.adi3000.com"
                 plexDomain = component "plex.adi3000.com"
+                blogDomains = component "blogs domains"
             }
             torrent = container "Torrent downloader" {
                 rutorrent = component "Rutorrent"
@@ -57,6 +68,13 @@ workspace "Adi3000 system" {
             }
             fileAnalyzer = container "Classifier for files Storage" {
                 photoTagger = component "Auto tag photo"
+            }
+            metrics = container "Metrics gatherer" {
+                dnsMetrics = component "DNS metrics"
+                telegramNotifier = component "Alerting via Telegram"
+            }
+            mailAnalayer = container "Tool to analyze mails" {
+                spamassassin = component "Spamassassin"
             }
         }
 
@@ -78,12 +96,14 @@ workspace "Adi3000 system" {
                 homeZ2MQTT = component "Zigbee2MQTT"
                 remoteDomoPi = component "Remote Domo Pi"
                 cerbinou = component "Cerbinou"
+                ps4Trigger = component "PS4 controller"
             }
             raspberry = container "Raspian" {
                 fileStorage = component "File Storage"
                 streamStorage = component "Movie/Serie Storage"
             }
         }
+        
         storageUser -> fafnirDomain "Call for Nextcloud"
         fafnirDomain -> gcpAuthentik "Ensure authentication"
         gcpAuthentik -> pgAuthentik "Preserve users info"
@@ -102,6 +122,32 @@ workspace "Adi3000 system" {
         plexDomain -> gcpAuthentik "Ensure authentication"
         plexDomain -> gcpPlex "Stream video"
         gcpPlex -> streamStorage "Fetch film to stream"
+        
+        blogUser -> blogDomains "Maintain blogs"
+        blogDomains -> gcpAuthentik "Ensure authentication"
+        blogDomains -> gcpWordPress "Expose blog"
+        gcpWordPress -> wpBlogs "Store blog data"
+        
+        cerbinouUser -> cerbinou "Ask a question"
+        cerbinou -> cerbinouASR "Listen question"
+        cerbinou -> cerbinouTranscript "Understand question"
+        cerbinou -> cerbinouSpeech "Understand question"
+        cerbinou -> cerbinouLLM "Formulate answer"
+        cerbinou -> cerbinouSpeech "Answer question"
+        
+        gamerUser -> homeAssistant "Wakeup computer"
+        homeAssistant -> ps4Trigger "Wakeup PS4"
+        gamerUser -> moonlight "Use computer"
+        gamerUser -> remotePlay "Use PS4"
+        
+        computerUser -> parentalControl "Avoid unwanted site"
+        computerUser -> adRemover "Remove some ads"
+        
+        downloaderUser -> fafnirDomain "Call for downloader"
+        fafnirDomain -> rutorrent "Find some stuff to download"
+        
+        mailUser -> freeMails "Receive mails"
+        freeMails -> spamassassin "Filter SPAMs"
         
     }
     views {
