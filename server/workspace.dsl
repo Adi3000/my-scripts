@@ -9,15 +9,19 @@ workspace "Adi3000 system" {
         blogUser = person "Need to write an article"
         cerbinouUser = person "Need to ask a question"
         gamerUser = person "Need to Game"
+        computerUser = person "Need to use Internet"
+        downloaderUser = person "Need a new download"
 
         google = softwareSystem "Google Cloud" "Google Cloud Plateform" {
             cloudRun = container "Cloud Run" "Serverless docker instances" {
                 gcpAuthentik = component "Authentik"
                 gcpNextCloud = component "Nextcloud"
+                gcpWordPress = component "Wordpress"
+                gcpPlex = component "Plex Server"
             }
         }
         
-        aiven = softwareSystem "Datalake" "Stockage des données pour analyse" {
+        aiven = softwareSystem "Aiven Data storage" {
             postgresql = container "PostgreSQL"  {
                 pgAuthentik = component "Postgresql Authentik"
                 pgNextcloud = component "Postgresql Nextcloud"
@@ -32,8 +36,10 @@ workspace "Adi3000 system" {
         }
 
         vps = softwareSystem "VPS" {
-            mqtt = container "MQTT server" {
-                homeTopic = component "Home Zigbee MQTT"
+            homeAutomationServices = container "MQTT server" {
+                mqtt = component "Zigbee MQTT Server"
+                rednode = component "Rednode for home"
+                homeAssistant = component "Home assistant for Maman-home"
             }
             blocky = container "Blocky DNS" {
                 parentalControl = component "Parental DNS filtering"
@@ -42,6 +48,15 @@ workspace "Adi3000 system" {
             traefik = container "Traefik" {
                 authentikDomain = component "login.adi3000.com"
                 fafnirDomain = component "fafnir.adi3000.com"
+                homeDomain = component "adi-home.adi3000.com"
+                plexDomain = component "plex.adi3000.com"
+            }
+            torrent = container "Torrent downloader" {
+                rutorrent = component "Rutorrent"
+                rtorrent = component "RTorrent"
+            }
+            fileAnalyzer = container "Classifier for files Storage" {
+                photoTagger = component "Auto tag photo"
             }
         }
 
@@ -66,8 +81,28 @@ workspace "Adi3000 system" {
             }
             raspberry = container "Raspian" {
                 fileStorage = component "File Storage"
+                streamStorage = component "Movie/Serie Storage"
             }
         }
+        storageUser -> fafnirDomain "Call for Nextcloud"
+        fafnirDomain -> gcpAuthentik "Ensure authentication"
+        gcpAuthentik -> pgAuthentik "Preserve users info"
+        fafnirDomain -> gcpNextCloud "Trigger Nextcloud instance"
+        gcpNextCloud -> pgNextcloud "Read data"
+        gcpNextCloud -> fileStorage "Fetch files"
+        photoTagger -> fileStorage "Autotag Photo"
+        photoTagger -> pgNextcloud "Enhence photo metadata"
+        
+        homeUser -> homeDomain "Call for HomeDomain"
+        homeDomain -> gcpAuthentik "Ensure authentication"
+        homeDomain -> rednode "Controle house"
+        rednode -> homeZ2MQTT "Receive signals"
+        
+        streamUser -> plexDomain "Stream a movie"
+        plexDomain -> gcpAuthentik "Ensure authentication"
+        plexDomain -> gcpPlex "Stream video"
+        gcpPlex -> streamStorage "Fetch film to stream"
+        
     }
     views {
         styles {        
