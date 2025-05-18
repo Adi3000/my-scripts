@@ -46,7 +46,7 @@ workspace "Adi3000 system" {
         }
 
         vps = softwareSystem "VPS" {
-            homeAutomationServices = container "MQTT server" {
+            homeAutomationServices = container "Home Automation" {
                 mqtt = component "Zigbee MQTT Server"
                 rednode = component "Rednode for home"
                 homeAssistant = component "Home assistant for Maman-home"
