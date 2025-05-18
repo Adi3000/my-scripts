@@ -77,7 +77,9 @@ workspace "Adi3000 system" {
                 }
             }
             traefik = container "Traefik" {
-                authentikDomain = component "login.adi3000.com"
+                authentikDomain = component "login.adi3000.com" {
+                    tags "Migrated"
+                }
                 fafnirDomain = component "fafnir.adi3000.com"
                 homeDomain = component "adi-home.adi3000.com"
                 plexDomain = component "plex.adi3000.com"
@@ -110,11 +112,17 @@ workspace "Adi3000 system" {
                 remotePlay = component "Remote play"
             }
             zigbeeMesh = container "Zigbee Mesh" {
-                homeAutomationComponent = component "Components Zigbee"
+                homeAutomationComponent = component "Components Zigbee" {
+                    tags "In progress"
+                }
             }
             pizigbee = container "PiZigbee" {
-                homeZ2MQTT = component "Zigbee2MQTT"
-                remoteDomoPi = component "Remote Domo Pi"
+                homeZ2MQTT = component "Zigbee2MQTT" {
+                    tags "In progress"
+                }
+                remoteDomoPi = component "Remote Domo Pi" {
+                    tags "In progress"
+                }
                 cerbinou = component "Cerbinou"
                 ps4Trigger = component "PS4 controller"
             }
