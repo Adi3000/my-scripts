@@ -8,12 +8,7 @@ sudo apt-get install jq yq git ufw sudo openssl
 ## Add to sudo
 
 ```bash
-echo -n "What is the new user to add : "
-read user_to_add
-echo -n "What is the password ? : "
-read -s password_to_set
-sudo useradd --user-group --create-home -s /bin/bash -p $password_to_set $user_to_add
-sudo usermod -a -G sudo $user_to_add
+sudo useradd --user-group --create-home -s /bin/bash -G sudo -p `openssl passwd` $user_to_add
 ```
 
 ## Install docker
