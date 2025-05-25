@@ -48,9 +48,21 @@ export PUB_FO="XX.XX.XX.XX" # failover ip / secondary ip
 export VPS_FRONT="XX.XX.XX.XX" # other front/bastion vps
 export PUBLIC_PORT_LIST="80 443 25 110 143" # add other if needed
 ```
-## Resources
+## DNS Blocky
 
 * [UFW docker rules](https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#tldr=)
+```
+sudo apt-get install bind9-dnsutils
+sudo wget -O /usr/local/bin/ufw-docker \
+  https://github.com/chaifeng/ufw-docker/raw/master/ufw-docker
+sudo chmod +x /usr/local/bin/ufw-docker
+sudo ufw enable
+sudo ufw-docker install
+sudo systemctl restart ufw
+sudo bash ufw_dns_updater.sh
+```
+
+
 
 ## Main service config file
 
