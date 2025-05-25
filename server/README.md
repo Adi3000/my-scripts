@@ -51,3 +51,10 @@ export PUBLIC_PORT_LIST="80 443 25 110 143" # add other if needed
 ## Resources
 
 * [UFW docker rules](https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#tldr=)
+
+## Main service config file
+
+* /etc/traefik
+* /etc/default/traefik
+* /etc/default/ufw-ipconfig
+* /etc/blocky
