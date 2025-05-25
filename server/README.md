@@ -58,3 +58,25 @@ export PUBLIC_PORT_LIST="80 443 25 110 143" # add other if needed
 * /etc/default/traefik
 * /etc/default/ufw-ipconfig
 * /etc/blocky
+
+## Certificat transfert
+
+### On source 
+
+```
+mkdir -p /etc/ssl/private/certbot-deploy
+ssh-keygen -t ed25519 -f /etc/ssl/private/certbot-deploy/certbot.key
+```
+
+### On target
+```
+sudo mkdir -p /etc/letsencrypt/live
+sudo useradd --shell /bin/sh --no-user-group --home-dir /home/certbot --create-home --system
+sudo -u certbot mkdir /home/certbot/certs
+sudo -u certbot nano ~certbot/.ssh/authorized_keys # then past public key /etc/ssl/private/certbot-deploy/certbot.pub
+```
+`/etc/sudoers.d/certbot`
+```
+certbot ALL=(ALL) NOPASSWD: /usr/bin/mv, /bin/chown
+```
+
