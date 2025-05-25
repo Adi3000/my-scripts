@@ -60,6 +60,7 @@ sudo ufw enable
 sudo ufw-docker install
 sudo systemctl restart ufw
 sudo bash ufw_dns_updater.sh
+sudo reboot
 ```
 
 
