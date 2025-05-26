@@ -1,0 +1,11 @@
+services:
+  nextcloud:
+    image: nextcloud:25.0.13-apache
+    container_name: nextcloud
+    restart: unless-stopped
+    ports:
+      - 11220:80
+    volumes:
+      - /mnt/nanopi/data/nextcloud/owncloud/data:/var/www/html/data
+      - /etc/nextcloud:/var/www/html/config
+      - /mnt/nanopi/data/nextcloud/shared:/media

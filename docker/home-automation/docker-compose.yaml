@@ -1,0 +1,78 @@
+services:
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    restart: unless-stopped
+    volumes:
+      - /home/mosquitto/data:/mosquitto/data
+      - /home/mosquitto/log:/mosquitto/log
+      - /etc/mosquitto:/mosquitto/config
+    ports:
+      - "1883:1883"
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - zigbee
+
+#  nodered:
+#    image: nodered/node-red
+#    container_name: nodered
+#    restart: unless-stopped
+#    ports:
+#      - "1880:1880"
+#    volumes:
+#      - /home/nodered/data:/data:rw
+#    networks:
+#      - zigbee
+
+  maman-zigbee:
+    image: ghcr.io/koenkk/zigbee2mqtt
+    container_name: maman-zigbee
+    volumes:
+      - /home/mosquitto/maman-zigbee:/app/data
+    ports:
+      - "21480:8080"
+    environment:
+      - TZ=Europe/Paris
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - zigbee
+
+  maman-ha:
+    image: homeassistant/home-assistant:stable
+    container_name: maman-ha
+    environment:
+      - TZ=Europe/Paris
+    ports:
+      - 8123:8123
+    volumes:
+      - /etc/homeassistant/maman:/config:rw
+    restart: always
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - zigbee
+
+  domoticz:
+    image: domoticz/domoticz:2023-beta.15563
+    container_name: domoticz
+    ports:
+      - "26366:8080"
+    env_file: "/home/domoticz/.config/domoticz.conf"
+    volumes:
+        - /home/adi/git/my-scripts:/home/adi/git/my-scripts
+        - /home/adi/git/python-broadlink:/home/adi/git/python-broadlink
+        - /home/domoticz/domoticz/userdata:/opt/domoticz/userdata:rw
+        - /home/domoticz/domoticz/data/www:/opt/domoticz/www/templates:rw
+        - /home/domoticz/domoticz/data:/opt/domoticz/data:rw
+    command: [ "/opt/domoticz/domoticz", "-noupdates", "-sslwww", "0", "-dbase", "/opt/domoticz/data/domoticz.db" ]
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - zigbee
+
+networks:
+  zigbee:
+    driver: bridge

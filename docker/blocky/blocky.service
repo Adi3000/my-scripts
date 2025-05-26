@@ -1,7 +1,5 @@
 [Unit]
 Description=blocky
-Requires=traefik.service
-After=traefik.service
 [Service]
 Restart=always
 User=root
