@@ -9,9 +9,17 @@ sudo apt-get install jq yq git ufw sudo openssl
 
 ```bash
 sudo useradd --user-group --create-home -s /bin/bash -G sudo -p `openssl passwd` $user_to_add
+sudo passwd -l debian
+sudo usermod -p '!' debian
 ```
 
 ## Install docker
+
+```
+sudo mkdir -p /home/docker/data
+sudo chmod 750 /home/docker/data
+sudo ln -s /var/lib/docker /home/docker/data 
+```
 
 ### Install procedure
 
