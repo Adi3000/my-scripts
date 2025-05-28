@@ -18,7 +18,8 @@ sudo usermod -p '!' debian
 ```
 sudo mkdir -p /home/docker/data
 sudo chmod 750 /home/docker/data
-sudo ln -s /var/lib/docker /home/docker/data 
+sudo ln -s /var/lib/docker /home/docker/data
+sudo usermod -a -G docker $user_to_add
 ```
 
 ### Install procedure
