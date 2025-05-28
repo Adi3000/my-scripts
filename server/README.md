@@ -85,6 +85,7 @@ sudo reboot
 ### On source 
 
 ```
+sudo apt-get install certbot python3-certbot-apache python3-certbot-dns-ovh
 mkdir -p /etc/ssl/private/certbot-deploy
 ssh-keygen -t ed25519 -f /etc/ssl/private/certbot-deploy/certbot.key
 ```
