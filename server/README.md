@@ -100,6 +100,6 @@ sudo -u certbot nano ~certbot/.ssh/authorized_keys # then past public key /etc/s
 ```
 `/etc/sudoers.d/certbot`
 ```
-certbot ALL=(ALL) NOPASSWD: /usr/bin/mv, /bin/chown
+certbot ALL=(ALL) NOPASSWD: /usr/bin/rm, /usr/bin/mv, /bin/chown
 ```
 
