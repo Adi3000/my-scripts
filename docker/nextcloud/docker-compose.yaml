@@ -9,3 +9,28 @@ services:
       - /mnt/nanopi/data/nextcloud/owncloud/data:/var/www/html/data
       - /etc/nextcloud:/var/www/html/config
       - /mnt/nanopi/data/nextcloud/shared:/media
+      - /home/adi/git/my-scripts/docker/nextcloud/post-installation:/docker-entrypoint-hooks.d/before-starting
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - traefik
+    environment:
+      - VIRTUAL_HOST=nextcloud.adi3000.com
+      - LETSENCRYPT_HOST=nextcloud.adi3000.com
+      - OVERWRITEHOST=nextcloud.adi3000.com
+      - OVERWRITEPROTOCOL=https
+  nextcloud-cron:
+    image: nextcloud:apache
+    container_name: nextcloud_cron
+    restart: always
+    entrypoint: /cron.sh
+    volumes:
+      - /mnt/nanopi/data/nextcloud/owncloud/data:/var/www/html/data
+      - /etc/nextcloud:/var/www/html/config
+      - /mnt/nanopi/data/nextcloud/shared:/media
+
+networks:
+  traefik:
+    driver: bridge
+    name: traefik
+    external: true

@@ -29,6 +29,7 @@ services:
   maman-zigbee:
     image: ghcr.io/koenkk/zigbee2mqtt
     container_name: maman-zigbee
+    restart: unless-stopped
     volumes:
       - /home/mosquitto/maman-zigbee:/app/data
     ports:
@@ -39,25 +40,28 @@ services:
       - "traefik.enable=true"
     networks:
       - zigbee
+      - traefik
 
   maman-ha:
     image: homeassistant/home-assistant:stable
     container_name: maman-ha
+    restart: unless-stopped
     environment:
       - TZ=Europe/Paris
     ports:
       - 8123:8123
     volumes:
       - /etc/homeassistant/maman:/config:rw
-    restart: always
     labels:
       - "traefik.enable=true"
     networks:
       - zigbee
+      - traefik
 
   domoticz:
     image: domoticz/domoticz:2023-beta.15563
     container_name: domoticz
+    restart: unless-stopped
     ports:
       - "26366:8080"
     env_file: "/home/domoticz/.config/domoticz.conf"
@@ -72,7 +76,13 @@ services:
       - "traefik.enable=true"
     networks:
       - zigbee
+      - traefik
 
 networks:
   zigbee:
     driver: bridge
+    name: zigbee
+  traefik:
+    driver: bridge
+    name: traefik
+    external: true

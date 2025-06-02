@@ -3,21 +3,34 @@ services:
   server:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.2.4}
     restart: unless-stopped
+    container_name: authentik
     command: server
-    env_file: /etc/default/authentik/.env
+    env_file: /etc/default/authentik
     ports:
       - "${COMPOSE_PORT_HTTP:-9000}:9000"
       - "${COMPOSE_PORT_HTTPS:-9443}:9443"
+    labels:
+      - "traefik.enable=true"
+    networks:
+    - traefik
   worker:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.2.4}
     restart: unless-stopped
+    container_name: authentik-worker
     command: worker
-    env_file: /etc/default/authentik/.env
+    env_file: /etc/default/authentik
   ldap:
     image: ghcr.io/goauthentik/ldap
     # Optionally specify which networks the container should be
     # might be needed to reach the core authentik server
+    container_name: ldap
     ports:
     - 389:3389
     - 636:6636
-    env_file: /etc/default/authentik/.env
+    env_file: /etc/default/authentik
+
+networks:
+  traefik:
+    driver: bridge
+    name: traefik
+    external: true
