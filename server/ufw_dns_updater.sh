@@ -1,7 +1,7 @@
 #!/bin/bash
 
 file_list=/etc/noip/domain.lst
-docker_ports=(53 9000 1883)
+docker_ports=(53 9000 1883 10050 10051)
 
 for domain in $(cat $file_list); do
 	resolvedip=$(nslookup $domain | awk '/^Address: / { print $2 ; exit }')
