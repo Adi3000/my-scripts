@@ -6,11 +6,11 @@ services:
     restart: unless-stopped
     env_file: /etc/default/zabbix
     ports:
-      - 10050:10050
       - 10051:10051
     networks:
      - zabbix
-
+    depends_on:
+     - postgres
   web:
     image: zabbix/zabbix-web-apache-pgsql:latest
     container_name: zabbix
@@ -23,22 +23,25 @@ services:
     networks:
       - traefik
       - zabbix
-#  agent:
-#    image: zabbix/zabbix-agent2:latest
-#    container_name: zabbix-agent
-#    restart: unless-stopped
-#    ports:
-#      - 10051:10051
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    networks:
-#      - zabbix
+  agent:
+    image: zabbix/zabbix-agent2:latest
+    container_name: zabbix-agent
+    restart: unless-stopped
+    env_file: /etc/default/zabbix
+    ports:
+      - 10050:10050
+    networks:
+      - zabbix
+    depends_on:
+      - zabbix-server
 
   postgres:
     image: postgres:15
     container_name: zabbix-postgres
     restart: unless-stopped
     env_file: /etc/default/zabbix
+    ports:
+      - 45321:5432
     volumes:
       - /home/zabbix/postgres/data:/var/lib/postgresql/data
     networks:
