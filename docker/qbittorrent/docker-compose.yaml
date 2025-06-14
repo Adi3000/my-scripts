@@ -1,0 +1,21 @@
+services:
+  qbittorrent:
+    image: qbittorrentofficial/qbittorrent-nox:latest
+    container_name: qbittorrent-nox
+    restart: unless-stopped
+    ports:
+      - 22641:22641
+      - 23741:23741
+    volumes:
+      - /mnt/nanopi/media:/mnt/nanopi/media
+      - /mnt/nanopi/media/qbittorrent/qBittorrent:/config/qBittorrent
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - traefik
+    env_file: /etc/default/qbittorrent
+
+networks:
+  traefik:
+    name: traefik
+    external: true
