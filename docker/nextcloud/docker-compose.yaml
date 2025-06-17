@@ -9,6 +9,7 @@ services:
       - /mnt/nanopi/data/nextcloud/owncloud/data:/var/www/html/data
       - /etc/nextcloud:/var/www/html/config
       - /mnt/nanopi/data/nextcloud/shared:/media
+      - /mnt/nanopi/media/Downloads:/media/Downloads
       - /home/adi/git/my-scripts/docker/nextcloud/post-installation:/docker-entrypoint-hooks.d/before-starting
     labels:
       - "traefik.enable=true"

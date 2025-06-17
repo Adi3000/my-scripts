@@ -1,0 +1,48 @@
+---
+services:
+  laprisedetete:
+    image: wordpress:apache
+    restart: unless-stopped
+    container_name: laprisedetete
+    volumes:
+      - /etc/wordpress/laprisedetete.fr.php:/var/www/html/wp-config.php
+      - /home/www/laprisedetete.fr/wordpress/wp-content/themes:/var/www/html/wp-content/themes
+      - /home/www/laprisedetete.fr/wordpress/wp-content/uploads:/var/www/html/wp-content/uploads
+      - /home/www/laprisedetete.fr/wordpress/wp-content/plugins:/var/www/html/wp-content/plugins
+    labels:
+      - "traefik.enable=true"
+    networks:
+    - traefik
+
+  lazapette:
+    image: wordpress:apache
+    restart: unless-stopped
+    container_name: lazapette
+    volumes:
+      - /etc/wordpress/lazapette.net.php:/var/www/html/wp-config.php
+      - /home/www/lazapette.net/wordpress/wp-content/themes:/var/www/html/wp-content/themes
+      - /home/www/lazapette.net/wordpress/wp-content/uploads:/var/www/html/wp-content/uploads
+      - /home/www/lazapette.net/wordpress/wp-content/plugins:/var/www/html/wp-content/plugins
+    labels:
+      - "traefik.enable=true"
+    networks:
+    - traefik
+
+  papadevgeek:
+    image: wordpress:apache
+    restart: unless-stopped
+    container_name: papadevgeek
+    volumes:
+      - /etc/wordpress/papadevgeek.fr.php:/var/www/html/wp-config.php
+      - /home/www/papadevgeek.fr/wordpress/wp-content/themes:/var/www/html/wp-content/themes
+      - /home/www/papadevgeek.fr/wordpress/wp-content/uploads:/var/www/html/wp-content/uploads
+      - /home/www/papadevgeek.fr/wordpress/wp-content/plugins:/var/www/html/wp-content/plugins
+    labels:
+      - "traefik.enable=true"
+    networks:
+    - traefik
+
+networks:
+  traefik:
+    name: traefik
+    external: true
