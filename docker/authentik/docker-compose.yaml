@@ -30,7 +30,9 @@ services:
     ports:
     - 389:3389
     - 636:6636
-    env_file: /etc/default/authentik
+    env_file: /etc/default/authentik-ldap
+    networks:
+    - ldap
 
   proxy:
     image: ghcr.io/goauthentik/proxy:${AUTHENTIK_TAG:-2025.6.1}
@@ -46,3 +48,6 @@ networks:
   traefik:
     name: traefik
     external: true
+  ldap:
+    name: ldap
+    driver: bridge
