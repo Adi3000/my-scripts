@@ -9,7 +9,6 @@ services:
       - 10051:10051
     networks:
      - zabbix
-    depends_on:
      - postgres
   web:
     image: zabbix/zabbix-web-apache-pgsql:latest
@@ -23,6 +22,7 @@ services:
     networks:
       - traefik
       - zabbix
+      - postgres
   agent:
     image: zabbix/zabbix-agent2:latest
     container_name: zabbix-agent
@@ -35,23 +35,13 @@ services:
     depends_on:
       - zabbix-server
 
-  postgres:
-    image: postgres:15
-    container_name: zabbix-postgres
-    restart: unless-stopped
-    env_file: /etc/default/zabbix
-    ports:
-      - 45321:5432
-    volumes:
-      - /home/zabbix/postgres/data:/var/lib/postgresql/data
-    networks:
-      - zabbix
-
 networks:
   traefik:
-    driver: bridge
     name: traefik
     external: true
   zabbix:
     driver: bridge
     name: zabbix
+  postgres:
+    name: postgres
+    external: true

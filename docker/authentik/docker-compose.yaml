@@ -15,6 +15,9 @@ services:
       - "traefik.enable=true"
     networks:
     - traefik
+    - postgres
+    - authentik
+
   worker:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.6.1}
     restart: unless-stopped
@@ -23,16 +26,21 @@ services:
       - /etc/ssl/private/aiven:/etc/ssl/private/aiven
     command: worker
     env_file: /etc/default/authentik
-
+    networks:
+    - postgres
+    - authentik
   ldap:
     image: ghcr.io/goauthentik/ldap:${AUTHENTIK_TAG:-2025.6.1}
     container_name: ldap
     ports:
-    - 389:3389
-    - 636:6636
+    - 3389:3389
+    - 6636:6636
     env_file: /etc/default/authentik-ldap
     networks:
     - ldap
+    - authentik
+    depends_on:
+    - server
 
   proxy:
     image: ghcr.io/goauthentik/proxy:${AUTHENTIK_TAG:-2025.6.1}
@@ -42,7 +50,9 @@ services:
     - "traefik.enable=true"
     networks:
     - traefik
-
+    - authentik
+    depends_on:
+    - server
 
 networks:
   traefik:
@@ -51,3 +61,9 @@ networks:
   ldap:
     name: ldap
     driver: bridge
+  authentik:
+    name: authentik
+    driver: bridge
+  postgres:
+    name: postgres
+    external: true

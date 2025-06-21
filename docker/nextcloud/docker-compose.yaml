@@ -16,11 +16,13 @@ services:
     networks:
       - traefik
       - ldap
+      - postgres
     environment:
       - VIRTUAL_HOST=nextcloud.adi3000.com
       - LETSENCRYPT_HOST=nextcloud.adi3000.com
       - OVERWRITEHOST=nextcloud.adi3000.com
       - OVERWRITEPROTOCOL=https
+
   nextcloud-cron:
     image: nextcloud:apache
     container_name: nextcloud_cron
@@ -37,4 +39,7 @@ networks:
     external: true
   ldap:
     name: ldap
+    external: true
+  postgres:
+    name: postgres
     external: true

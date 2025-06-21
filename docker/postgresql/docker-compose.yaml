@@ -1,0 +1,19 @@
+services:
+
+  postgres:
+    image: ghcr.io/immich-app/postgres:17-vectorchord0.4.2-pgvectors0.3.0
+    container_name: postgres
+    restart: unless-stopped
+    env_file: /etc/default/postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - ./init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+      - /home/postgres/data:/var/lib/postgresql/data
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
+    name: postgres
