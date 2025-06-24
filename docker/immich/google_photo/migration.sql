@@ -78,3 +78,21 @@ select * from exif where city is not null;
 
 
 update google_metadata set album = regexp_replace(path, '/.*/([^/]+)/([^/]+)$', '\1'); 
+
+
+insert into albums_assets_assets ("albumsId" , "assetsId" , "createdAt" )
+select distinct a.id, origin."id",  origin."localDateTime"
+from assets origin
+inner join assets google on google."duplicateId" = origin."duplicateId" and origin."originalPath" not like '/mnt/nanopi/data/nextcloud/shared/photos/media/zuliz/Google Photos/%' and google."originalPath" like '/mnt/nanopi/data/nextcloud/shared/photos/media/zuliz/Google Photos/%'
+inner join albums a on a."albumName" =  regexp_replace(google."originalPath", '/.*/([^/]+)/([^/]+)$', '\1')
+
+
+update assets google
+set "duplicateId" = null,
+    "status" = 'trashed',
+    "deletedAt" = now()
+where google."duplicateId" in (select origin."duplicateId" from assets origin where origin."originalPath" not like '/mnt/nanopi/data/nextcloud/shared/photos/media/zuliz/Google Photos/%' )
+and google."originalPath"  like '/mnt/nanopi/data/nextcloud/shared/photos/media/zuliz/Google Photos/%'
+
+
+
