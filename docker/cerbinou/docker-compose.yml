@@ -1,6 +1,7 @@
 version: "3.3"
 services:
   whisper:
+    profiles: [fallback]
     image: onerahmet/openai-whisper-asr-webservice:latest
     container_name: whisper
     environment:
@@ -12,6 +13,7 @@ services:
       - "traefik.enable=true"
 
   openvoice:
+    profiles: [fallback]
     image: adi3000/openvoice-api-python:latest-cpu
     container_name: openvoice
     restart: always
@@ -33,6 +35,7 @@ services:
       - "traefik.enable=true"
 
   llamacpp:
+    profiles: [fallback]
     image: adi3000/llama.cpp:server
     container_name: llamacpp
     restart: always
