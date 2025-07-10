@@ -60,3 +60,8 @@ services:
       - "8321:8080/tcp"
     labels:
       - "traefik.enable=true"
+  telegram:
+      image: zulizzz/cerbinou-telegram:latest
+      container_name: cerbinou-telegram
+      restart: unless-stopped
+      env_file: /etc/default/cerbinou
