@@ -2,26 +2,28 @@ import time
 import sys
 import os
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from jproperties import Properties
-from wakeonlan import send_magic_packet
 from multiprocessing import Pool
-sys.path.append("/home/pi/git/python-host")
-import switchbot_py3
-from switchbot_py3 import Driver
+import importlib.util
+#sys.path.append("/home/pi/git/python-host")
+#import switchbot_py3
+SWITCHBOT_SCRIPT="/home/pi/git/python-host/switchbot_py3.py"
+#spec = importlib.util.spec_from_file_location("module.name", SWITCHBOT_SCRIPT)
+#switchbot_py3 = importlib.util.module_from_spec(spec)
+#sys.modules["module.name"] = switchbot_py3
+#spec.loader.exec_module(switchbot_py3)
+#from switchbot_py3 import Driver
 
 HOST_NAME = "0.0.0.0"
 HOST_PORT = 9966
 #SWITCH_BOT_DEVICE="D7:35:34:35:46:69"
 SWITCH_BOT_DEVICE="F0:4A:DF:AA:72:AA"
 
-PC_SALON_MAC="B4-2E-99-D5-D6-2A"
+PC_SALON_MAC="B4:2E:99:D5:D6:2A"
 IP_WOL_BROADCAST="192.168.0.255"
 PHONE_IPS = [ ("Phone Adi 1", "192.168.0.34"), ("Phone Zuliz 2", "192.168.0.26"), ("Phone Zuliz 1", "192.168.0.27"), ("Phone PC", "192.168.0.21")]
 #PHONE_IPS = [ ("Phone Adi 1", "192.168.0.34"), ("Phone Adi 2", "192.168.0.18"), ("Phone Adi 3", "192.168.0.28"),("Phone PC", "192.168.0.21")]
-SWITCHBOT_SCRIPT="/home/pi/git/python-host/switchbot_py3.py"
 
-configs = Properties()
-
+configs = {}
 
 def _pingPhone(idx):
     name, ip = PHONE_IPS[idx]
@@ -87,7 +89,7 @@ class HttpServer(SimpleHTTPRequestHandler):
         except ValueError:
             self.send_response(404)
             return
-        driver = Driver(device=SWITCH_BOT_DEVICE, bt_interface="hci0", timeout_secs=2)
+        #driver = Driver(device=SWITCH_BOT_DEVICE, bt_interface="hci0", timeout_secs=2)
         i=0
 
         while i < times:
@@ -109,7 +111,7 @@ class HttpServer(SimpleHTTPRequestHandler):
             return
         signal = ""
         try:
-            signal = configs[command].data
+            signal = configs[command]
         except KeyError:
             self.send_response(404)
             return
@@ -118,8 +120,12 @@ class HttpServer(SimpleHTTPRequestHandler):
         return
 
     def wokeonlan(self):
-        send_magic_packet(PC_SALON_MAC,ip_address=IP_WOL_BROADCAST)
-        self.wfile.write(str("woke on lan :"+PC_SALON_MAC).encode())
+        try:
+            wolCommand = os.system("wakeonlan -i "+IP_WOL_BROADCAST+" "+PC_SALON_MAC)
+        except:
+            print("Failed send WOL magick packet for  "+PC_SALON_MAC)
+            self.send_response(500)
+        self.wfile.write(PC_SALON_MAC.encode())
         self.send_response(200)
         return
 
@@ -132,7 +138,11 @@ class HttpServer(SimpleHTTPRequestHandler):
 
 
 with open('/home/pi/git/my-scripts/domoticz/codes.txt', 'rb') as config_file:
-    configs.load(config_file)
+    for rawLine in config_file:
+       line = rawLine.decode("utf-8")
+       if len(line.strip()) > 0 and not line.strip().startswith("#"):
+           (key, value) = line.split("=", 1)
+           configs[key] = value
 
 httpServer = HTTPServer((HOST_NAME, HOST_PORT), HttpServer)
 try:
