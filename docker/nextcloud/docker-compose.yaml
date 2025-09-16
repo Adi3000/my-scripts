@@ -1,38 +1,40 @@
 services:
   nextcloud:
-    image: nextcloud:25.0.13-apache
+    image: nextcloud:stable-apache
     container_name: nextcloud
     restart: unless-stopped
     ports:
       - 11220:80
     volumes:
-      - /mnt/nanopi/data/nextcloud/owncloud/data:/var/www/html/data
       - /etc/nextcloud:/var/www/html/config
+      - /home/adi/git/my-scripts/docker/nextcloud/apache/conf-enabled/nfs-tweak.conf:/etc/apache2/conf-enabled/nfs-tweak.conf
+      - /mnt/nanopi/data/nextcloud/owncloud/data:/var/www/html/data
       - /mnt/nanopi/data/nextcloud/shared:/media
       - /mnt/nanopi/media/Downloads:/media/Downloads
-      - /home/adi/git/my-scripts/docker/nextcloud/post-installation:/docker-entrypoint-hooks.d/before-starting
+      - /home/adi/git/my-scripts/docker/nextcloud/docker-entrypoint-hooks.d:/docker-entrypoint-hooks.d
     labels:
       - "traefik.enable=true"
     networks:
       - traefik
       - ldap
       - postgres
-    environment:
-      - VIRTUAL_HOST=nextcloud.adi3000.com
-      - LETSENCRYPT_HOST=nextcloud.adi3000.com
-      - OVERWRITEHOST=nextcloud.adi3000.com
-      - OVERWRITEPROTOCOL=https
+    env_file: /etc/default/nextcloud
 
   nextcloud-cron:
-    image: nextcloud:apache
-    container_name: nextcloud_cron
+    image: nextcloud:stable-apache
+    container_name: nextcloud-cron
     restart: always
-    entrypoint: /cron.sh
+    command: ["busybox","crond","-f","-L","/dev/stdout"]
     volumes:
-      - /mnt/nanopi/data/nextcloud/owncloud/data:/var/www/html/data
       - /etc/nextcloud:/var/www/html/config
+      - /mnt/nanopi/data/nextcloud/owncloud/data:/var/www/html/data
       - /mnt/nanopi/data/nextcloud/shared:/media
-
+      - /mnt/nanopi/media/Downloads:/media/Downloads
+    env_file: /etc/default/nextcloud
+    environment:
+      - NEXTCLOUD_UPDATE=1
+    networks:
+      - postgres
 networks:
   traefik:
     name: traefik

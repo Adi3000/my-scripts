@@ -23,6 +23,31 @@ services:
     networks:
     - traefik
 
+  jellyfin-server:
+    image: jellyfin/jellyfin
+    container_name: jellyfin-server
+    volumes:
+      - /home/jellyfin/config:/config
+      - /home/jellyfin/cache:/cache
+      - type: bind
+        source: /mnt/nanopi/media/Downloads
+        target: /mnt/nanopi/media/Downloads
+        read_only: true
+    restart: 'unless-stopped'
+    environment:
+    - JELLYFIN_PublishedServerUrl=https://jellyfin-server.adi3000.com
+    networks:
+    - traefik
+
+  jellyfin:
+    container_name: jellyfin
+    image: jellyfin/jellyfin-vue:unstable
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+    - traefik
+
 networks:
   traefik:
     name: traefik
