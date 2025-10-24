@@ -40,7 +40,6 @@ services:
     networks:
       - traefik
       - immich
-      - postgres
 
   immich-ml:
     profiles: [ compute ]
