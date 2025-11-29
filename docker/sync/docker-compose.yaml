@@ -1,0 +1,13 @@
+services:
+  git-sync:
+    image: openweb/git-sync:0.0.1
+    user: "1001:1001"
+    environment:
+      GIT_SYNC_REPO: "https://github.com/Adi3000/my-scripts.git"
+      GIT_SYNC_DEST: "/git"
+      GIT_SYNC_BRANCH: "main"
+      GIT_SYNC_REV: "FETCH_HEAD"
+      GIT_SYNC_WAIT: "10"
+    volumes:
+      - /home/adi/git/my-scripts:/git:z
+    restart: unless-stopped
