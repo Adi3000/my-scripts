@@ -1,7 +1,7 @@
 ---
 services:
   server:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.8.1}
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.10.2}
     restart: unless-stopped
     container_name: authentik
     command: server
@@ -19,7 +19,7 @@ services:
     - authentik
 
   worker:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.8.1}
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.10.2}
     restart: unless-stopped
     container_name: authentik-worker
     volumes:
@@ -30,7 +30,7 @@ services:
     - postgres
     - authentik
   ldap:
-    image: ghcr.io/goauthentik/ldap:${AUTHENTIK_TAG:-2025.8.1}
+    image: ghcr.io/goauthentik/ldap:${AUTHENTIK_TAG:-2025.10.2}
     container_name: ldap
     ports:
     - 3389:3389
@@ -43,7 +43,7 @@ services:
     - server
 
   proxy:
-    image: ghcr.io/goauthentik/proxy:${AUTHENTIK_TAG:-2025.8.1}
+    image: ghcr.io/goauthentik/proxy:${AUTHENTIK_TAG:-2025.10.2}
     container_name: authentik-proxy
     env_file: /etc/default/authentik
     labels:
