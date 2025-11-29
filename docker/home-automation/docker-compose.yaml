@@ -59,7 +59,7 @@ services:
       - traefik
 
   domoticz:
-    image: domoticz/domoticz:2023-beta.15563
+    image: domoticz/domoticz:2025.2
     container_name: domoticz
     restart: unless-stopped
     ports:

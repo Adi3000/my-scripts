@@ -43,8 +43,11 @@ services:
     container_name: jellyfin
     image: jellyfin/jellyfin-vue:unstable
     restart: unless-stopped
+    environment:
+    - DEFAULT_SERVERS=https://jellyfin-server.adi3000.com
+    - DISABLE_SERVER_SELECTION=0
     volumes:
-      - /etc/localtime:/etc/localtime:ro
+    - /etc/localtime:/etc/localtime:ro
     networks:
     - traefik
 
