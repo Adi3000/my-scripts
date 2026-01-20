@@ -31,6 +31,7 @@ services:
     - authentik
   ldap:
     image: ghcr.io/goauthentik/ldap:${AUTHENTIK_TAG:-2025.10.2}
+    restart: unless-stopped
     container_name: ldap
     ports:
     - 3389:3389
@@ -44,6 +45,7 @@ services:
 
   proxy:
     image: ghcr.io/goauthentik/proxy:${AUTHENTIK_TAG:-2025.10.2}
+    restart: unless-stopped
     container_name: authentik-proxy
     env_file: /etc/default/authentik
     labels:
