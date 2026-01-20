@@ -1,25 +1,28 @@
 ---
 services:
-  jolpin:
+  joplin:
     image: joplin/server:latest
-    container_name: jolpin
+    container_name: joplin
     depends_on:
-        - jolpin-transcribe
+        - joplin-transcribe
     ports:
         - "22300:22300"
-    env_file: /etc/default/jolpin
+    env_file: /etc/default/joplin
     networks:
-        - jolpin
+        - joplin
         - postgres
         - traefik
     restart: unless-stopped
-  jolpin-transcribe:
+    volumes:
+    - /etc/joplin:/etc/joplin
+  joplin-transcribe:
+    restart: unless-stopped
     image: joplin/transcribe:latest
     volumes:
-       - /mnt/nanopi/data/jolpin/images:/app/packages/transcribe/images
-    env_file: /etc/default/jolpin-transcribe
+       - /mnt/nanopi/data/joplin/images:/app/packages/transcribe/images
+    env_file: /etc/default/joplin-transcribe
     networks:
-        - jolpin
+        - joplin
         - postgres
 
 networks:
@@ -29,6 +32,8 @@ networks:
   traefik:
     name: traefik
     external: true
-  jolpin:
-    name: jolpin
+  joplin:
+    name: joplin
     driver: bridge
+
+
