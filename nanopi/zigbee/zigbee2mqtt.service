@@ -1,0 +1,6 @@
+[Service]
+WorkingDirectory=/home/pi/git/zigbee2mqtt
+ExecStart=/usr/bin/node index.js
+Restart=always
+Environment=NODE_ENV=production
+User=pi
