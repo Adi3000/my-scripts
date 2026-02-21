@@ -17,6 +17,8 @@ services:
               - gpu
     ports:
       - '2283:2283'
+      - '22881:8081'
+      - '22882:8082'
     volumes:
       - /mnt/nanopi/data/nextcloud/shared/photos/upload:/usr/src/app/upload
       - /mnt/nanopi/data/nextcloud/shared/photos/media:/mnt/nanopi/data/nextcloud/shared/photos/media
@@ -44,7 +46,7 @@ services:
 
   immich-ml:
     profiles: [ compute ]
-    container_name: immich_machine_learning
+    container_name: immich-machine-learning
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-v2}-cuda
     runtime: nvidia
     deploy:
