@@ -1,0 +1,18 @@
+services:
+  moonlight:
+    image: mrcreativ3001/moonlight-web-stream:latest
+    container_name: moonlight
+    environment:
+    - WEBRTC_NAT_1TO1_HOST=xx.xx.xx.xx
+    networks:
+    - traefik
+    volumes:
+    - /etc/letsencrypt/live/:/etc/certs/live/:ro
+    - /etc/moonlight/config.json:/etc/moonlight/config.json:ro
+    - /etc/moonlight/data.json:/moonlight-web/server/data.json:ro
+    restart: unless-stopped
+
+networks:
+  traefik:
+    name: traefik
+    external: true
