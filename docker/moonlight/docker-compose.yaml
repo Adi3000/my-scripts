@@ -9,7 +9,7 @@ services:
     volumes:
     - /etc/letsencrypt/live/:/etc/certs/live/:ro
     - /etc/moonlight/config.json:/etc/moonlight/config.json:ro
-    - /etc/moonlight/data.json:/moonlight-web/server/data.json:ro
+    - /etc/moonlight/data.json:/moonlight-web/server/data.json:rw
     restart: unless-stopped
 
 networks:
