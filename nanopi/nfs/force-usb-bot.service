@@ -1,0 +1,14 @@
+[Unit]
+Description=Force USB NVMe to use usb-storage (disable UAS)
+DefaultDependencies=no
+After=systemd-udev-trigger.service
+Before=local-fs-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/git/my-scripts/nanopi/nfs/force-usb-bot.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=local-fs-pre.target
+

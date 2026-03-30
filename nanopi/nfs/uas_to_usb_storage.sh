@@ -1,6 +1,6 @@
 #!/bin/sh
 
-dev_list=4-1.4.4 4-1.1.3
+dev_list="4-1.4.4 4-1.1.3"
 usb_vendor="0bda:9210:u" #RTL9210
 
 # Apply quirk (disable UAS for $usb_vendor)
