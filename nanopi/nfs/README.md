@@ -29,3 +29,12 @@ data  -fstype=nfs4,rw  my-nfs-server.example.com:/mnt/nanopi/data
 ```
 sudo systemctl restart autofs
 ```
+
+To handle high throughput :
+
+```
+# Add service to force `usb-storage` instead of `uas` driver
+sudo ln -s /home/pi/git/my-scripts/nanopi/nfs/force-usb-bot.service /etc/systemd/system/force-usb-bot.service
+sudo systemctl enable force-usb-bot.service
+sudo systemctl daemon-reload
+```
