@@ -2,6 +2,7 @@
 
 gamepad_mac="$1"
 test -n "$gamepad_mac" || (zenity --error --text="Aucune manette sélectionnée" && exit 1) 
+bluetoothctl remove "$gamepad_mac" || echo "No $gamepad_mac device found, continue..."
 
 ( sleep 2 &&\
     echo "agent on" &&\
