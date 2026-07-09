@@ -4,6 +4,7 @@ services:
       context: notifier
       dockerfile: Dockerfile
     env_file: /etc/default/ffxivv
+    container_name: ffxivv-notifier
     networks:
     - traefik
     - postgres
