@@ -1,3 +1,4 @@
 **/.idea
 **/__pycache__
 cerbinou/tts
+server/runpod/chatterbot-tts/data

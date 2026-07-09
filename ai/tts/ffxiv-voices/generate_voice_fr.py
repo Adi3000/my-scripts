@@ -9,13 +9,17 @@ from pathlib import Path
 from chatterbox.tts import ChatterboxTTS
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
+import requests
+
 
 
 
 MODEL_REPO = "Thomcles/Chatterbox-TTS-French"
 CHECKPOINT_FILENAME = "t3_cfg.safetensors"
-OUTPUT_DIR=os.environ.get('GENERATED_VOICES_DIR', "/data/voices")
-PGHOST=os.environ.get('GENERATED_VOICES_DIR', "/data/voices")
+OUTPUT_DIR=os.environ.get('GENERATED_VOICES_DIR', "/data/voices_overrides")
+NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL', "https://cloud.example.com" )
+NEXTCLOUD_SHARE_TOKEN = os.environ.get('NEXTCLOUD_SHARE_TOKEN')
+NEXTCLOUD_SHARE_PASSWORD = os.environ.get('NEXTCLOUD_SHARE_PASSWORD', '123xxx654')
 
 def get_device() -> str:
     return "cuda" if torch.cuda.is_available() else "cpu"
@@ -44,6 +48,23 @@ def synthesize_speech(model: ChatterboxTTS, text: str, audio_prompt_path:str, **
 def save_audio(waveform: torch.Tensor, path: str, sample_rate: int):
     sf.write(path, waveform.squeeze().cpu().numpy(), sample_rate)
 
+def upload_audio(ogg_file: str):
+    
+    remote_path = (
+        f"{NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}/"
+        f"voices_overrides/{ogg_file}"
+    )
+    print(f"\n========> Will upload {ogg_file} to : {remote_path})\n")
+
+    with open(ogg_file, "rb") as f:
+        response = requests.put(
+            remote_path,
+            auth=(NEXTCLOUD_SHARE_TOKEN, NEXTCLOUD_SHARE_PASSWORD),
+            data=f,
+            headers={
+                "Content-Type": "audio/ogg",
+            },
+        )
 
 if __name__ == "__main__":
 
@@ -62,7 +83,8 @@ if __name__ == "__main__":
             print(f"\n========> line {current_line}/{nb_lines} : {line[0]} ({CSV_LINES})\n")
             wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
             save_audio(wav, wav_output, model.sr)
-            subprocess.call(["ffmpeg", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
+            subprocess.call(["ffmpeg", "-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
+            upload_audio(f"{OUTPUT_DIR}/{line[0]}.ogg")
             subprocess.call(["rm", "-f", wav_output])
             subprocess.call(["psql", "-U", "postgres", "-c", f"update ffxivv_data fd set last_generation_date = current_timestamp where fd.id = '{line[0]}';"])
 

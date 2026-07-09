@@ -1,0 +1,1058 @@
+<html lang="fr" class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths"><head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Mes démarches en ligne">
+        <meta name="keywords" content="démarches mairie citoyen famille">
+        <meta name="author" content="Arpege">
+        <meta name="format-detection" content="telephone=no">
+        <meta property="og:title">
+        <meta property="og:image">
+        <meta property="og:description">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+        <link rel="canonical" href="#">
+        <link rel="icon" type="image/png" href="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/favicon.png">
+        <title>Gestion de la relation citoyen de ... - File d'attente</title>
+            <link href="/pouceetpuce/espace-citoyens/Content/themes/_courant/bootstrap.css?v=225.1.5.1" rel="stylesheet" type="text/css">
+            <link href="/pouceetpuce/espace-citoyens/Content/themes/_courant/bootstrap-responsive.css?v=225.1.5.1" rel="stylesheet" type="text/css">
+        <link href="/pouceetpuce/espace-citoyens/Content/themes/_courant/StylesContenusHTML.css?v=225.1.5.1" rel="stylesheet" type="text/css">
+        <link href="/pouceetpuce/espace-citoyens/Content/themes/_courant/StylesContenusHTML.css" rel="stylesheet" type="text/css">
+        <!-- css pour l'impressiojn -->
+        <link media="print" href="/pouceetpuce/espace-citoyens/Content/themes/print.css" rel="stylesheet" type="text/css">
+    <script src="/pouceetpuce/espace-citoyens/bundles/scriptsjquery?v=vbkxytIll0A0eb3f604JAXhkBA9PDlpdr-u-JUt20OM1"></script>
+<script src="/pouceetpuce/espace-citoyens/bundles/scriptsarpege?v=IpaOfCuiehy7sNm0vsCm9AX7nbw-t6h39wiKdxYQoAQ1"></script>
+    <script>
+    var idPayFrance = 267;
+    var deptSite = '59';
+    var villeSite = 'Villeneuve-d\u0027Ascq';
+    var paysSite = 'FRANCE';
+    var UrlWebService = 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens//WebServices/';
+    var modeAffichage = "desktop";
+    var monOrigine = 'EC';
+    var listeVille = new Array('[]');
+
+    if(listeVille.length == 1){
+        listeVille[0] = listeVille[0].replace("[","");
+        listeVille[0] = listeVille[0].replace("]","");
+        listeVille[0] = listeVille[0].replace(/"/gi,"");
+        listeVille = listeVille[0].split(",");
+    }
+
+    var avertissementSession = "True";
+    var avertissementAvantTimeOutSession = "False";
+    var estAuthentifier = "True";
+    var estWebView = "False";
+    var estWebViewErreurDejaAppelee = false;
+    const affichage1Colonne = "False" === "True";
+
+    if ($.validator != undefined) {
+        $.validator.addMethod("atleastonechecked", function (value, element, param) {
+            var params = param["dependentproperty"].split(',');
+            //for(var i = 0; i < params["dependentproperty"].length; i++){
+            //    var thisCheck = $('#' + params["dependentproperty"][i]);
+            //    if(thisCheck.attr('checked')){
+            //        return true;
+            //    }
+            //}
+            $.each(params, function(index, value){
+                if($('#' + value).attr('checked')){
+                    return true;
+                }
+            });
+            return false;
+        });
+
+        //$.validator.addMethod("atleastonechecked", function (value, element, params) {
+
+        //});
+        $.validator.unobtrusive.adapters.add('requiredif', ['dependentproperty', 'targetvalue'], function (options) {
+            options.rules['requiredif'] = {
+                dependentproperty: options.params['dependentproperty'],
+                targetvalue: options.params['targetvalue']
+            };
+            options.messages['requiredif'] = options.message;
+        });
+
+        $.validator.addMethod('requiredif',
+            function (value, element, parameters) {
+                var id = '#' + parameters['dependentproperty'];
+
+                // get the target value (as a string,
+                // as that's what actual value will be)
+                var targetvalue = parameters['targetvalue'];
+                targetvalue =
+                    (targetvalue == null ? '' : targetvalue).toString();
+
+                // get the actual value of the target control
+                // note - this probably needs to cater for more
+                // control types, e.g. radios
+                var control = $(id);
+                var controltype = control.attr('type');
+                var actualvalue =
+                    controltype == 'checkbox' ?
+                    (control.attr('checked') == 'checked' ? 'true' : 'false') :
+                    control.val();
+
+                // if the condition is true, reuse the existing
+                // required field validator functionality
+                if (targetvalue === actualvalue)
+                    return $.validator.methods.required.call(
+                        this, value, element, parameters);
+
+                return true;
+            }
+        );
+
+        const validatorAuMoinsUn = [
+            'requiredaumoinsun',
+            'requiredaumoinsunasso',
+            'requiredaumoinsunassocorrespondant',
+            'requiredaumoinsunassopresident',
+            'requiredaumoinsunassosiege',
+            'requiredaumoinsunassotresorier',
+            'requiredaumoinsunent'
+        ];
+
+        validatorAuMoinsUn.forEach(function(m) {
+            $.validator.addMethod(m,
+                function (value, element, parameters) {
+                    if (value != null && value != "") {
+                        return true;
+                    }
+
+                    var selector = '[data-val-' + m + ']:not([data-val-' + m + '=""])';
+
+                    var inputs = $(selector).toArray();
+
+                    for (var i in inputs) {
+                        var id = inputs[i];
+                        if (typeof id == "object") {
+                            var val = $(id).val();
+                            if (val != null && val != "") {
+                                return true;
+                            }
+                        }
+                    }
+
+                    return false;
+                }
+            );
+
+            $.validator.unobtrusive.adapters.add(m, [], function (options) {
+                options.rules[m] = {
+
+                };
+                options.messages[m] = options.message;
+            });
+        })
+
+        $.validator.unobtrusive.adapters.add('luhn', [], function (options) {
+            options.rules['luhn'] = {
+
+            };
+            options.messages['luhn'] = options.message;
+        });
+
+        $.validator.addMethod('luhn', function(value, element, parameters) {
+            if (value == null || value.indexOf("356 000 000") == 0)
+                return true;
+
+            var chiffres = value.split(" ").join("").split("").reverse();
+            var somme = chiffres.map(function(c, i) { return i % 2 == 0 ? Number(c) : Number(c) * 2 > 9 ? (Number(c) * 2) - 9 : Number(c) * 2}).reduce(function(a, b) { return a + b }, 0);
+
+            return somme % 10 == 0;
+        });
+
+        //MatthieuB 261021-1 Jira GRC2-4920 : modification du messsage d'erreur pour la gestion ddu plurièle     >>> Début
+        let pluriel = '';
+        let maxDecimales = '';
+        jQuery.validator.addMethod('decimale', function (value, element, parameters) {
+            maxDecimales = $(element).attr('decimale');
+
+            if (maxDecimales == null) { return true; }
+
+            maxDecimales = Number(maxDecimales);
+
+            if (maxDecimales > 1) {
+                pluriel = 's';
+            }
+
+            //MatthieuB 100522-1 Jira GRC2-5345 Changement de la regex pour autoriser les entiers lorsque le nombre de décimale est paramétré à 0
+            return value.match("^[0-9]*([,.][0-9]{0," + maxDecimales + "})?$");
+        }, function() { return 'Vous ne pouvez mettre que ' + maxDecimales + ' chiffre' + pluriel + ' après la virgule.'; });
+
+        //jQuery.validator.messages.decimale = 'Vous ne pouvez mettre que {0} chiffres après la virgule.';
+
+        //MatthieuB 261021-1 Jira GRC2-4920      <<< Fin
+
+        $.validator.unobtrusive.adapters.add('requiredif', ['dependentproperty', 'targetvalue'], function (options) {
+            options.rules['requiredif'] = {
+                dependentproperty: options.params['dependentproperty'],
+                targetvalue: options.params['targetvalue']
+            };
+            options.messages['requiredif'] = options.message;
+        });
+
+        $.validator.addMethod('regexmediacontact',
+            function (value, element, parameters) {
+                var id = '#' + parameters['dependentproperty'];
+
+                var actualvalue = $(id + ' :selected').val();
+
+                var regex;
+                if(actualvalue == 'Courriel')
+                {
+                    regex = new RegExp(/^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&amp;&#39;*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&amp;&#39;*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/);
+                    return regex.test(value);
+                }
+                else if(actualvalue == 'Sms' || actualvalue == 'Audio')
+                {
+                    regex = new RegExp(/^\+[0-9]{1,15}$|^(0[1-9])[0-9]{8}$/);
+                    return regex.test(value);
+                }
+                else return true;
+            }
+        );
+
+        $.validator.unobtrusive.adapters.add(
+            'regexmediacontact',
+            ['dependentproperty'],
+            function (options) {
+                options.rules['regexmediacontact'] = {
+                    dependentproperty: options.params['dependentproperty']
+                };
+                options.messages['regexmediacontact'] = options.message;
+            });
+
+
+        jQuery.validator.unobtrusive.adapters.add(
+            'atleastonerequired', ['properties'], function (options) {
+                options.rules['atleastonerequired'] = options.params;
+                options.messages['atleastonerequired'] = options.message;
+            }
+        );
+
+        jQuery.validator.addMethod('atleastonerequired', function (value, element, params) {
+            var properties = params.properties.split(',');
+            var values = $.map(properties, function (property, index) {
+                var val = $('#' + property).val();
+                return val != '' ? val : null;
+            });
+            return values.length > 0;
+        }, '');
+    }
+
+    $(document).ready(function() {
+       
+        var champs = $('input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"]')
+        FocusWithTab(champs)
+
+        moment.locale('fr');
+        moment.tz.setDefault('Europe/Paris');
+        // moment.tz.setDefault('Europe/Paris');
+
+        $('form').submit(function () {
+            var self = this;
+            if ($(self).valid()) {
+                jsAjaxEnCours();
+            }
+        });
+
+        $('form').bind("invalid-form.validate", function () {
+            jsAjaxFin();
+        });
+
+        $('#btnDesactiverSU').click(function () {
+            //suppression de la barre superUsager
+            $('#superUserBar').slideUp();
+
+            //maj de la variable de session correspondante
+            jsAjaxEnCours();
+            $.ajax({
+                type: "POST",
+                url: '/pouceetpuce/espace-citoyens/Home/DesactiverSuperUsager/',
+                dataType: 'json',
+                success: function () {
+                    jsAjaxFin();
+                    window.location.reload(true);
+                },
+                error: function (xhr, errorType, exception) {
+                    var errorMessage = exception || xhr.statusText;
+                    jAlert("Erreur: " + errorMessage);
+                    jsAjaxFin();
+                }
+            });
+        });
+
+        $('#btnActiverSU').click(function () {
+            //suppression de la barre superUsager
+            $('#superUserBar').slideUp();
+
+            //maj de la variable de session correspondante
+            jsAjaxEnCours();
+            $.ajax({
+                type: "POST",
+                url: '/pouceetpuce/espace-citoyens/Home/ActiverSuperUsager/',
+                dataType: 'json',
+                success: function () {
+                    jsAjaxFin();
+                    window.location.reload(true);
+                },
+                error: function (xhr, errorType, exception) {
+                    var errorMessage = exception || xhr.statusText;
+                    jAlert("Erreur: " + errorMessage);
+                    jsAjaxFin();
+                }
+            });
+        });
+
+        $('#btnAccepterCookies').click(function () {
+            //suppression de la barre d'acceptation des cookies
+            $('#accepterCookies').slideUp();
+
+            //maj de la variable de session correspondante
+            jsAjaxEnCours();
+            $.ajax({
+                type: "POST",
+                url: '/pouceetpuce/espace-citoyens/Home/AccepterCookies/',
+                dataType: 'json',
+                success: function () {
+                    jsAjaxFin();
+                },
+                error: function (xhr, errorType, exception) {
+                    var errorMessage = exception || xhr.statusText;
+                    if (errorMessage == "Gone") {
+                        errorMessage = "La requête ne peut pas aboutir car la session n'éxiste plus, veuillez actualiser la page."
+                    }
+                    jAlert("Erreur: " + errorMessage);
+                    jsAjaxFin();
+                }
+            });
+
+        });
+
+        $('a.supprimerDemande').click(function (e) {
+            e.stopPropagation();
+            let ticket = $(this).data("ticket");
+            let uriAnnuler = $(this)[0].href + "/" + ticket;
+            //MatthieuB 300123-1 Jira GRC2-5205 On récupère le bouton cliqué pour pouvoir le refocus en cas de non comfirmation
+            var elementDeclencheur = $(this);
+            jConfirmWithButtons("Etes-vous sûr de vouloir annuler cette demande ?", 'Annulation de la demande', '&nbsp;Oui&nbsp;', '&nbsp;Non&nbsp;', function (r) {
+                if (r) {
+                    jsAjaxEnCours();
+                    $.ajax({
+                        url: uriAnnuler,
+                        type: 'POST',
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            jsAjaxFin();
+                            jAlert($.parseJSON(jqXHR.responseText).errormessage, "Erreur");
+                        },
+                        success: function (data) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    //MatthieuB 300123-1 Jira GRC2-5205 On met le focus sur le bouton qui a permit d'ouvrir la modal si on clique sur non
+                    elementDeclencheur.focus();
+                }
+            });
+            return false;
+        });
+
+        $('a.desactiverModification').click(function (e) {
+            e.stopPropagation();
+            jAlert("Erreur: L'enregistrement de cette démarche n'est plus possible");
+            return false;
+        });
+
+        $('input[data-val-length-max],textarea[data-val-length-max]').each(function (index) {
+            $(this).attr('maxlength', $(this).attr('data-val-length-max'));
+        });
+
+        $(document).ajaxError(function(e, xhr, settings){
+            if (xhr.status == 410) {
+                window.location.href = '/pouceetpuce/espace-citoyens/';
+            }
+        });
+
+        $.alerts.defaultTitle = "Attention";
+
+        $.fn.selectpicker.defaults = $.extend($.fn.selectpicker.defaults, {
+            noneSelectedText : 'Aucune sélection',
+            noneResultsText : 'Aucun résultat',
+            countSelectedText: '{0} sur {1}',
+            maxOptionsText: ['Limite atteinte ({n} {var} max)', 'Limite de groupe atteinte ({n} {var} max)', ['items','item']]
+        });
+
+        $('.alerte, .infos').css({ opacity: 0 });
+        $('.alerte, .infos').delay(500).fadeTo(1900, 1);
+
+        // gestion des symboles * des champs requis (pour les inclure dans les labels LABELFOR)
+        $('em.requis').each(function () {
+            if ($(this).parent()[0].tagName != "label") {
+                // le parent n'est pas un label, si le label est au même niveau, on déplace le em
+                if ($(this).siblings('label').length == 1) {
+                    //alert($(this).html());
+                    $(this).siblings('label').prepend("&nbsp;");
+                    $(this).siblings('label').prepend($(this));
+                }
+            }
+        });
+
+        //$('.dalle > div').dotdotdot({
+        //    callback: function( isTruncated, orgContent ) {
+        //        if (isTruncated && orgContent.length > 1 && orgContent[2].nodeValue != null) {
+        //            $(this).attr('title', orgContent[2].nodeValue.replace(/\n/g, '').trim());
+        //        }
+        //    }
+        //});
+
+        // Remplacement de $(window).outerWidth par window.innerWidth
+        // car dans le cas d'un zoom, les valeurs sont différentes et cela peut poser problème.
+
+        // Exemple zoom à 250% (pb rencontré lors de l'affichage des actualités)
+        // Avec $(window).outerWidth() = 761px
+        // le code va prendre le css qui se trouve dans le média (min-width: 768px) and (max-width: 999px) qui correspond à une tablette
+        // et ici modeAffichage va être 'phone'
+        //
+        // Avec window.innerWidth = 768px
+        // le media et modeAffichage correspondent
+
+        if (window.innerWidth >= 1000) {
+            modeAffichage = "desktop";
+        }
+
+        if (window.innerWidth >= 768 && window.innerWidth <= 999) {
+            modeAffichage = "tablet";
+        }
+
+        if (window.innerWidth < 768) {
+            modeAffichage = "phone";
+        }
+
+        $(window).resize(function () {
+            if (modeAffichage != "desktop" && window.innerWidth >= 1000) {
+                modeAffichage = "desktop";
+                changeModeAffichage();
+                $('#menuhorizontal .horizontal').show();
+            }
+
+            if (modeAffichage != "tablet" && window.innerWidth >= 768 && window.innerWidth <= 999) {
+                modeAffichage = "tablet";
+                changeModeAffichage();
+                $('#menuhorizontal .horizontal').show();
+            }
+
+            if (modeAffichage != "phone" && window.innerWidth < 768) {
+                modeAffichage = "phone";
+                changeModeAffichage();
+                $('#menuhorizontal .horizontal').hide();
+            }
+        });
+
+        $('input').change(function(e) {
+            if ((typeof this == "object") && $(this).data("val-requiredaumoinsun") != null) {
+                var inputs = $('input').toArray();
+                for (var i in inputs) {
+                    var id = inputs[i];
+                    if ((typeof id == "object") && $(id).data("val-requiredaumoinsun") != null) {
+                        $('form').validate().element(id);
+                    }
+                }
+            }
+        });
+
+        
+
+        // MANTIS 0027167 : le champ numéro ne doit pas accepter les caractères alphabétiques
+        // comportement ok dans le profil internaute et nok dans demande de changement d'adresse
+        // => déplacement de _Layout.cshtml
+        $('.numeroAdresse').each(function () {
+            var $input = $(this);
+            $input.bind('input propertychange', function () {
+                if ($(this).val().length > 8)
+                    $(this).val($(this).val().substring(0, 8));
+                var filteredText = $(this).val().replace(/[^\d]/gi, '');
+                $(this).val(filteredText);
+            });
+        });
+
+
+
+        if (avertissementSession == "True") {
+            $("#btnActualiserSession").click(function() {
+                $.ajax({
+                    type: "GET",
+                    url: '/pouceetpuce/espace-citoyens/Home/ActualiserSession/',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.ok) {
+                            initialiserTimeoutSession();
+                        }
+
+                        if (data.isFAEjected) {
+                            jAlert("Vous semblez avoir été déconnecté depuis un autre périphérique ou navigateur, vous allez être déconnecté.", "Information",
+                                () => { window.location.href = data.urlLogOff; });
+                        }
+                    }
+                });
+            });
+
+            $('#expirationSession').dialog({
+                autoOpen: false,
+                resizable: false,
+                width:widthDialog,
+                modal: true,
+                closeOnEscape: false,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+                    $('.dialog-overlay').show().animate({ opacity: 0.25 }, 250);
+                    $('#expirationSession').css('width', $('#expirationSession').parent().css("width"));
+                    $('#expirationSession').css('min-height', 0);
+                },
+                close: function(event, ui) {
+                    $('.dialog-overlay').animate({ opacity: 0 }, 300, function () {
+                        $('.dialog-overlay').hide();
+                    });
+                }
+            });
+
+            if ($('.ui-dialog-titlebar-close').length) {
+                $('.ui-dialog-titlebar-close').append('<span class="sr-only">Fermer</span>');
+            }
+
+            initialiserTimeoutSession();
+
+            setInterval(affichertempsSessionRestant, 1000);
+        }
+
+        //MatthieuB 250122-1 Jira GRC2-5205 Focus sur la modale d'acceptation des cookies si elle est présente sur la page.
+        if ($('#accepterCookies').length) {
+            $('#accepterCookies').focus();
+        }
+    });
+
+    function changeModeAffichage()
+    {
+        //alert(modeAffichage);
+        $(document).trigger('changementModeAffichage', modeAffichage);
+    }
+
+    var widthDialog = function()
+    {
+        if($(window).width() < 960)
+        {
+            return $(window).width() / 1.5
+        }
+        else{
+            return 960 / 1.5
+        };
+    }
+    var TIME_SESSION_TIMEOUT;
+    // jonathanbl22072019 : mantis#0044187 -> Informer l'usager que la session va expirer
+    function initialiserTimeoutSession() {
+        $.ajax({
+            type: "GET",
+            url: '/pouceetpuce/espace-citoyens/Home/RecupererDureeSession/',
+            dataType: 'json',
+            success: function (data) {
+                initialiserDialogTimeoutSession(data);
+            }
+        });
+     }
+
+    var dataInfosSession;
+    var sessionTimeoutProcessID;
+    function initialiserDialogTimeoutSession(data) {
+        TIME_SESSION_TIMEOUT = data.timeout;
+        const TIME_INFORMER_SESSION_TIMEOUT = data.avant_timeout;
+        dateTimeFinSession = new Date();
+        dateTimeFinSession.setMilliseconds((TIME_SESSION_TIMEOUT * 60) * 1000);
+        $('#expirationSession').dialog("close");
+        sessionTimeoutProcessID = setTimeout(function () {
+            if (avertissementAvantTimeOutSession == "True") {
+                $('#expirationSession').dialog("open");
+            }
+        }, (TIME_SESSION_TIMEOUT - TIME_INFORMER_SESSION_TIMEOUT) * 60 * 1000);
+
+        dataInfosSession = data;
+    }
+
+    function resetTimeoutSession() {
+        if (sessionTimeoutProcessID) {
+            clearTimeout(sessionTimeoutProcessID);
+        }
+            
+        if (dataInfosSession) {
+            initialiserDialogTimeoutSession(dataInfosSession);
+        }      
+     }
+
+    var dateTimeFinSession = null;
+    function affichertempsSessionRestant() {
+        if (dateTimeFinSession == null)
+            return;
+
+        var restant = dateTimeFinSession.getTime() - Date.now().getTime();
+
+        if (restant <= 0) {
+            if (estWebView == "True") {
+                if (estWebViewErreurDejaAppelee == false) {
+                    estWebViewErreurDejaAppelee = true;
+                    window.location.href = '/pouceetpuce/espace-citoyens/WebView/Erreur?codeErreur=EXPIRATION_SESSION&amp;libErreur=La%20session%20a%20expir%C3%A9.';
+                }
+            }
+            else {
+                if (estAuthentifier == "True") {
+                    $("#expirationSession").html(
+                        '<h2 id="popup_title_session" class="ui-draggable-handle" style="cursor: move;">Votre session a expiré</h2>' +
+                        '<div style="width: 100%; display: flex">' +
+                        '<div style="margin: 18px 10px">' +
+                        '<img style="max-width: none !important;" src="/pouceetpuce/espace-citoyens/Content/Images/info.gif" alt="">' +
+                        '</div>' +
+                        '<div style ="padding: 18px 8px">' +
+                        '<p>Votre session a expiré suite à une inactivité de ' + TIME_SESSION_TIMEOUT + ' minutes</p>' +
+                        '<p>Nous sommes désolés, les informations que vous avez saisies sont perdues. Veuillez vous reconnecter.</p>' +
+                        '</div>' +
+                        '</div>' +
+
+                        '<div>' +
+                        '<span>' +
+                        '<button class="btn btn-style3" style="margin: 0 10px 10px 10px" id="btnaccueilSession">' +
+                        '<span>Retourner à la page d\'accueil</span>' +
+                        '</button>' +
+                        '</span>' +
+                        '</div>'
+                    );
+                } else {
+                    $("#expirationSession").html(
+                        '<h2 id="popup_title_session" class="ui-draggable-handle" style="cursor: move;">Votre session a expiré</h2>' +
+                        '<div style="width: 100%; display: flex">' +
+                        '<div style="margin: 18px 10px">' +
+                        '<img style="max-width: none !important;" src="/pouceetpuce/espace-citoyens/Content/Images/info.gif" alt="">' +
+                        '</div>' +
+                        '<div style ="padding: 18px 8px">' +
+                        '<p>Votre session a expiré suite à une inactivité de ' + TIME_SESSION_TIMEOUT + ' minutes</p>' +
+                        '<p>Nous sommes désolés, les informations que vous avez saisies sont perdues. Merci de bien vouloir recommencer.</p>' +
+                        '</div>' +
+                        '</div>' +
+
+                        '<div>' +
+                        '<span>' +
+                        '<button class="btn btn-style3" style="margin: 0 10px 10px 10px" id="btnaccueilSession">' +
+                        '<span>Recommencer</span>' +
+                        '</button>' +
+                        '</span>' +
+                        '</div>'
+                    );
+                }
+
+                if (avertissementAvantTimeOutSession == "False") {
+                    $('#expirationSession').dialog("open");
+                }
+            }
+
+            $("#btnaccueilSession").click(function() {
+                document.location.reload();
+            });
+        } else {
+
+            if (avertissementAvantTimeOutSession == "False") {
+                return;
+            }
+
+            var iMin = Math.floor(restant / 1000 / 60);
+            var iSec = Math.floor((restant / 1000) % 60);
+            if (iMin > 0 && iSec > 0) {
+                $("#sessionTimeout").text(iMin + " minute" + (iMin > 1 ? "s" : "") + " et " + iSec + " seconde" + (iSec > 1 ? "s" : ""));
+            } else if (iMin > 0) {
+                $("#sessionTimeout").text(iMin + " minute" + (iMin > 1 ? "s" : ""));
+            } else {
+                $("#sessionTimeout").text(iSec + " seconde" + (iSec > 1 ? "s" : ""));
+            }
+        }
+
+    }
+</script>
+</head>
+<body>
+    <div class="skip-to-main">
+        <a href="#divBody" id="go-to-main">Aller au contenu principal</a>
+    </div>
+            
+        <div id="divBandeau" class="">
+            
+<header class="headerBandeau">
+    <div id="divBandeau2" class="bandeau">
+                            <a id="lnkBandeau" href="/pouceetpuce/espace-citoyens/" class="hidden-phone">
+                                <img id="imgBandeau" src="https://www.espace-citoyens.net/pouceetpuce/espace-citoyens//App_Ressources/Images/Bannierepoucepuce_5450788.jpg" alt="Retour à l'accueil">
+                            </a>
+                <a id="lnkBandeauMobile" href="/pouceetpuce/espace-citoyens/" class="visible-phone hidden-print">
+                    <img id="imgBandeauMobile" src="https://www.espace-citoyens.net/pouceetpuce/espace-citoyens//App_Ressources/Images/Banniere-767x150-newpix_2116784_5519055.jpg" alt="Bandeau mobile">
+                </a>
+
+    </div>
+</header>
+
+        </div>
+        <div class="containerprincipal">
+            <button type="button" class="btnAvertissement" style="display: none;" title="Afficher les avertissements">
+    <img src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/cloche.svg" alt="Avertissement">
+    <span class="smartiesAvertissement"></span>
+</button>
+
+<script>
+    $(document).ready(function () {
+
+        if (!window.GererAvertissements) {
+            if (window.codeAvertissementLocalisation)
+                getAvertissementsConst(codeAvertissementLocalisation.const);
+        }
+    });
+
+    $('.btn_avertissement').click(function () {
+
+        var notices_data = $(window).data("pnotify").filter(function (val, i, arr) {
+            return arr.indexOf(val) == i;
+        });
+
+        notices_data.forEach(function (notice) {
+            if (notice.timer === null) {
+                notice.pnotify_display();
+            } else {
+                notice.opts.remove = true;
+                notice.pnotify_queue_remove();
+                notice.pnotify_remove();
+            }
+        });
+
+        return false;
+    });
+
+    $('.btnAvertissement').click(function () {
+
+        var notices_data = $(window).data("pnotify").filter(function (val, i, arr) {
+            return arr.indexOf(val) == i;
+        });
+
+        notices_data.forEach(function (notice) {
+            if (notice.timer === null) {
+                notice.pnotify_display();
+            } else {
+                notice.opts.remove = true;
+                notice.pnotify_queue_remove();
+                notice.pnotify_remove();
+            }
+        });
+
+        return false;
+    });
+
+    var siteBaseUrl = '/pouceetpuce/espace-citoyens/';
+
+    var ongletsCreationCitoyen;
+    var ongletsCreationAsso;
+    var ongletsCreationEntr;
+
+    var localisationConst = "";
+    var etape = "";
+    var isAsso = false;
+    var codeQdt = "";
+    var jsonAvts;
+
+    var listerOngletsVisiblesCompteUsager = function ()
+    {
+        var urlAvertissement = siteBaseUrl + "/Avertissements/ObtenirOngletsCreationModificationCompte";
+
+        jsAjaxEnCours();
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: urlAvertissement,
+            dataType: 'json',
+            success: function (jsonData) {
+                jsAjaxFin();
+                ongletsCreationCitoyen = jsonData.ListePageAfficheesCitoyen;
+                ongletsCreationAsso = jsonData.ListePageAfficheesAsso;
+                ongletsCreationEntr = jsonData.ListePageAfficheesEntr;
+            },
+            error: function (xhr, errorType, exception) {
+                jsAjaxFin();
+                var errorMessage = exception || xhr.statusText
+                jAlert("Erreur : " + errorMessage);
+            }
+        });
+    }
+
+
+    function prepareAvtsCreaCit(index) {
+        if (typeof index !== 'undefined') {
+            etape = ongletsCreationCitoyen[index];
+            isAsso = false;
+        }
+    }
+    function prepareAvtsCreaAsso(index) {
+        if (typeof index !== 'undefined') {
+            etape = ongletsCreationAsso[index];
+            isAsso = true;
+        }
+    }
+    function prepareAvtsCreaEntr(index) {
+        if (typeof index !== 'undefined') {
+            etape = ongletsCreationEntr[index];
+            isAsso = false;
+        }
+    }
+
+    if (
+            (
+                ('False' === 'True') ||
+                ('False' === 'True')
+            )
+        ) {
+        listerOngletsVisiblesCompteUsager();
+    }
+
+    //récupération de l'index de l'onglet en cours pour le suivi d'une demande
+    function prepareAvtsSuiviDemande(linkName, code) {
+        if (typeof linkName !== 'undefined') {
+            codeQdt = code;
+        }
+        if (typeof linkName !== 'undefined') {
+            switch (linkName) {
+                case "lnkRecapDemandeur":
+                    etape = "Demandeur"; break;
+                case "lnkRecapDemande":
+                    etape = "Demande"; break;
+                case "lnkHistorique":
+                    etape = "Historique"; break;
+                case "lnkEchange":
+                    etape = "Echanges"; break;
+                case "lnkPieceJointe":
+                    etape = "Pièces jointes"; break;
+                case "lnkRendezVous":
+                    etape = "Rendez-vous"; break;
+                default: "Historique";
+            }
+        }
+    }
+    //récupération de l'index de l'onglet en cours pour une nouvelle demande
+    function prepareAvtsDemande(index, code) {
+        if (typeof code !== 'undefined') {
+            codeQdt = code;
+        }
+        switch (index) {
+            case numOngletDemarche:
+                etape = "La démarche";break;
+            case numOngletDemandeur:
+                etape = "Mes informations"; break;
+            case numOngletRendezVous:
+                etape = "Mon rendez-vous"; break;
+            case numOngletDemande:
+                etape = "Ma demande"; break;
+            case numOngletValidation:
+                etape = "Le récapitulatif"; break;
+            case numOngletChoixPersonnes:
+                etape = "Choix des personnes"; break;
+            case numOngletChoixInscriptions:
+                etape = "Choix des inscriptions"; break;
+        }
+    }
+
+    var hasAvertissements = null;
+    var siteBaseUrl = '/pouceetpuce/espace-citoyens/';
+
+    // appel ajax ramenant du serveur les avertissements en cours
+    function getAvertissementsConst(constParam) {
+        var hasAvertissementsGlobal = false;
+        if (hasAvertissements == null) {
+            hasAvertissements = true;
+        }
+        if (hasAvertissements && hasAvertissementsGlobal) {
+            localisationConst = constParam;
+            $.ajax({
+                type: "GET",
+                url: '/pouceetpuce/espace-citoyens/Avertissements/GetAvertissementsConst',
+                dataType: 'json',
+                data: { localisationConst: localisationConst, etape: etape, codeQdt: codeQdt, isAsso: isAsso },
+                success: function (avertissements) {
+                    jsonAvts = $.parseJSON(avertissements);
+                    if (jsonAvts !== null) {
+                        Object.keys(jsonAvts).forEach(function (avt) {
+                            var ele = document.querySelector('[id^=div_avt_' + avt + ']');
+                            if (!ele) {
+                                var div = document.createElement("li");
+                                div.id = "div_avt_" + avt;
+                                div.innerHTML = "<h3>" + jsonAvts[avt].titre + "</h3>" + jsonAvts[avt].corps;
+                                document.getElementById('listeAvertissements').appendChild(div);
+                            }
+                        });
+                    }
+                    getAvtsCallBack();
+                },
+                error: function (xhr, errorType, exception) {
+                    var errorMessage = exception || xhr.statusText;
+                    console.error(errorMessage);
+                }
+            });
+        } else {
+            $('#titreListeAvertissements').remove();
+            $('#listeAvertissements').remove();
+        }
+    }
+
+    // Callback de l'appel ajax ramenant du serveur les avertissements en cours
+    // Gestion de l'affichage (librairie pnotify + css)
+    function getAvtsCallBack() {
+        if (jsonAvts != undefined) {
+            jsonAvts.map(function (jsonAvt) {
+                $.pnotify({
+                    title: jsonAvt.titre.toString(),
+                    text: jsonAvt.corps.toString(),
+                    idAvt: jsonAvt.idAvt.toString(),
+                    isAlreadyRead: jsonAvt.isAlreadyRead,
+                    class:'tsertsetset',
+                    history: false,
+                    reference: {
+                        marker: true
+                    }
+                });
+
+                if (jsonAvt.titre.toString() === "" || jsonAvt.corps.toString() === "") {
+                    $('.titre-avertissement').css('border-bottom', 'none');
+                }
+            });
+            $('.smarties_avertissement').text(jsonAvts.length);
+            $('.btn_avertissement').show();
+            $('.smartiesAvertissement').text(jsonAvts.length);
+            $('.btnAvertissement').show();
+        }
+        else {
+            $('.btn_avertissement').hide();
+            $('.btnAvertissement').hide();
+            $('#titreListeAvertissements').remove();
+            $('#listeAvertissements').remove();
+        }
+    }
+
+</script>
+
+<label class="sr-only" id="titreListeAvertissements">Liste des avertissements</label>
+<ul class="sr-only" id="listeAvertissements" aria-labelledby="titreListeAvertissements"></ul>
+            <div class="row-fluid">
+            </div>
+            <div class="container-fluid">
+
+                <!--menu horizontal-->
+                                <main id="divBody" class="row">
+                    
+
+<script type="text/javascript" src="/pouceetpuce/espace-citoyens/Scripts/FileAttente/FileAttenteVM.js"></script>
+
+<div data-bind="if: accesOK() === false" class="divFileAttenteInfos" id="divFileAttenteInfos">
+    <h2>Bienvenue dans la file d'attente</h2>
+    <p>
+        En raison d'une forte demande, vous êtes actuellement en file d'attente.<br>
+        Lorsque ce sera votre tour, vous disposerez de <b data-bind="text: tpsSessionMax() + ' minutes '">20 minutes </b> pour réaliser votre démarche.
+    </p>
+    <div class="animated-progress">
+        <span style="width: 47.1429%;"></span>
+    </div>
+    <p>
+        <b>Votre position dans la file d'attente : <span data-bind="text: position">37</span></b><br>
+            <b>Votre temps d’attente est estimé à <span data-bind="text: tpsAttenteEstime">moins de 5 minutes</span></b>
+    </p>
+    <p>
+        Dernière réactualisation à <span data-bind="text: lastUpdateTime">08:34:22</span>
+    </p>
+
+    <div class="popup-infosWarning">
+        <span>
+            Pour conserver votre place dans la file d'attente : veillez à ne pas quitter cette page, à ne pas la rafraîchir, et à ne pas réaliser une démarche similaire dans un autre navigateur/onglet.
+        </span>
+    </div>
+
+</div>
+
+<div data-bind="if: accesOK() === true" class="divFileAttenteInfos" id="divFileAttenteInfosAccesOK"></div>
+
+    <div><a class="btn btn-styleAnnuler" href="/pouceetpuce/espace-citoyens/CompteCitoyen" id="lnkSortirFileAttente">Sortir de la file d'attente</a></div>
+
+
+
+<script>
+    function dataVM()
+    {
+        this.urlAcces;
+        this.urlFonctionnel;
+        this.tempoInterrogation;
+        this.typAcces;
+        this.tpsAttenteEstime;
+        this.position;
+        this.tpsSessionMax;
+        this.formParams;
+    }
+
+    let data = new dataVM();
+
+    data.urlAcces = "/pouceetpuce/espace-citoyens/FileAttenteReservations/Acceder";
+    data.urlFonctionnel = "https://www.espace-citoyens.net/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservation/4/1768381/33/4283";
+    data.tempoInterrogation = 60;
+    data.typAcces =  "ACCES_ATTENTE";
+    data.position = 70;
+    data.tpsAttenteEstime = "calcul en cours";
+    data.tpsSessionMax = 20;
+
+
+
+    ko.applyBindings(new FileAttenteVM(data));
+
+    document.getElementById("lnkSortirFileAttente").addEventListener("click", event => {
+        event.preventDefault();
+        jConfirmWithButtons("Etes-vous sûr de vouloir sortir de la file d'attente et abandonner votre place ?", "Sortir de la file d'attente", '&nbsp;Sortir&nbsp;', '&nbsp;Rester&nbsp;', r => {
+            if (r) {
+                window.location = event.target.href;
+            } else {
+                event.target.focus();
+            }
+        })
+    });
+</script>
+
+                </main>
+            </div>
+                    <div style="min-height: 8px"></div>
+        </div>
+        <div class="dialog-overlay">
+        </div>
+        <div id="appelEnCoursFond">
+        </div>
+        <div id="appelEnCours">
+            <span role="alert" aria-live="assertive" aria-busy="true" aria-label="Chargement en cours">Merci de patienter...</span>
+            <img src="/pouceetpuce/espace-citoyens/Content/themes/_courant/Images/0.png" width="150" height="150" role="presentation" alt="Chargement en cours...">
+
+        </div>
+     
+
+
+<div id="qtip-rcontainer"></div><div style="display: none;" tabindex="-1" role="dialog" class="ui-dialog ui-corner-all ui-widget ui-widget-content ui-front ui-draggable" aria-describedby="expirationSession" aria-labelledby="ui-id-1"><div class="ui-dialog-titlebar ui-corner-all ui-widget-header ui-helper-clearfix ui-draggable-handle"><span id="ui-id-1" class="ui-dialog-title">&nbsp;</span><button type="button" class="ui-dialog-titlebar-close"><span class="sr-only">Fermer</span></button></div><div id="expirationSession" class="dialog-demandes-form ui-draggable ui-dialog-content ui-widget-content" style="">
+                <h2 id="popup_title_session" class="ui-draggable-handle" style="cursor: move;">La session va expirer</h2>
+                <div style="width: 100%; display: flex">
+                    <div style="margin: 18px 10px">
+                        <img style="max-width: none !important;" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/alerte.png" alt="">
+                    </div>
+                    <div style="padding: 18px 8px">
+                        <p>Votre session se termine dans <span id="sessionTimeout" style="font-weight: bold"></span></p>
+                        <p>Si votre session expire, vous risquez de perdre ce que vous n'avez pas validé. Vous pouvez cliquer sur le bouton pour la prolonger.</p>
+                    </div>
+                </div>
+                <div>
+                    <span>
+                        <button class="btn btn-style3" style="margin: 0 18px 18px 0" id="btnActualiserSession" title="Prolonger la session" alt="Prolonger la session">
+                            <span>Prolonger ma session</span>
+                        </button>
+                    </span>
+                </div>
+            </div></div></body></html>

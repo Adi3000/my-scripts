@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     postgresql-client \
     build-essential \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Miniconda
@@ -42,6 +43,6 @@ WORKDIR /workspace
 
 ENV CONDA_DEFAULT_ENV=py314
 RUN pip3 install "torch==2.11.0" "torchaudio==2.11.0" --index-url https://download.pytorch.org/whl/cu129 &&\
-    pip3 install chatterbox-tts
+    pip3 install chatterbox-tts peft
 
 CMD ["/bin/bash"]

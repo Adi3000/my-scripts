@@ -1,0 +1,3175 @@
+<html lang="fr" class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths"><head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Mes démarches en ligne">
+        <meta name="keywords" content="démarches mairie citoyen famille">
+        <meta name="author" content="Arpege">
+        <meta name="format-detection" content="telephone=no">
+        <meta property="og:title">
+        <meta property="og:image">
+        <meta property="og:description">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+        <link rel="canonical" href="#">
+        <link rel="icon" type="image/png" href="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/favicon.png">
+        <title>Gestion de la relation citoyen de ... - Mon espace citoyen</title>
+            <link href="/pouceetpuce/espace-citoyens/Content/themes/_courant/bootstrap.css?v=225.1.5.1" rel="stylesheet" type="text/css">
+            <link href="/pouceetpuce/espace-citoyens/Content/themes/_courant/bootstrap-responsive.css?v=225.1.5.1" rel="stylesheet" type="text/css">
+        <link href="/pouceetpuce/espace-citoyens/Content/themes/_courant/StylesContenusHTML.css?v=225.1.5.1" rel="stylesheet" type="text/css">
+        <link href="/pouceetpuce/espace-citoyens/Content/themes/_courant/StylesContenusHTML.css" rel="stylesheet" type="text/css">
+        <!-- css pour l'impressiojn -->
+        <link media="print" href="/pouceetpuce/espace-citoyens/Content/themes/print.css" rel="stylesheet" type="text/css">
+    <script src="/pouceetpuce/espace-citoyens/bundles/scriptsjquery?v=vbkxytIll0A0eb3f604JAXhkBA9PDlpdr-u-JUt20OM1"></script>
+<script src="/pouceetpuce/espace-citoyens/bundles/scriptsarpege?v=IpaOfCuiehy7sNm0vsCm9AX7nbw-t6h39wiKdxYQoAQ1"></script>
+    <script>
+    var idPayFrance = 267;
+    var deptSite = '59';
+    var villeSite = 'Villeneuve-d\u0027Ascq';
+    var paysSite = 'FRANCE';
+    var UrlWebService = 'https://www.espace-citoyens.net/pouceetpuce/espace-citoyens//WebServices/';
+    var modeAffichage = "desktop";
+    var monOrigine = 'EC';
+    var listeVille = new Array('[]');
+
+    if(listeVille.length == 1){
+        listeVille[0] = listeVille[0].replace("[","");
+        listeVille[0] = listeVille[0].replace("]","");
+        listeVille[0] = listeVille[0].replace(/"/gi,"");
+        listeVille = listeVille[0].split(",");
+    }
+
+    var avertissementSession = "True";
+    var avertissementAvantTimeOutSession = "True";
+    var estAuthentifier = "True";
+    var estWebView = "False";
+    var estWebViewErreurDejaAppelee = false;
+    const affichage1Colonne = "False" === "True";
+
+    if ($.validator != undefined) {
+        $.validator.addMethod("atleastonechecked", function (value, element, param) {
+            var params = param["dependentproperty"].split(',');
+            //for(var i = 0; i < params["dependentproperty"].length; i++){
+            //    var thisCheck = $('#' + params["dependentproperty"][i]);
+            //    if(thisCheck.attr('checked')){
+            //        return true;
+            //    }
+            //}
+            $.each(params, function(index, value){
+                if($('#' + value).attr('checked')){
+                    return true;
+                }
+            });
+            return false;
+        });
+
+        //$.validator.addMethod("atleastonechecked", function (value, element, params) {
+
+        //});
+        $.validator.unobtrusive.adapters.add('requiredif', ['dependentproperty', 'targetvalue'], function (options) {
+            options.rules['requiredif'] = {
+                dependentproperty: options.params['dependentproperty'],
+                targetvalue: options.params['targetvalue']
+            };
+            options.messages['requiredif'] = options.message;
+        });
+
+        $.validator.addMethod('requiredif',
+            function (value, element, parameters) {
+                var id = '#' + parameters['dependentproperty'];
+
+                // get the target value (as a string,
+                // as that's what actual value will be)
+                var targetvalue = parameters['targetvalue'];
+                targetvalue =
+                    (targetvalue == null ? '' : targetvalue).toString();
+
+                // get the actual value of the target control
+                // note - this probably needs to cater for more
+                // control types, e.g. radios
+                var control = $(id);
+                var controltype = control.attr('type');
+                var actualvalue =
+                    controltype == 'checkbox' ?
+                    (control.attr('checked') == 'checked' ? 'true' : 'false') :
+                    control.val();
+
+                // if the condition is true, reuse the existing
+                // required field validator functionality
+                if (targetvalue === actualvalue)
+                    return $.validator.methods.required.call(
+                        this, value, element, parameters);
+
+                return true;
+            }
+        );
+
+        const validatorAuMoinsUn = [
+            'requiredaumoinsun',
+            'requiredaumoinsunasso',
+            'requiredaumoinsunassocorrespondant',
+            'requiredaumoinsunassopresident',
+            'requiredaumoinsunassosiege',
+            'requiredaumoinsunassotresorier',
+            'requiredaumoinsunent'
+        ];
+
+        validatorAuMoinsUn.forEach(function(m) {
+            $.validator.addMethod(m,
+                function (value, element, parameters) {
+                    if (value != null && value != "") {
+                        return true;
+                    }
+
+                    var selector = '[data-val-' + m + ']:not([data-val-' + m + '=""])';
+
+                    var inputs = $(selector).toArray();
+
+                    for (var i in inputs) {
+                        var id = inputs[i];
+                        if (typeof id == "object") {
+                            var val = $(id).val();
+                            if (val != null && val != "") {
+                                return true;
+                            }
+                        }
+                    }
+
+                    return false;
+                }
+            );
+
+            $.validator.unobtrusive.adapters.add(m, [], function (options) {
+                options.rules[m] = {
+
+                };
+                options.messages[m] = options.message;
+            });
+        })
+
+        $.validator.unobtrusive.adapters.add('luhn', [], function (options) {
+            options.rules['luhn'] = {
+
+            };
+            options.messages['luhn'] = options.message;
+        });
+
+        $.validator.addMethod('luhn', function(value, element, parameters) {
+            if (value == null || value.indexOf("356 000 000") == 0)
+                return true;
+
+            var chiffres = value.split(" ").join("").split("").reverse();
+            var somme = chiffres.map(function(c, i) { return i % 2 == 0 ? Number(c) : Number(c) * 2 > 9 ? (Number(c) * 2) - 9 : Number(c) * 2}).reduce(function(a, b) { return a + b }, 0);
+
+            return somme % 10 == 0;
+        });
+
+        //MatthieuB 261021-1 Jira GRC2-4920 : modification du messsage d'erreur pour la gestion ddu plurièle     >>> Début
+        let pluriel = '';
+        let maxDecimales = '';
+        jQuery.validator.addMethod('decimale', function (value, element, parameters) {
+            maxDecimales = $(element).attr('decimale');
+
+            if (maxDecimales == null) { return true; }
+
+            maxDecimales = Number(maxDecimales);
+
+            if (maxDecimales > 1) {
+                pluriel = 's';
+            }
+
+            //MatthieuB 100522-1 Jira GRC2-5345 Changement de la regex pour autoriser les entiers lorsque le nombre de décimale est paramétré à 0
+            return value.match("^[0-9]*([,.][0-9]{0," + maxDecimales + "})?$");
+        }, function() { return 'Vous ne pouvez mettre que ' + maxDecimales + ' chiffre' + pluriel + ' après la virgule.'; });
+
+        //jQuery.validator.messages.decimale = 'Vous ne pouvez mettre que {0} chiffres après la virgule.';
+
+        //MatthieuB 261021-1 Jira GRC2-4920      <<< Fin
+
+        $.validator.unobtrusive.adapters.add('requiredif', ['dependentproperty', 'targetvalue'], function (options) {
+            options.rules['requiredif'] = {
+                dependentproperty: options.params['dependentproperty'],
+                targetvalue: options.params['targetvalue']
+            };
+            options.messages['requiredif'] = options.message;
+        });
+
+        $.validator.addMethod('regexmediacontact',
+            function (value, element, parameters) {
+                var id = '#' + parameters['dependentproperty'];
+
+                var actualvalue = $(id + ' :selected').val();
+
+                var regex;
+                if(actualvalue == 'Courriel')
+                {
+                    regex = new RegExp(/^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&amp;&#39;*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&amp;&#39;*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/);
+                    return regex.test(value);
+                }
+                else if(actualvalue == 'Sms' || actualvalue == 'Audio')
+                {
+                    regex = new RegExp(/^\+[0-9]{1,15}$|^(0[1-9])[0-9]{8}$/);
+                    return regex.test(value);
+                }
+                else return true;
+            }
+        );
+
+        $.validator.unobtrusive.adapters.add(
+            'regexmediacontact',
+            ['dependentproperty'],
+            function (options) {
+                options.rules['regexmediacontact'] = {
+                    dependentproperty: options.params['dependentproperty']
+                };
+                options.messages['regexmediacontact'] = options.message;
+            });
+
+
+        jQuery.validator.unobtrusive.adapters.add(
+            'atleastonerequired', ['properties'], function (options) {
+                options.rules['atleastonerequired'] = options.params;
+                options.messages['atleastonerequired'] = options.message;
+            }
+        );
+
+        jQuery.validator.addMethod('atleastonerequired', function (value, element, params) {
+            var properties = params.properties.split(',');
+            var values = $.map(properties, function (property, index) {
+                var val = $('#' + property).val();
+                return val != '' ? val : null;
+            });
+            return values.length > 0;
+        }, '');
+    }
+
+    $(document).ready(function() {
+       
+        var champs = $('input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"]')
+        FocusWithTab(champs)
+
+        moment.locale('fr');
+        moment.tz.setDefault('Europe/Paris');
+        // moment.tz.setDefault('Europe/Paris');
+
+        $('form').submit(function () {
+            var self = this;
+            if ($(self).valid()) {
+                jsAjaxEnCours();
+            }
+        });
+
+        $('form').bind("invalid-form.validate", function () {
+            jsAjaxFin();
+        });
+
+        $('#btnDesactiverSU').click(function () {
+            //suppression de la barre superUsager
+            $('#superUserBar').slideUp();
+
+            //maj de la variable de session correspondante
+            jsAjaxEnCours();
+            $.ajax({
+                type: "POST",
+                url: '/pouceetpuce/espace-citoyens/Home/DesactiverSuperUsager/',
+                dataType: 'json',
+                success: function () {
+                    jsAjaxFin();
+                    window.location.reload(true);
+                },
+                error: function (xhr, errorType, exception) {
+                    var errorMessage = exception || xhr.statusText;
+                    jAlert("Erreur: " + errorMessage);
+                    jsAjaxFin();
+                }
+            });
+        });
+
+        $('#btnActiverSU').click(function () {
+            //suppression de la barre superUsager
+            $('#superUserBar').slideUp();
+
+            //maj de la variable de session correspondante
+            jsAjaxEnCours();
+            $.ajax({
+                type: "POST",
+                url: '/pouceetpuce/espace-citoyens/Home/ActiverSuperUsager/',
+                dataType: 'json',
+                success: function () {
+                    jsAjaxFin();
+                    window.location.reload(true);
+                },
+                error: function (xhr, errorType, exception) {
+                    var errorMessage = exception || xhr.statusText;
+                    jAlert("Erreur: " + errorMessage);
+                    jsAjaxFin();
+                }
+            });
+        });
+
+        $('#btnAccepterCookies').click(function () {
+            //suppression de la barre d'acceptation des cookies
+            $('#accepterCookies').slideUp();
+
+            //maj de la variable de session correspondante
+            jsAjaxEnCours();
+            $.ajax({
+                type: "POST",
+                url: '/pouceetpuce/espace-citoyens/Home/AccepterCookies/',
+                dataType: 'json',
+                success: function () {
+                    jsAjaxFin();
+                },
+                error: function (xhr, errorType, exception) {
+                    var errorMessage = exception || xhr.statusText;
+                    if (errorMessage == "Gone") {
+                        errorMessage = "La requête ne peut pas aboutir car la session n'éxiste plus, veuillez actualiser la page."
+                    }
+                    jAlert("Erreur: " + errorMessage);
+                    jsAjaxFin();
+                }
+            });
+
+        });
+
+        $('a.supprimerDemande').click(function (e) {
+            e.stopPropagation();
+            let ticket = $(this).data("ticket");
+            let uriAnnuler = $(this)[0].href + "/" + ticket;
+            //MatthieuB 300123-1 Jira GRC2-5205 On récupère le bouton cliqué pour pouvoir le refocus en cas de non comfirmation
+            var elementDeclencheur = $(this);
+            jConfirmWithButtons("Etes-vous sûr de vouloir annuler cette demande ?", 'Annulation de la demande', '&nbsp;Oui&nbsp;', '&nbsp;Non&nbsp;', function (r) {
+                if (r) {
+                    jsAjaxEnCours();
+                    $.ajax({
+                        url: uriAnnuler,
+                        type: 'POST',
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            jsAjaxFin();
+                            jAlert($.parseJSON(jqXHR.responseText).errormessage, "Erreur");
+                        },
+                        success: function (data) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    //MatthieuB 300123-1 Jira GRC2-5205 On met le focus sur le bouton qui a permit d'ouvrir la modal si on clique sur non
+                    elementDeclencheur.focus();
+                }
+            });
+            return false;
+        });
+
+        $('a.desactiverModification').click(function (e) {
+            e.stopPropagation();
+            jAlert("Erreur: L'enregistrement de cette démarche n'est plus possible");
+            return false;
+        });
+
+        $('input[data-val-length-max],textarea[data-val-length-max]').each(function (index) {
+            $(this).attr('maxlength', $(this).attr('data-val-length-max'));
+        });
+
+        $(document).ajaxError(function(e, xhr, settings){
+            if (xhr.status == 410) {
+                window.location.href = '/pouceetpuce/espace-citoyens/';
+            }
+        });
+
+        $.alerts.defaultTitle = "Attention";
+
+        $.fn.selectpicker.defaults = $.extend($.fn.selectpicker.defaults, {
+            noneSelectedText : 'Aucune sélection',
+            noneResultsText : 'Aucun résultat',
+            countSelectedText: '{0} sur {1}',
+            maxOptionsText: ['Limite atteinte ({n} {var} max)', 'Limite de groupe atteinte ({n} {var} max)', ['items','item']]
+        });
+
+        $('.alerte, .infos').css({ opacity: 0 });
+        $('.alerte, .infos').delay(500).fadeTo(1900, 1);
+
+        // gestion des symboles * des champs requis (pour les inclure dans les labels LABELFOR)
+        $('em.requis').each(function () {
+            if ($(this).parent()[0].tagName != "label") {
+                // le parent n'est pas un label, si le label est au même niveau, on déplace le em
+                if ($(this).siblings('label').length == 1) {
+                    //alert($(this).html());
+                    $(this).siblings('label').prepend("&nbsp;");
+                    $(this).siblings('label').prepend($(this));
+                }
+            }
+        });
+
+        //$('.dalle > div').dotdotdot({
+        //    callback: function( isTruncated, orgContent ) {
+        //        if (isTruncated && orgContent.length > 1 && orgContent[2].nodeValue != null) {
+        //            $(this).attr('title', orgContent[2].nodeValue.replace(/\n/g, '').trim());
+        //        }
+        //    }
+        //});
+
+        // Remplacement de $(window).outerWidth par window.innerWidth
+        // car dans le cas d'un zoom, les valeurs sont différentes et cela peut poser problème.
+
+        // Exemple zoom à 250% (pb rencontré lors de l'affichage des actualités)
+        // Avec $(window).outerWidth() = 761px
+        // le code va prendre le css qui se trouve dans le média (min-width: 768px) and (max-width: 999px) qui correspond à une tablette
+        // et ici modeAffichage va être 'phone'
+        //
+        // Avec window.innerWidth = 768px
+        // le media et modeAffichage correspondent
+
+        if (window.innerWidth >= 1000) {
+            modeAffichage = "desktop";
+        }
+
+        if (window.innerWidth >= 768 && window.innerWidth <= 999) {
+            modeAffichage = "tablet";
+        }
+
+        if (window.innerWidth < 768) {
+            modeAffichage = "phone";
+        }
+
+        $(window).resize(function () {
+            if (modeAffichage != "desktop" && window.innerWidth >= 1000) {
+                modeAffichage = "desktop";
+                changeModeAffichage();
+                $('#menuhorizontal .horizontal').show();
+            }
+
+            if (modeAffichage != "tablet" && window.innerWidth >= 768 && window.innerWidth <= 999) {
+                modeAffichage = "tablet";
+                changeModeAffichage();
+                $('#menuhorizontal .horizontal').show();
+            }
+
+            if (modeAffichage != "phone" && window.innerWidth < 768) {
+                modeAffichage = "phone";
+                changeModeAffichage();
+                $('#menuhorizontal .horizontal').hide();
+            }
+        });
+
+        $('input').change(function(e) {
+            if ((typeof this == "object") && $(this).data("val-requiredaumoinsun") != null) {
+                var inputs = $('input').toArray();
+                for (var i in inputs) {
+                    var id = inputs[i];
+                    if ((typeof id == "object") && $(id).data("val-requiredaumoinsun") != null) {
+                        $('form').validate().element(id);
+                    }
+                }
+            }
+        });
+
+        
+
+        // MANTIS 0027167 : le champ numéro ne doit pas accepter les caractères alphabétiques
+        // comportement ok dans le profil internaute et nok dans demande de changement d'adresse
+        // => déplacement de _Layout.cshtml
+        $('.numeroAdresse').each(function () {
+            var $input = $(this);
+            $input.bind('input propertychange', function () {
+                if ($(this).val().length > 8)
+                    $(this).val($(this).val().substring(0, 8));
+                var filteredText = $(this).val().replace(/[^\d]/gi, '');
+                $(this).val(filteredText);
+            });
+        });
+
+
+
+        if (avertissementSession == "True") {
+            $("#btnActualiserSession").click(function() {
+                $.ajax({
+                    type: "GET",
+                    url: '/pouceetpuce/espace-citoyens/Home/ActualiserSession/',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.ok) {
+                            initialiserTimeoutSession();
+                        }
+
+                        if (data.isFAEjected) {
+                            jAlert("Vous semblez avoir été déconnecté depuis un autre périphérique ou navigateur, vous allez être déconnecté.", "Information",
+                                () => { window.location.href = data.urlLogOff; });
+                        }
+                    }
+                });
+            });
+
+            $('#expirationSession').dialog({
+                autoOpen: false,
+                resizable: false,
+                width:widthDialog,
+                modal: true,
+                closeOnEscape: false,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+                    $('.dialog-overlay').show().animate({ opacity: 0.25 }, 250);
+                    $('#expirationSession').css('width', $('#expirationSession').parent().css("width"));
+                    $('#expirationSession').css('min-height', 0);
+                },
+                close: function(event, ui) {
+                    $('.dialog-overlay').animate({ opacity: 0 }, 300, function () {
+                        $('.dialog-overlay').hide();
+                    });
+                }
+            });
+
+            if ($('.ui-dialog-titlebar-close').length) {
+                $('.ui-dialog-titlebar-close').append('<span class="sr-only">Fermer</span>');
+            }
+
+            initialiserTimeoutSession();
+
+            setInterval(affichertempsSessionRestant, 1000);
+        }
+
+        //MatthieuB 250122-1 Jira GRC2-5205 Focus sur la modale d'acceptation des cookies si elle est présente sur la page.
+        if ($('#accepterCookies').length) {
+            $('#accepterCookies').focus();
+        }
+    });
+
+    function changeModeAffichage()
+    {
+        //alert(modeAffichage);
+        $(document).trigger('changementModeAffichage', modeAffichage);
+    }
+
+    var widthDialog = function()
+    {
+        if($(window).width() < 960)
+        {
+            return $(window).width() / 1.5
+        }
+        else{
+            return 960 / 1.5
+        };
+    }
+    var TIME_SESSION_TIMEOUT;
+    // jonathanbl22072019 : mantis#0044187 -> Informer l'usager que la session va expirer
+    function initialiserTimeoutSession() {
+        $.ajax({
+            type: "GET",
+            url: '/pouceetpuce/espace-citoyens/Home/RecupererDureeSession/',
+            dataType: 'json',
+            success: function (data) {
+                initialiserDialogTimeoutSession(data);
+            }
+        });
+     }
+
+    var dataInfosSession;
+    var sessionTimeoutProcessID;
+    function initialiserDialogTimeoutSession(data) {
+        TIME_SESSION_TIMEOUT = data.timeout;
+        const TIME_INFORMER_SESSION_TIMEOUT = data.avant_timeout;
+        dateTimeFinSession = new Date();
+        dateTimeFinSession.setMilliseconds((TIME_SESSION_TIMEOUT * 60) * 1000);
+        $('#expirationSession').dialog("close");
+        sessionTimeoutProcessID = setTimeout(function () {
+            if (avertissementAvantTimeOutSession == "True") {
+                $('#expirationSession').dialog("open");
+            }
+        }, (TIME_SESSION_TIMEOUT - TIME_INFORMER_SESSION_TIMEOUT) * 60 * 1000);
+
+        dataInfosSession = data;
+    }
+
+    function resetTimeoutSession() {
+        if (sessionTimeoutProcessID) {
+            clearTimeout(sessionTimeoutProcessID);
+        }
+            
+        if (dataInfosSession) {
+            initialiserDialogTimeoutSession(dataInfosSession);
+        }      
+     }
+
+    var dateTimeFinSession = null;
+    function affichertempsSessionRestant() {
+        if (dateTimeFinSession == null)
+            return;
+
+        var restant = dateTimeFinSession.getTime() - Date.now().getTime();
+
+        if (restant <= 0) {
+            if (estWebView == "True") {
+                if (estWebViewErreurDejaAppelee == false) {
+                    estWebViewErreurDejaAppelee = true;
+                    window.location.href = '/pouceetpuce/espace-citoyens/WebView/Erreur?codeErreur=EXPIRATION_SESSION&amp;libErreur=La%20session%20a%20expir%C3%A9.';
+                }
+            }
+            else {
+                if (estAuthentifier == "True") {
+                    $("#expirationSession").html(
+                        '<h2 id="popup_title_session" class="ui-draggable-handle" style="cursor: move;">Votre session a expiré</h2>' +
+                        '<div style="width: 100%; display: flex">' +
+                        '<div style="margin: 18px 10px">' +
+                        '<img style="max-width: none !important;" src="/pouceetpuce/espace-citoyens/Content/Images/info.gif" alt="">' +
+                        '</div>' +
+                        '<div style ="padding: 18px 8px">' +
+                        '<p>Votre session a expiré suite à une inactivité de ' + TIME_SESSION_TIMEOUT + ' minutes</p>' +
+                        '<p>Nous sommes désolés, les informations que vous avez saisies sont perdues. Veuillez vous reconnecter.</p>' +
+                        '</div>' +
+                        '</div>' +
+
+                        '<div>' +
+                        '<span>' +
+                        '<button class="btn btn-style3" style="margin: 0 10px 10px 10px" id="btnaccueilSession">' +
+                        '<span>Retourner à la page d\'accueil</span>' +
+                        '</button>' +
+                        '</span>' +
+                        '</div>'
+                    );
+                } else {
+                    $("#expirationSession").html(
+                        '<h2 id="popup_title_session" class="ui-draggable-handle" style="cursor: move;">Votre session a expiré</h2>' +
+                        '<div style="width: 100%; display: flex">' +
+                        '<div style="margin: 18px 10px">' +
+                        '<img style="max-width: none !important;" src="/pouceetpuce/espace-citoyens/Content/Images/info.gif" alt="">' +
+                        '</div>' +
+                        '<div style ="padding: 18px 8px">' +
+                        '<p>Votre session a expiré suite à une inactivité de ' + TIME_SESSION_TIMEOUT + ' minutes</p>' +
+                        '<p>Nous sommes désolés, les informations que vous avez saisies sont perdues. Merci de bien vouloir recommencer.</p>' +
+                        '</div>' +
+                        '</div>' +
+
+                        '<div>' +
+                        '<span>' +
+                        '<button class="btn btn-style3" style="margin: 0 10px 10px 10px" id="btnaccueilSession">' +
+                        '<span>Recommencer</span>' +
+                        '</button>' +
+                        '</span>' +
+                        '</div>'
+                    );
+                }
+
+                if (avertissementAvantTimeOutSession == "False") {
+                    $('#expirationSession').dialog("open");
+                }
+            }
+
+            $("#btnaccueilSession").click(function() {
+                document.location.reload();
+            });
+        } else {
+
+            if (avertissementAvantTimeOutSession == "False") {
+                return;
+            }
+
+            var iMin = Math.floor(restant / 1000 / 60);
+            var iSec = Math.floor((restant / 1000) % 60);
+            if (iMin > 0 && iSec > 0) {
+                $("#sessionTimeout").text(iMin + " minute" + (iMin > 1 ? "s" : "") + " et " + iSec + " seconde" + (iSec > 1 ? "s" : ""));
+            } else if (iMin > 0) {
+                $("#sessionTimeout").text(iMin + " minute" + (iMin > 1 ? "s" : ""));
+            } else {
+                $("#sessionTimeout").text(iSec + " seconde" + (iSec > 1 ? "s" : ""));
+            }
+        }
+
+    }
+</script>
+</head>
+<body>
+    <div class="skip-to-main">
+        <a href="#divBody" id="go-to-main">Aller au contenu principal</a>
+    </div>
+            
+        <div id="divBandeau" class="">
+            
+<header class="headerBandeau">
+    <div id="divBandeau2" class="bandeau">
+                            <a id="lnkBandeau" href="/pouceetpuce/espace-citoyens/" class="hidden-phone">
+                                <img id="imgBandeau" src="https://www.espace-citoyens.net/pouceetpuce/espace-citoyens//App_Ressources/Images/Bannierepoucepuce_5450788.jpg" alt="Retour à l'accueil">
+                            </a>
+                <a id="lnkBandeauMobile" href="/pouceetpuce/espace-citoyens/" class="visible-phone hidden-print">
+                    <img id="imgBandeauMobile" src="https://www.espace-citoyens.net/pouceetpuce/espace-citoyens//App_Ressources/Images/Banniere-767x150-newpix_2116784_5519055.jpg" alt="Bandeau mobile">
+                </a>
+
+    </div>
+</header>
+
+        </div>
+        <div class="containerprincipal">
+            <button type="button" class="btnAvertissement" style="display: none;" title="Afficher les avertissements">
+    <img src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/cloche.svg" alt="Avertissement">
+    <span class="smartiesAvertissement"></span>
+</button>
+
+<script>
+    $(document).ready(function () {
+
+        if (!window.GererAvertissements) {
+            if (window.codeAvertissementLocalisation)
+                getAvertissementsConst(codeAvertissementLocalisation.const);
+        }
+    });
+
+    $('.btn_avertissement').click(function () {
+
+        var notices_data = $(window).data("pnotify").filter(function (val, i, arr) {
+            return arr.indexOf(val) == i;
+        });
+
+        notices_data.forEach(function (notice) {
+            if (notice.timer === null) {
+                notice.pnotify_display();
+            } else {
+                notice.opts.remove = true;
+                notice.pnotify_queue_remove();
+                notice.pnotify_remove();
+            }
+        });
+
+        return false;
+    });
+
+    $('.btnAvertissement').click(function () {
+
+        var notices_data = $(window).data("pnotify").filter(function (val, i, arr) {
+            return arr.indexOf(val) == i;
+        });
+
+        notices_data.forEach(function (notice) {
+            if (notice.timer === null) {
+                notice.pnotify_display();
+            } else {
+                notice.opts.remove = true;
+                notice.pnotify_queue_remove();
+                notice.pnotify_remove();
+            }
+        });
+
+        return false;
+    });
+
+    var siteBaseUrl = '/pouceetpuce/espace-citoyens/';
+
+    var ongletsCreationCitoyen;
+    var ongletsCreationAsso;
+    var ongletsCreationEntr;
+
+    var localisationConst = "";
+    var etape = "";
+    var isAsso = false;
+    var codeQdt = "";
+    var jsonAvts;
+
+    var listerOngletsVisiblesCompteUsager = function ()
+    {
+        var urlAvertissement = siteBaseUrl + "/Avertissements/ObtenirOngletsCreationModificationCompte";
+
+        jsAjaxEnCours();
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: urlAvertissement,
+            dataType: 'json',
+            success: function (jsonData) {
+                jsAjaxFin();
+                ongletsCreationCitoyen = jsonData.ListePageAfficheesCitoyen;
+                ongletsCreationAsso = jsonData.ListePageAfficheesAsso;
+                ongletsCreationEntr = jsonData.ListePageAfficheesEntr;
+            },
+            error: function (xhr, errorType, exception) {
+                jsAjaxFin();
+                var errorMessage = exception || xhr.statusText
+                jAlert("Erreur : " + errorMessage);
+            }
+        });
+    }
+
+
+    function prepareAvtsCreaCit(index) {
+        if (typeof index !== 'undefined') {
+            etape = ongletsCreationCitoyen[index];
+            isAsso = false;
+        }
+    }
+    function prepareAvtsCreaAsso(index) {
+        if (typeof index !== 'undefined') {
+            etape = ongletsCreationAsso[index];
+            isAsso = true;
+        }
+    }
+    function prepareAvtsCreaEntr(index) {
+        if (typeof index !== 'undefined') {
+            etape = ongletsCreationEntr[index];
+            isAsso = false;
+        }
+    }
+
+    if (
+            (
+                ('False' === 'True') ||
+                ('False' === 'True')
+            )
+        ) {
+        listerOngletsVisiblesCompteUsager();
+    }
+
+    //récupération de l'index de l'onglet en cours pour le suivi d'une demande
+    function prepareAvtsSuiviDemande(linkName, code) {
+        if (typeof linkName !== 'undefined') {
+            codeQdt = code;
+        }
+        if (typeof linkName !== 'undefined') {
+            switch (linkName) {
+                case "lnkRecapDemandeur":
+                    etape = "Demandeur"; break;
+                case "lnkRecapDemande":
+                    etape = "Demande"; break;
+                case "lnkHistorique":
+                    etape = "Historique"; break;
+                case "lnkEchange":
+                    etape = "Echanges"; break;
+                case "lnkPieceJointe":
+                    etape = "Pièces jointes"; break;
+                case "lnkRendezVous":
+                    etape = "Rendez-vous"; break;
+                default: "Historique";
+            }
+        }
+    }
+    //récupération de l'index de l'onglet en cours pour une nouvelle demande
+    function prepareAvtsDemande(index, code) {
+        if (typeof code !== 'undefined') {
+            codeQdt = code;
+        }
+        switch (index) {
+            case numOngletDemarche:
+                etape = "La démarche";break;
+            case numOngletDemandeur:
+                etape = "Mes informations"; break;
+            case numOngletRendezVous:
+                etape = "Mon rendez-vous"; break;
+            case numOngletDemande:
+                etape = "Ma demande"; break;
+            case numOngletValidation:
+                etape = "Le récapitulatif"; break;
+            case numOngletChoixPersonnes:
+                etape = "Choix des personnes"; break;
+            case numOngletChoixInscriptions:
+                etape = "Choix des inscriptions"; break;
+        }
+    }
+
+    var hasAvertissements = false;
+    var siteBaseUrl = '/pouceetpuce/espace-citoyens/';
+
+    // appel ajax ramenant du serveur les avertissements en cours
+    function getAvertissementsConst(constParam) {
+        var hasAvertissementsGlobal = false;
+        if (hasAvertissements == null) {
+            hasAvertissements = true;
+        }
+        if (hasAvertissements && hasAvertissementsGlobal) {
+            localisationConst = constParam;
+            $.ajax({
+                type: "GET",
+                url: '/pouceetpuce/espace-citoyens/Avertissements/GetAvertissementsConst',
+                dataType: 'json',
+                data: { localisationConst: localisationConst, etape: etape, codeQdt: codeQdt, isAsso: isAsso },
+                success: function (avertissements) {
+                    jsonAvts = $.parseJSON(avertissements);
+                    if (jsonAvts !== null) {
+                        Object.keys(jsonAvts).forEach(function (avt) {
+                            var ele = document.querySelector('[id^=div_avt_' + avt + ']');
+                            if (!ele) {
+                                var div = document.createElement("li");
+                                div.id = "div_avt_" + avt;
+                                div.innerHTML = "<h3>" + jsonAvts[avt].titre + "</h3>" + jsonAvts[avt].corps;
+                                document.getElementById('listeAvertissements').appendChild(div);
+                            }
+                        });
+                    }
+                    getAvtsCallBack();
+                },
+                error: function (xhr, errorType, exception) {
+                    var errorMessage = exception || xhr.statusText;
+                    console.error(errorMessage);
+                }
+            });
+        } else {
+            $('#titreListeAvertissements').remove();
+            $('#listeAvertissements').remove();
+        }
+    }
+
+    // Callback de l'appel ajax ramenant du serveur les avertissements en cours
+    // Gestion de l'affichage (librairie pnotify + css)
+    function getAvtsCallBack() {
+        if (jsonAvts != undefined) {
+            jsonAvts.map(function (jsonAvt) {
+                $.pnotify({
+                    title: jsonAvt.titre.toString(),
+                    text: jsonAvt.corps.toString(),
+                    idAvt: jsonAvt.idAvt.toString(),
+                    isAlreadyRead: jsonAvt.isAlreadyRead,
+                    class:'tsertsetset',
+                    history: false,
+                    reference: {
+                        marker: true
+                    }
+                });
+
+                if (jsonAvt.titre.toString() === "" || jsonAvt.corps.toString() === "") {
+                    $('.titre-avertissement').css('border-bottom', 'none');
+                }
+            });
+            $('.smarties_avertissement').text(jsonAvts.length);
+            $('.btn_avertissement').show();
+            $('.smartiesAvertissement').text(jsonAvts.length);
+            $('.btnAvertissement').show();
+        }
+        else {
+            $('.btn_avertissement').hide();
+            $('.btnAvertissement').hide();
+            $('#titreListeAvertissements').remove();
+            $('#listeAvertissements').remove();
+        }
+    }
+
+</script>
+
+
+
+            <div class="row-fluid">
+            </div>
+            <div class="container-fluid">
+
+                <!--menu horizontal-->
+                    <div id="divMenu" class="row">
+                        
+
+<script>
+
+    const TEMPS_ANIMATION_FADE = 200;
+    let hasModalAlreadyShow = false;
+
+    $(document).ready(function () {
+        $('#lnkMenuMobile').click(function () {
+            $('#menuhorizontal .horizontal').slideToggle();
+        });
+        $(".boutonConnexionModale").on("click", function () {
+            afficherModale();
+        })
+        // Désactivé jusqu'au passage sur RGAA
+        //let element = document.querySelectorAll('.boutonConnexionModale');
+        //const textColorFromBackground = new TextColorFromBackground();
+        //textColorFromBackground.determineTextColor(element);
+        $(".full-modale-connexion").on("mousedown", function (event) {
+            if (event.target === this) {
+                var modalContent = $(".modale-connexion");
+                if (!modalContent.is(event.target) && modalContent.has(event.target).length === 0) {
+                    fermerModale();
+                    resetModale();
+                }
+            }
+        });
+        $('.croix-modale').on('click', function () {
+            fermerModale();
+            resetModale();
+        })
+
+        $(".full-modale-connexion").on("keydown", function (event) {
+            var modalContent = $(".modale-connexion");
+            var focusableElements = modalContent.find('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            var firstElement = focusableElements.first();
+            var lastElement = focusableElements.last();
+
+            if (event.key === 'Escape' || event.key === 'Esc') {
+                fermerModale();
+                resetModale();
+            } else if (event.key === 'Tab') {
+                if (event.shiftKey) {
+                    if (document.activeElement === firstElement[0]) {
+                        event.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement[0]) {
+                        event.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+
+            $(".croix-modale img").on("keydown", function (event) {
+                if (event.key === 'Enter') {
+                    fermerModale();
+                    resetModale();
+                }
+            })
+        });
+
+    });
+
+    $(document).on("keydown", function (event) {
+        if ((event.key === 'Escape' || event.key === 'Esc') && $('.full-modale-connexion').is(':visible')) {
+            fermerModale();
+            resetModale();
+        }
+    });
+
+    function setInitialFocus() {
+        $(':focus').blur();
+        setTimeout(function () {
+            $(".croix-modale img").focus();
+        }, TEMPS_ANIMATION_FADE + 100)
+    }
+
+    function afficherModale(isCompteRequis = false, qdm = null, qdt = null) {
+        if (!hasModalAlreadyShow) {
+            hasModalAlreadyShow = true;
+            $.ajax({
+                url: "/pouceetpuce/espace-citoyens/Home/RecupererModaleConnexion",
+                type: "POST",
+                success: function (data) {
+                    $('.modale-connexion-child').html(data);
+                    $(".full-modale-connexion").fadeIn(TEMPS_ANIMATION_FADE);
+                    setInitialFocus();
+                    if (isCompteRequis) {
+                        isCompteRequiredInfo(true);
+                    } else {
+                        isCompteRequiredInfo(false);
+                    }
+                    if (qdt != null && qdm != null) {
+                        setReturnUrl(qdm, qdt);
+                    }
+                    setTimeout(function () {
+                        hasModalAlreadyShow = false
+                    }, TEMPS_ANIMATION_FADE)
+                },
+                error: function (xhr) {
+                    console.error("Une erreur s'est produite lors de la récupération de la vue partielle. " + xhr);
+                }
+            })
+        };
+    }
+
+    function fermerModale() {
+        $(".full-modale-connexion").fadeOut(TEMPS_ANIMATION_FADE);
+        setTimeout(function () {
+            isCompteRequiredInfo(false);
+            $('.modale-connexion-child').empty();
+        }, TEMPS_ANIMATION_FADE)
+    }
+
+     function setReturnUrl(LibCodeQdm, LibCodeQdt) {
+         let returnUrl = '/pouceetpuce/espace-citoyens/Demande/NouvelleDemande';
+         returnUrl += '/' + LibCodeQdm + '/' + LibCodeQdt;
+         if ($('#returnUrl').length) {
+             $('#returnUrl').val(returnUrl);
+         }
+         if ($('#returnUrlOidc').length) {
+             $('#returnUrlOidc').val(returnUrl);
+         }
+     }
+
+</script>
+<section id="secMenu" class="menu ">
+    <nav id="menuhorizontal" class="">
+        <a id="lnkMenuMobile" href="#" class="lnkMenuMobile visible-phone">
+            <span id="hMenuMenuMobileTitre"><img id="imgMenuMobile" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/picto_menu_trois_barres.png" alt="" class="imgMenuMobile">Menu</span>
+        </a>
+
+            <ul class="horizontal affichageBurgerMenuMobile1Colonne">
+                                <li>
+                                    <a id="lnkMenuAccueilPrive" href="/pouceetpuce/espace-citoyens/" class=" couleurMenuHorizontal couleurMenuPriveMonAccueil menuselected">
+                                            <span>
+                                                    <img id="imgMenuAccueilPrive" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/mairie30x30.png" alt="">
+                                            </span>
+                                        <span id="hMenuAccueilPriveTitre">Mon accueil</span>
+                                    </a>
+                                </li>
+                                    <li>
+                                        <a id="lnkMenuActuPub" href="/pouceetpuce/espace-citoyens/Actualites/IndexActusPubliquesFromAccueilAuth" class=" couleurMenuHorizontal couleurMenuPriveActualites ">
+                                                <span>
+                                                        <img id="imgMenuActuPub" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/picto_actualites.varcouleur.png" alt="">
+                                                </span>
+                                            <span id="hMenuActuPubTitre">Actualités</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a id="lnkMenuDocuments" href="/pouceetpuce/espace-citoyens/DocumentsPublies" class=" couleurMenuHorizontal couleurMenuPriveDocuments ">
+                                            <span>
+                                                    <img id="imgMenuDocumentsPublies" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/Edition_documents_publies16.png" alt="">
+                                            </span>
+                                            <span id="hMenuDocumentsPubliesTitre">Edition de documents</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a id="lnkMenuInfosPratiques" href="/pouceetpuce/espace-citoyens/Activites/IndexInfosPratiques" class=" couleurMenuHorizontal couleurMenuPriveInfosPratiques ">
+                                            <span>
+                                                    <img id="imgMenuInfosPratiques" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/infos_pratiques30x30.png" alt="">
+                                            </span>
+                                            <span id="hMenuInfosPratiquesTitre">Infos pratiques</span>
+                                        </a>
+                                    </li>
+
+                <li id="liDeconnexion" class="visible-phone">
+                    <a id="lnkMenuDeco" href="/pouceetpuce/espace-citoyens/Home/LogOff" class="couleurMenuHorizontal couleurMenuPriveDeconnexion">
+                        <span>
+                            <img id="imgMenuDeco" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/deconnexion16.png" alt="">
+                        </span>
+                        <span id="hMenuDecoTitre">Se déconnecter</span>
+                    </a>
+                </li>
+            </ul>
+                    <div id="liMenuIdentifiants" class="identifiantConnexion hidden-phone">
+                <a class="deconnexion" href="/pouceetpuce/espace-citoyens/Home/LogOff" id="lnkDeconnexion" title="Se déconnecter"> </a>
+                <span class="flexCol">
+Bonjour Monsieur RAMAROJOHN.                                            <span id="spanDerniereConnexion">Dernière connexion le 19/09/2025 à 08:30</span>
+                </span>
+            </div>
+                            <span class="identifiantConnexion visible-phone">
+                <a alt="Se déconnecter_Personnes" class="deconnexion" href="/pouceetpuce/espace-citoyens/Home/LogOff" id="lnkDeconnexionPourTel" title="Se déconnecter_Personnes"> </a>
+            </span>
+    </nav>
+</section>
+
+                    </div>
+                    <div id="filariane">
+                        
+                    </div>
+                                <main id="divBody" class="row">
+                    
+<script>
+
+    var codeAvertissementLocalisation = { const: "AVT_CONST_ACCUEIL_PRIVE" };
+    Object.freeze(codeAvertissementLocalisation);
+
+    $(document).ready(function () {
+        const isAffichage1Colonne = "False";
+        /* EricM201118-1 la règle "display: flex" est ajoutée ICI à la classe .dalle, plutôt que dans le .css, pour éviter les effets de bord !!!*/
+        /* EricM121118-1 ajout pour centrer le texte des dalles qui n'ont pas d'image
+        (attention: il faut aussi que la classe ".dalle" ait la règle "display: flex;" => NON effets de bord !!!*/
+        // EricM201118-1 ajout
+        $('.dalle').css({
+            'display': 'flex'
+        });
+
+        if (modeAffichage == 'phone' && isAffichage1Colonne == "False") {
+            $('.dalle').css({
+                'margin-left': '0px',
+                'margin-right': '8px'
+            });
+        }
+
+        $('.dalle > a.lien-style3:not(:has(span.image-illustrative))').css({
+            'height': 'auto',
+            'margin': 'auto'
+        });
+        $('.dalle > a.lien-style3:has(span.image-illustrative)').css({
+            'margin': '0 auto'
+        });
+        $('.dalle > .label-radio:not(:has(span.image-illustrative))').css({
+            'height': 'auto',
+            'margin': 'auto'
+        });
+
+        // JulienP220922 - Jira GRC2-5069 Dalles toggle d'affichage - Cliquer trop de fois sur la dalle avant la fin de son chargement la rend inutilisable
+        $('[id^=divDalleDetail_]').stop(true, true).hide();
+
+        //MatthieuB 260123-1 Jira GRC2-5205 on empèche le focus des éméments lié au tabbleau de bord et aux actues dans le cas d'un affichage
+        var lastModeAffichage = modeAffichage;
+
+        /*if (modeAffichage == 'phone')
+        {
+            $(".profilfamilletitregauche").attr("tabindex", 0);
+            $(".profilfamilletitregauche").attr("aria-hidden", "false");
+            setUnfocusableElementInParent("ActueTableauDeBord");
+        }*/
+
+        //Si changement de taille d'écran
+        $(window).resize(function () {
+            if (modeAffichage != lastModeAffichage)
+            {
+                //si le mode d'affichage à changé  et qu'il est devenu phone, on passe en mode mobile avec deux onglet pour la page d'accueil du compte citoyen
+                /*if (modeAffichage == 'phone')
+                {
+                    $(".profilfamilletitregauche").attr("tabindex", 0);
+                    setUnfocusableElementInParent("ActueTableauDeBord");
+                    $("#divMonEspace").find('[tabindex=0]').first().focus();
+                }
+                else    //Si non on repasse en mode sans onglets
+                {
+                    $(".profilfamilletitregauche").attr("tabindex", -1);
+                    $(".profilfamilletitredroit").attr("tabindex", -1);
+                    resetFocussableElementInParent("ActueTableauDeBord");
+                }*/
+                if (modeAffichage == 'phone') {
+                    $('.dalle').css({
+                        'margin-left': '0px',
+                        'margin-right': '8px'
+                    });
+                }
+                else {
+                    $('.dalle').css({
+                        'margin-left': '0px',
+                        'margin-right': '0px'
+                    });
+                }
+                lastModeAffichage = modeAffichage;
+            }
+        });
+
+        function checkZoomLevel() {
+            // Calculate the zoom level
+            var zoomLevel = Math.round((window.outerWidth / window.innerWidth) * 100);
+
+            // Check if the zoom level is at least 200%
+            if (zoomLevel >= 200) {
+                document.body.classList.add('zoom-200');
+            } else {
+                document.body.classList.remove('zoom-200');
+            }
+        }
+
+        // Attach event listeners to check the zoom level on resize and load
+        window.addEventListener('resize', checkZoomLevel);
+        window.addEventListener('load', checkZoomLevel);
+
+        // Initial check
+        checkZoomLevel();
+
+        //Navigation au clavier pour les dalle de type liste
+        let lePremierBlocDalle = $('.divBlocDalles').first();
+        if(lePremierBlocDalle.length == 0){
+            lePremierBlocDalle = $('.divBlocDalles-new').first();
+        }
+        let leDernierBlocDalle = $('.divBlocDalles').last();
+        if(leDernierBlocDalle.length == 0){
+            leDernierBlocDalle = $('.divBlocDalles-new').last();
+        }
+
+        function dalleKeyDown(e) {
+            var laDalleActuelle = $('#' + $(this).attr('id').replace('Detail', ''));
+            var idToutesLesDemarches1Colonne = 'divDalle_DemarchesSuite-new';
+            var lnkToutesLesDemarches = 'lnk_VoirToutesLesDemarches';
+            var leBlocDalleParentDeLaDalleActuelle = $(laDalleActuelle).parents('.divBlocDalles');
+            if(leBlocDalleParentDeLaDalleActuelle.length == 0){
+                leBlocDalleParentDeLaDalleActuelle = $(laDalleActuelle).parents('.divBlocDalles-new')
+            }
+            var laPremiereDalleDuBlocParent = $(leBlocDalleParentDeLaDalleActuelle).children('.dalle').first();
+            var laDerniereDalleDuBlocParent = $(leBlocDalleParentDeLaDalleActuelle).children('.dalle').last();
+            var leBlocDalleSuivant = leBlocDalleParentDeLaDalleActuelle.next('.divBlocDalles');
+            if(leBlocDalleSuivant.length === 0) {
+                leBlocDalleSuivant = leBlocDalleParentDeLaDalleActuelle.next('.divBlocDalles-new');
+            }
+            var leBlocDallePrecedent = leBlocDalleParentDeLaDalleActuelle.prev('.divBlocDalles');
+            if(leBlocDallePrecedent.length === 0) {
+                leBlocDallePrecedent = leBlocDalleParentDeLaDalleActuelle.prev('.divBlocDalles-new');
+            }
+
+            //Dans le cas de la touche Entrée
+            if (e.keyCode === 13) {
+                //On annule l'évènement (problème avec firefox si l'évènement n'est pas annulé)
+                e.preventDefault();
+
+                // Bouton "Toutes les démarches"
+                if (document.activeElement.id === lnkToutesLesDemarches) {
+                    window.location.href = '/pouceetpuce/espace-citoyens/Demande/ChoixTypeDemande';
+                }
+
+                if ($(this).find('input[type=radio]').is(':checked')) {
+                    if ($(this).children('span').length > 0) {
+                        $(this).children('span').click();
+                    } else if ($(this).children('label').length > 0) {
+                        $(this).children('label').click();
+                    }
+                    $(this).find('input[type=radio]').prop('checked', false);
+                    $(laDalleActuelle).focus();
+                } else {
+                    if ($(this).children('span').length > 0) {
+                        $(this).children('span').click();
+                    } else if ($(this).children('label').length > 0) {
+                        $(this).children('label').click();
+                    }
+                    $(this).find('input[type=radio]').prop('checked', true);
+
+                    if (e.target.className.includes('dalle-radio_TableauDeBord') || e.target.className.includes('dalle-radio_MaFamille')) {
+                        $('.bloc-dalledetail:visible').find('tr').first().focus();
+                    } else {
+                    $('.bloc-dalledetail:visible').find('a').first().focus();
+                    }
+                }
+            }
+
+            //On Fait passer la tabulation par le bloc dalle détail que s'il y a des éléments focussables, si non on ne change pas l'ordre de tabulation initial
+            if ($('.bloc-dalledetail:visible').find('a').length) {
+                //Si on est sur une dalle activée, on passe dans le détail lors d'une tabulation
+                if (!e.shiftKey && e.keyCode === 9 && $(this).find('input[type=radio]').is(':checked')) {
+                    e.preventDefault();
+                    $('.bloc-dalledetail:visible').find('a').first().focus();
+                }
+            }
+            else {
+                if (!e.shiftKey && e.keyCode === 9 && $(this).find('input[type=radio]').is(':checked')) {
+                    e.preventDefault();
+                    focusDalleSuivante(laDalleActuelle, leBlocDalleSuivant, laDerniereDalleDuBlocParent);
+                }
+            }
+
+            //Si tabulation sur la dernière dalle du bloc de dalles actuel, on focus la première dalle du bloc de dalles suivant
+            if (!e.shiftKey && e.keyCode === 9 && document.activeElement.id === laDerniereDalleDuBlocParent.attr('id') && $(leBlocDalleParentDeLaDalleActuelle).attr('id') !== $(leDernierBlocDalle).attr('id')) {
+                e.preventDefault();
+                var elementsFocusablesBlocSuivant = $(leBlocDalleSuivant).find("a[href], button, input:not([type=hidden]), select, textarea, [tabindex]:not([tabindex='-1'])");
+                $(elementsFocusablesBlocSuivant).first().focus();
+            }
+
+            //Si shift + tab sur la première dalle du bloc de dalles actuel, on focus la dernière dalle du bloc de dalles précédent
+            if (e.shiftKey && e.keyCode === 9) {
+                //Si la dalle est dépliée, on la replie
+                if ($(this).find('input[type=radio]').is(':checked')) {
+                    if ($(laDalleActuelle).children('label').length > 0) {
+                        $(laDalleActuelle).children('label').click();
+                    } else if ($(laDalleActuelle).children('span').length > 0) {
+                        $(laDalleActuelle).children('span').click();
+                    }
+                    $(laDalleActuelle).find('input[type=radio]').prop('checked', false);
+                }
+                if (document.activeElement.id === $(laPremiereDalleDuBlocParent).attr('id') && $(leBlocDalleParentDeLaDalleActuelle).attr('id') !== $(lePremierBlocDalle).attr('id')) {
+                    e.preventDefault();
+                    if ($(leBlocDallePrecedent).children('.dalle').last().hasClass('dalle-suite')){
+                        $(leBlocDallePrecedent).children('.dalle').last().find('a').first().focus();
+                    }
+                    else {
+                        let lastDalle = $(leBlocDallePrecedent).children('.dalle').last();
+                        if(lastDalle.length && lastDalle.attr('id') === idToutesLesDemarches1Colonne)
+                        {
+                            lastDalle.find("a[href], button, input:not([type=hidden]), select, textarea, [tabindex]:not([tabindex='-1'])").focus();
+                            return;
+                        }
+                        lastDalle.focus();
+                    }
+                }
+            }
+        };
+
+        function dalleDetailKeyDown(e) {
+            var laDalleActuelle = $('#' + $(this).attr('id').replace('Detail', ''));
+            var elementsFocusables = $(this).find("a[href]:not([tabindex='-1']), button, input:not([type=hidden]), select, textarea, [tabindex]:not([tabindex='-1'])");
+            var lePremierElemFocusableDeLaDalleActuelle = $(elementsFocusables).first();
+            var leDernierElemFocusableDeLaDalleActuelle = $(elementsFocusables).last();
+            var leBlocDalleParentDeLaDalleActuelle = $(laDalleActuelle).parents('.divBlocDalles');
+            if(leBlocDalleParentDeLaDalleActuelle.length == 0){
+                leBlocDalleParentDeLaDalleActuelle = $(laDalleActuelle).parents('.divBlocDalles-new')
+            }
+
+            var laDerniereDalleDuBlocParent = $(leBlocDalleParentDeLaDalleActuelle).children('.dalle').last();
+            var leBlocDalleSuivant = leBlocDalleParentDeLaDalleActuelle.next('.divBlocDalles');
+            if(leBlocDalleSuivant.length === 0) {
+                leBlocDalleSuivant = leBlocDalleParentDeLaDalleActuelle.next('.divBlocDalles-new');
+            }
+
+            $(this).find(':focus').parents('ul').removeClass('dalle-radio-tr-focus');
+
+            //Si tabulation sur le dernier élément du détail, on focus la dalle suivant de celle activée
+            if (!e.shiftKey && e.keyCode === 9 && document.activeElement.id === leDernierElemFocusableDeLaDalleActuelle.attr('id')) {
+                e.preventDefault();
+                focusDalleSuivante(laDalleActuelle, leBlocDalleSuivant, laDerniereDalleDuBlocParent);
+            }
+
+            //Si shit + tab sur le premier élément du détail, on focus la dalle activée
+            if (e.shiftKey && e.keyCode === 9 && document.activeElement.id === lePremierElemFocusableDeLaDalleActuelle.attr('id')) {
+                e.preventDefault();
+                if ($(laDalleActuelle).children('label').length > 0) {
+                    $(laDalleActuelle).children('label').click();
+                } else if ($(laDalleActuelle).children('span').length > 0) {
+                    $(laDalleActuelle).children('span').click();
+                }
+                $(laDalleActuelle).find('input[type=radio]').prop('checked', false);
+                $(laDalleActuelle).focus();
+            }
+        };
+
+        function dalleDetailFocus(e) {
+            $(this).parents('ul').addClass('dalle-radio-tr-focus');
+        };
+
+        function focusDalleSuivante(laDalleActuelle, leBlocDalleSuivant, laDerniereDalleDuBlocParent) {
+            if ($(laDalleActuelle).children('span').length > 0) {
+                $(laDalleActuelle).children('span').click();
+            } else if ($(laDalleActuelle).children('label').length > 0) {
+                $(laDalleActuelle).children('label').click();
+            }
+            $(laDalleActuelle).find('input[type=radio]').prop('checked', false);
+            let elementsFocusables = "a[href], button, input:not([type=hidden]), select, textarea, [tabindex]:not([tabindex='-1'])";
+
+            if ($(laDalleActuelle).attr('id') === $(laDerniereDalleDuBlocParent).attr('id')) {
+                $(leBlocDalleSuivant).find(elementsFocusables).first().focus();
+            } else {
+                let lastDalle = $(laDalleActuelle).nextAll('.dalle:visible').first();
+                if(lastDalle.length) {
+                    lastDalle.focus();
+                } else {
+                    $(leBlocDalleSuivant).find(elementsFocusables).first().focus();
+            }
+        }
+        }
+
+        $('.sectionMonEspace .dalle:not(.dalle-suite)').on('keydown', dalleKeyDown);
+        $(document).on('keydown', '.bloc-dalledetail', dalleDetailKeyDown);
+        $('.bloc-dalledetail').find('a').on('focus', dalleDetailFocus);
+
+        $('.alt-access[alt]').each(function () {
+            $(this).qtip({
+                content: $(this).attr('alt'),
+                position: {
+                    // my: 'top left',
+		            at: 'bottom-right',
+                    target: 'mouse',
+                },
+                style: { classes: 'ui-tooltip-dark' },
+                show: { event: 'mouseover focus' },
+                hide: { event: 'mouseout blur' }
+            });
+        });
+
+        var isCguAccepted = '20190927';
+
+        var widthDialog = function()
+        {
+            if($(window).width() < 960)
+            {
+                return $(window).width()
+            }
+            else{
+                return 960
+            };
+        }
+
+        
+
+        
+
+        hasAvertissements = false;
+
+        var oldIdDiv, idDiv;
+        $('input[type=radio] + span, input[type=radio] + label').click(function (e) {
+            if (!$(e.currentTarget).siblings('input[type=radio]').is(':checked'))
+            {
+                $(e.currentTarget).siblings('input[type=radio]').prop('checked', true);
+            }
+            var hasMultipleUnderscores = false;
+            var cpt = 0;
+            var theId = this.id;
+            if (this.nodeName == "SPAN" && this.id === undefined) {
+                theId = $(this).parents("label")[0].id;
+            }
+            var pos = theId.indexOf("_");
+
+            while (pos != -1) {
+                cpt++;
+                pos = theId.indexOf("_", pos + 1);
+            }
+
+            var tag, section, numero, idDiv;
+
+            if (cpt > 1) {
+                hasMultipleUnderscores = true;
+                var tmp = theId.split('_');
+                tag = tmp[0];
+                section = tmp[1];
+                numero = tmp[2];
+                idDiv = theId;
+            } else {
+                section = $(this).siblings('input[type=radio]')[0].id.split('_')[0];
+                numero = $(this).siblings('input[type=radio]')[0].id.split('_')[1];
+                idDiv = section + '_' + numero;
+            }
+
+            // JulienP220922 - Jira GRC2-5069 Dalles toggle d'affichage - Cliquer trop de fois sur la dalle avant la fin de son chargement la rend inutilisable
+            $('[id^=divDalleDetail_]').stop(true, true).slideUp();
+
+            if (oldIdDiv != null && oldIdDiv !== "") {
+                $('#' + oldIdDiv).parent().attr('aria-expanded', 'false');
+                if (oldIdDiv === idDiv) {
+                    $('#' + idDiv).parent().attr('aria-expanded', 'false');
+                } else {
+                    $('#' + idDiv).parent().attr('aria-expanded', 'true');
+                }
+            } else {
+                $('#' + idDiv).parent().attr('aria-expanded', 'true');
+            }
+
+            if (oldIdDiv != idDiv) {
+                oldIdDiv = idDiv;
+                var posY = $(this).parents('.dalle').offset().top;
+                // on va chercher à quel endroit insérer la div à montrer
+                var isSlideDownOk = false;
+                for (var i = 0; i < $(this).parents('.dalle').nextAll(':visible').length; i++) {
+                    if ($($(this).parents('.dalle').nextAll(':visible')[i]).offset().top > posY) {
+                        // on doit insérer la div à montrer ici
+                        if(idDiv.indexOf("lblDalle_DemAutreActionsSociales_") != -1){
+                            $("#divDalleDetail_DemAutreActionsSociales_" + numero).insertBefore($(this).parents('.dalle').nextAll(':visible')[i]);
+                        }
+                        else if(idDiv.indexOf("lblDalle_DemAutre") != -1){
+                            $("#divDalleDetail_DemAutre_" + numero).insertBefore($(this).parents('.dalle').nextAll(':visible')[i]);
+                        }
+                        else if (idDiv.indexOf("lblDalle_GcnDemAutre") != -1) {
+                            $("#divDalleDetail_GcnDemAutre_" + numero).insertBefore($(this).parents('.dalle').nextAll(':visible')[i]);
+                        }
+                        else if(idDiv.indexOf("lblDalle_BulletinInscr_") != -1){
+                            $("#divDalleDetail_BulletinInscr_" + numero).insertBefore($(this).parents('.dalle').nextAll(':visible')[i]);
+                        }
+                        else {
+                            $("#divDalleDetail_" + numero).insertBefore($(this).parents('.dalle').nextAll(':visible')[i]);
+                        }
+                        isSlideDownOk = true;
+                        if (hasMultipleUnderscores) {
+                            $("#divDalleDetail_" + section + '_' + numero).slideDown();
+                        } else {
+                            $("#divDalleDetail_" + numero).slideDown();
+                        }
+                        break;
+                    }
+                }
+                if (!isSlideDownOk) {
+                    // on a pas trouvé l'emplacement où insérer la DIV, on la mets à la fin
+                    $("#divDalleDetail_" + numero).insertAfter($(this).parents('.dalle').nextAll(':visible')[$(this).parents('.dalle').nextAll(':visible').length - 1]);
+                    if (hasMultipleUnderscores) {
+                        $("#divDalleDetail_" + section + '_' + numero).slideDown();
+                    } else {
+                        $("#divDalleDetail_" + numero).slideDown();
+                    }
+                }
+            }
+            else {
+                oldIdDiv = '';
+            }
+        });
+
+        $('#inpDalle_MesDocuments + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/CompteCitoyen/MesDocuments';
+            return false;
+        });
+
+        $('#inpDalle_MesFactures + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/MonCompte';
+            return false;
+        });
+
+        $('#inpDalle_MesPrevelements + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/MonCompte/PrelevementsSEPA';
+            return false;
+        });
+
+        $('#inpDalle_MesQFRevenus + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/MonCompte/QFRevenus';
+            return false;
+        });
+
+        $('#inpDalle_MesActu + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/Actualites/IndexActusPrivees';
+            return false;
+        });
+
+        //TODO: test avec flag de la requête d'initialisation pour savoir si on affiche ou non la dalle
+        $('#inpDalle_SimuTar + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/SimulationTarifs';
+            return false;
+        });
+
+        $('#inpDalle_SimuTar_Gcn + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/SimulationTarifsGCN';
+            return false;
+        });
+
+        $('#inpDalle_InfosAllocataires + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/InformationsAllocataires?IdDynamic=1';
+        })
+
+        
+
+        var existeDocuments = true;
+        if (existeDocuments == true) {
+            $('#inpDalle_EditionDoc + span').click(function () {
+                window.location.href = '/pouceetpuce/espace-citoyens/DocumentsPublies';
+                return false;
+            });
+        }
+
+        //ST 20191209 M46646
+        $('#inpDalle_CourriersARetirer + span').click(function(){
+            //Création d'un passage virtuel
+            $.ajax({
+                type: 'POST',
+                url: '/pouceetpuce/espace-citoyens/CompteCitoyen/TraiterPassageVirtuel',
+                dataType: 'json',
+                success: function (jsonData) {
+                    jsAjaxFin();
+                },
+                error: function (xhr, errorType, exception) {
+                    jsAjaxFin();
+                    console.error(exception);
+                    JAlert("Une erreur s'est produite lors du traitement du passage virtuel.");
+                }
+            });
+            //}
+        })
+
+        //ST 20200225 M47984
+        $('#inpDalle_RegistreNominatif + span').click(function () {
+            window.location.href = '/pouceetpuce/espace-citoyens/CompteCitoyen/RegistreNominatif';
+            return false;
+        });
+
+        $('.menu_deroulant tr, .menu_deroulant').click(function () {
+            if ($(this).hasClass("desactiverModification")) {
+                jAlert("Erreur: L'enregistrement de cette démarche n'est plus possible");
+                return false;
+            }
+
+            // on recherche le lien
+            var linkSuivi = $(this).find('.lnkPJListeFichier');
+            if (linkSuivi.length == 0) {
+                // On a cliqué sur une ligne qui n'a pas de lien vers le récapitulatif de demande (si il y a un lien vers le récapitulatif, c'est le javascript de "---\Views\Demande\_LigneSyntheseUneDemande.cshtml" qui ouvrira la fenêtre vers le récapitulatif)
+                if ($(this).find('.detailDemarche a').length != 0) {
+                    // On est sur la liste des dernières demandes
+                    if (typeof $(this).find('.detailDemarche a').attr("href") != 'undefined') {
+                        let element = $(this).find('.detailDemarche a');
+                        let target = element.attr("target") != undefined ? element.attr("target") : "_self";
+                        window.open(element.attr("href"), target);
+
+                    }
+                }
+                else {
+                    // on est dans une des listes "réservations", "bulletins", "signalement", etc.
+                    if (typeof $(this).find('a').attr('href') != 'undefined') {
+                        window.location = $(this).find('a').attr('href');
+                    }
+                }
+            }
+            return false;
+        });
+
+        $('.aucuneactionpossible').click(function () {
+            event.cancelBubble = true;
+            return false;
+        });
+
+        //MatthieuB 2601-1 Jira GRC2-5205 TO DO
+        /*$('.profilfamilletitregauche').click(function () {
+            if (modeAffichage == 'phone') {
+                $('#monEspace').animate({ "margin-left": arpInt(-1 * ($('#divMonEspace').width() + 12)) }, "slow", function () {
+                    $('.profilfamilletitregauche').hide();
+                    $('.profilfamilletitregauche').attr("tabindex", "-1");
+                    $('.profilfamilletitregauche').attr("aria-hidden", "true");
+
+
+                    $('.profilfamilletitredroit').show();
+                    $('.profilfamilletitredroit').attr("tabindex", "0");
+                    $('.profilfamilletitredroit').attr("aria-hidden", "false");
+
+                    //On rend infocussable le premier onglet "MonEspace"
+                    setUnfocusableElementInParent("divMonEspace");
+
+                    //On rend focussable le second onglet
+                    resetFocussableElementInParent("ActueTableauDeBord");
+
+                    //Focus sur le premier élément
+                    $("#ActueTableauDeBord").find('[tabindex=0]').first().focus()
+                });
+            }
+
+        });
+
+        $('.profilfamilletitredroit').hide();
+
+        $('.profilfamilletitredroit').click(function () {
+            if (modeAffichage == 'phone') {
+                $('#monEspace').stop().animate({ "margin-left": 0 }, "slow", () => {
+                    $('.profilfamilletitregauche').show();
+                    $('.profilfamilletitregauche').attr("tabindex", "0");
+                    $('.profilfamilletitregauche').attr("aria-hidden", "false");
+
+
+                    $('.profilfamilletitredroit').hide();
+                    $('.profilfamilletitredroit').attr("tabindex", "-1");
+                    $('.profilfamilletitredroit').attr("aria-hidden", "true");
+
+                    //On rend infocussable le premier onglet "MonEspace"
+                    setUnfocusableElementInParent("ActueTableauDeBord");
+
+                    //On rend focussable le second onglet
+                    resetFocussableElementInParent("divMonEspace");
+
+                    //Focus sur le premier élément
+                    $("#divMonEspace").find('[tabindex=0]').first().focus();
+                });
+            }
+        });
+
+
+        $(window).resize(function () {
+            if (modeAffichage != "phone") {
+                if ($('#monEspace').css('margin-left') != "0px") {
+                    $('#monEspace').css('margin-left', "0px");
+                }
+            }
+            if (modeAffichage == "phone") {
+                if ($('#monEspace').css('margin-left') != "0px") {
+                    $('#monEspace').stop().animate({ "margin-left": arpInt(-1 * ($('#divMonEspace').width() + 12)) }, "fast");
+                }
+            }
+        });
+
+
+        $('.identifiantConnexion a').click(function (event) {
+            event.stopPropagation();
+        });
+        /*
+        $(document).swipe({
+            //Generic swipe handler for all directions
+            swipeLeft: function (event, direction, distance, duration, fingerCount) {
+                if (modeAffichage === "phone") {
+                    $('.profilfamilletitregauche').click();
+                }
+            },
+            swipeRight: function (event, direction, distance, duration, fingerCount) {
+                if (modeAffichage === "phone") {
+                        $('.profilfamilletitredroit').click();
+
+                }
+            }
+        });
+        */
+        //MatthieuB 2601-1 Jira GRC2-5205 TO DO
+        // ajout keydown sur le bouton pour passer à l'ongelet suivant
+        /*$('.profilfamilletitregauche').keydown(function (event)
+        {
+            if (event.key == " " || event.key == "Enter")
+            {
+                $('.profilfamilletitregauche').click();
+            }
+        });
+
+        // ajout keydown sur le bouton pour passer à l'ongelet précédent
+        $('.profilfamilletitredroit').keydown(function (event)
+        {
+            if (event.key == " " || event.key == "Enter") {
+                $('.profilfamilletitredroit').click();
+            }
+
+        });
+
+
+        $(document).on('glisserGauche', function (event, direction, distance, duration, fingerCount) {
+            $('.profilfamilletitregauche').click();
+        });
+
+        $(document).on('glisserDroit', function (event, direction, distance, duration, fingerCount) {
+            $('.profilfamilletitredroit').click();
+        }); */
+
+        var portailEnAttenteConfirmationPass = null;
+        var isCitoyenFranceConnectAuthentified = 'True';
+        var libNomPop = null;
+
+        $('[id^="divDalle_AutresEspaces_"]').on('click', function (e) {
+
+            var isFranceConnectedJs = 'False';
+
+            libNomPop = $(this).attr('data-nom') || 'L\'espace auquel vous souhaitez accéder ';
+            var isPPCmdpAlreadyFilled = $(this).attr('data-ppc');
+
+            if(isPPCmdpAlreadyFilled === 'True' && isFranceConnectedJs === 'True' && $(this).attr('data-isAuth') === 'True' && (!isCitoyenFranceConnectAuthentified || isCitoyenFranceConnectAuthentified == 'False')){
+                portailEnAttenteConfirmationPass = this;
+                var dialogState = ($('#modalConfirmPassAutreEspace').dialog('isOpen') === true) ? 'close' : 'open';
+                $('#passAutreEspaceValidation').hide();
+                $('#lblpassAutreEspace').text($('#lblpassAutreEspace').text().replace('{{autreEspace}}', libNomPop));
+                $('#modalConfirmPassAutreEspace').draggable({ handle: "h3", containment: "window" });
+                if(dialogState === 'open'){
+                    $('#modalConfirmPassAutreEspace').slideDown('slow', function () {
+                        $('.dialog-overlay').show().animate({ opacity: 0.25 }, 250);
+                    });
+                } else{
+                    $('.dialog-overlay').animate({ opacity: 0 }, 300, function () {
+                        $('#modalConfirmPassAutreEspace').slideUp('slow');
+                        $('.dialog-overlay').hide();
+                    });
+                }
+                e.preventDefault();
+            }else{
+                e.preventDefault();
+                redirectToPortailPartenaire(this);
+            }
+        });
+
+        function redirectToPortailPartenaire(portailDom){
+            var tmpArray = portailDom.id.split('_');
+            var idDetail = tmpArray[tmpArray.length - 1];
+            if ($('#divDalleDetail_AutresEspaces_' + idDetail).length == 0) {
+                if ($(portailDom).attr('data-red') == 'Client') {//Redirection client
+                    if ($(portailDom).attr('data-isAuth') == 'True') {
+                        getFusion(idDetail, 'form', function (form) {//Identifiants nécessaires
+                            $('#tmpEspaceConnexionEnCours').append(form);
+                            if($(portailDom).attr('data-modOuv') == 'NouvelOnglet')
+                            {
+                                $('#monFormulaire').attr('target', '_blank');//Ouvre dans un nouvel onglet
+                            }else{
+                                $('#monFormulaire').attr('target', '');//Ouvre dans le même onglet
+                            }
+                            $('#monFormulaire').submit();
+
+                        });
+                    } else {
+                        manageSessionDataFromAuth(idDetail, function (tmpForm) {//Sans identifiant pour se connecter au portail partenaire
+                            $('#tmpEspaceConnexionEnCours').append(tmpForm);
+                            if($(portailDom).attr('data-modOuv') == 'NouvelOnglet')
+                            {
+                                $('#monFormulaire').attr('target', '_blank');//Ouvre dans un nouvel onglet
+                            }else{
+                                $('#monFormulaire').attr('target', '');//Ouvre dans le même onglet
+                            }
+                            $('#monFormulaire').submit();
+                        });
+                    }
+                } else if ($(portailDom).attr('data-red') == 'Serveur') {//Redirection serveur
+
+                    if ($(portailDom).attr('data-isAuth') == 'True') {
+                        getFusion(idDetail, 'link', function (link) {//Identifiants nécessaires
+                            //window.location = link;
+                            if($(portailDom).attr('data-modOuv') == 'NouvelOnglet')
+                            {
+                                window.open(link,'_blank'); //Ouvre dans un nouvel onglet
+                            }else{
+                                window.location = link; //Ouvre dans le même onglet
+                            }
+                        });
+                    } else {
+                        manageSessionDataFromAuth(idDetail, function (tmpLink) {//Sans identifiant pour se connecter au portail partenaire
+                            //window.location = tmpLink;
+                            if($(portailDom).attr('data-modOuv') == 'NouvelOnglet')
+                            {
+                                window.open(tmpLink,'_blank'); //Ouvre dans un nouvel onglet
+                            }else{
+                                window.location = tmpLink; //Ouvre dans le même onglet
+                            }
+
+                        });
+                    }
+                }
+            }
+        }
+
+        $('#submitPassAutreEspace').on('click', function (e) {
+            var pass = $('#passAutreEspace').val();
+            if(pass == ''){
+                isCitoyenFranceConnectAuthentified = false;
+                return false;
+            }else{
+                jsAjaxEnCours();
+                $.ajax({
+                    type: 'POST',
+                    url: '/pouceetpuce/espace-citoyens/CompteCitoyen/ConfirmerPassword/',
+                    dataType: 'json',
+                    data: { passAutreEspace: pass },
+                    success: function (jsonData) {
+                        jsAjaxFin();
+                        submitPassAutreEspace(jsonData);
+                    },
+                    error: function (xhr, errorType, exception) {
+                        jsAjaxFin();
+                        console.error(exception);
+                        JAlert("Une erreur s'est produite lors de la confirmation du mot de passe.");
+                    }
+                });
+            }
+        });
+
+        function submitPassAutreEspace(response){
+            $('#passAutreEspace').val('');
+            if(response === true){
+                $('#modalConfirmPassAutreEspace').dialog('close');
+                $('#lblpassAutreEspace').text($('#lblpassAutreEspace').text().replace(libNomPop, '{{autreEspace}}'));
+                isCitoyenFranceConnectAuthentified = true;
+                $('#' + portailEnAttenteConfirmationPass.id).trigger('click');
+            }else{
+                $('#passAutreEspaceValidation').show();
+                isCitoyenFranceConnectAuthentified = false;
+            }
+        }
+
+        $('#cancelPassAutreEspace').click(function () {
+            var btn = this;
+            btn.disabled = (!btn.disabled);
+            $('#passAutreEspace').val('');
+            $('.dialog-overlay').animate({ opacity: 0 }, 300, function () {
+                $('#modalConfirmPassAutreEspace').slideUp('slow', function(){
+                    $('#lblpassAutreEspace').text($('#lblpassAutreEspace').text().replace(libNomPop, '{{autreEspace}}'));
+                });
+                $('.dialog-overlay').hide();
+            });
+            btn.disabled = (!btn.disabled);
+        });
+
+        function getFusion(id, typeFusion, callback) {
+            if (id != null) {
+                jsAjaxEnCours();
+                $.ajax({
+                    type: "GET",
+                    url: '/pouceetpuce/espace-citoyens/CompteCitoyen/GetFusion/',
+                    dataType: 'json',
+                    data: { id: id, typeFusion: typeFusion },
+                    success: function (jsonData) {
+                        jsAjaxFin();
+                        callback(jsonData);
+                    },
+                    error: function (xhr, errorType, exception) {
+                        jsAjaxFin();
+                        console.error(exception);
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+
+        function manageSessionDataFromAuth(id, callback) {
+            if (id != null) {
+                jsAjaxEnCours();
+                $.ajax({
+                    type: "GET",
+                    url: '/pouceetpuce/espace-citoyens/CompteCitoyen/ManageSessionDataFromAuth/',
+                    dataType: 'json',
+                    data: { id: id },
+                    success: function (jsonData) {
+                        jsAjaxFin();
+                        callback(jsonData);
+                    },
+                    error: function (xhr, errorType, exception) {
+                        jsAjaxFin();
+                        console.error(exception);
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+
+
+        if(isCguAccepted == "")
+        {
+            $(window).bind('beforeunload', function(){
+                $('#btnRetourCgu').trigger('click');
+                //$.get('/Home/LogOff');
+
+            });
+
+            $('#divDialogCgu').dialog({
+                autoOpen: false,
+                resizable: false,
+                width:widthDialog,
+                modal: true,
+                closeOnEscape: false,
+                open: function(event, ui) {
+                    $("#divDialogCgu").addClass("dialogCgu");
+                    $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+                    $('.dialog-overlay').show().animate({ opacity: 0.25 }, 250);
+                    $("#divDialogCgu").parents("div").css("z-index","4000");
+                },
+                close: function(event, ui)
+                {
+                    $('.dialog-overlay').animate({ opacity: 0 }, 300, function () {
+                        $('.dialog-overlay').hide();
+                    });
+                }
+            });
+
+            function jsOpenDialogCgu() {
+                var dialogDiv = $('#divDialogCgu');
+                dialogDiv.dialog('open');
+                $( "#divDialogCgu" ).dialog( "option", "draggable", false );
+
+                // EricM300719-1 : Ajout pour prise en compte de la mantis #0044976: "Un usager qui se connecte sur son espace-personnel est empêché à cause de l'affichage des CGU qui ne se fait pas correctement"
+                setTimeout(function(){
+                    $('#divDialogCgu').dialog("option", "position", {my: "center", at: "center", of: ".containerprincipal", collision: "none"});
+                }, 50);
+            }
+
+
+            if(isCguAccepted == "")
+            {
+                $(window).bind('beforeunload', function(){
+                    $('#btnRetourCgu').trigger('click');
+                });
+                jsOpenDialogCgu();
+            }
+
+            function scrollFin()
+            {
+
+                var divBodyCgu = $(".bodyCgu");
+                //if(divBodyCgu.offsetHeight + divBodyCgu.scrollTop() >= divBodyCgu.scrollHeight)
+                if(divBodyCgu[0].scrollHeight - divBodyCgu.scrollTop() <= divBodyCgu.outerHeight())
+                {
+                    $("#btnAcceptCgu").removeAttr("disabled");
+                    $("#btnAcceptCgu").removeClass("btnAcceptCgu");
+                    $("#btnAcceptCgu").click(function()
+                    {
+                        jsAjaxEnCours();
+                        $.ajax({
+                            type: "POST",
+                            url: '/pouceetpuce/espace-citoyens/CompteCitoyen/EnregistrerDateCGU/',
+                            dataType: 'json',
+                            data: {},
+                            success: function (jsonData) {
+                                jsAjaxFin();
+                                $('#divDialogCgu').dialog("close");
+                            },
+                            error: function (xhr, errorType, exception) {
+                                jsAjaxFin();
+                            }
+                        });
+                    }
+            )
+                }
+            }
+
+            $(".bodyCgu").bind('scroll',scrollFin);
+            $(".bodyCgu").animate({scrollTop: $('.bodyCgu').scrollTop})
+        }
+
+        $('span[data-tooltip]').each(function () {
+            $(this).qtip({
+                content: $(this).attr('data-tooltip'), // Use the tooltip attribute of the element for the content
+                position: {
+                    my: 'right top',
+                    at: 'left bottom'
+                },
+                style: {
+                    classes: 'ui-tooltip-cream'
+                },
+                show: {
+                    event: 'mouseover focus'
+                },
+                hide: {
+                    event: 'mouseout blur'
+                }
+            });
+        });
+
+        $("span[data-tooltip]").on('mouseenter focus', function () {
+            const isSelected = $(this);
+            $(window).on('keydown', function (e) {
+                if (e.keyCode == 27 && isSelected) {
+                    isSelected.qtip('hide')
+                }
+            });
+        });
+
+        $('.alt-access').keypress(function (e) {
+            if (e.which === 13) { // Enter
+                $(this).find('a').click();
+            }
+        });
+
+    });
+</script>
+<form action="/pouceetpuce/espace-citoyens/CompteCitoyen" method="post" novalidate="novalidate">        <div class="masque">
+            <div id="monEspace" class="monEspace">
+                
+    <script>
+        $(document).ready(function () {
+            //$('.profil_famille_reduit').hide();
+            //agrandir();
+            $('#divDetailFactures').hide();
+
+            var callbackVoirFactures = function () {
+                $('#divDetailFactures').slideToggle(1000, function () {
+                    if ($("#divDetailFactures").is(':visible')) {
+                        $("#lnkVoirDetailFacture").attr("aria-expanded", "true");
+                    } else {
+                        $("#lnkVoirDetailFacture").attr("aria-expanded", "false");
+                    }
+                });
+
+
+            };
+            $('#lnkVoirDetailFacture').click(function () {
+                callbackVoirFactures();
+                $('#lnkVoirDetailFacture').blur();
+            });
+            $('#lnkVoirDetailFacture').keypress(function (e) {
+                if (e.which === 13) callbackVoirFactures();
+            });
+
+            $('.facture_deroulant tr').click(function () {
+                // on recherche le lien
+                window.location.href = $(this).find('a').attr('href');
+            });
+
+            $('#tblCompteFamille tr').click(function () {
+                // on recherche le lien
+                window.location.href = $(this).find('a').attr('href');
+            });
+
+            $('.dallepersonne .prenom').dotdotdot();
+        });
+    </script>
+        <div id="divMonEspace" class="span-sectionprofilfamille bloc-style6">
+            <div class="row">
+                <div class="span-sectionprofilfamilletitre">
+                    <h1 id="hMonEspaceTitre" class="titre-style3">
+Mon espace                    </h1>
+                </div>
+                <div class="sectionprofilfamilleinfos">
+                    <div class="dalle" style="display: flex;">
+                        <div class="arrow_boxPersonne">
+                            <div class="imgpersonne tuteur">
+<a alt="Accéder à ma fiche" href="/pouceetpuce/espace-citoyens/FichePersonne/DetailPersonne?idDynamic=1" id="lnkVoirDetailPersonne" title="Accéder à ma fiche"><img alt="Adrien RAMAROJOHN" id="imgVoirDetailPersonne" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/pere.png"></a>                            </div>
+                        </div>
+                    </div>
+                    <div id="divMonEspaceIdentite" class="span-sectionidentite" role="list">
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <span id="hMonEspaceIdentite" class="titre-style5" role="listitem">Adrien RAMAROJOHN</span>
+                                <p id="pMonEspaceRue" class="para-style2" role="listitem">27 Rue Du Colonel Pollet</p>
+                                <p id="pMonEspaceCPVille" class="para-style2" role="listitem">59650 VILLENEUVE D'ASCQ</p>
+                                                        <p id="pMonEspaceNumMob" class="para-style2" role="listitem">06 77 57 89 33</p>
+                                <p id="pMonEspaceEmail" class="para-style2" role="listitem">adi300000@gmail.com</p>
+                    </div>
+                </div>
+                <div class="sectionprofilfamilleboutons" role="list">
+                    <a id="lnkModifierProfil" role="listitem" class="btns_mon_espace btns_mon_espace_profil" href="/pouceetpuce/espace-citoyens/CompteCitoyen/Modification">Profil</a>
+                    
+                        <a role="listitem" id="lnkModifierIdentifiant" class="btns_mon_espace btns_mon_espace_id" href="/pouceetpuce/espace-citoyens/CompteCitoyen/ModificationIdentifants">Identifiants</a>
+                    
+
+                        <a role="listitem" id="lnkModifierEntourage" class="btns_mon_espace btns_mon_espace_entourage" href="/pouceetpuce/espace-citoyens/CompteCitoyen/GestionEntourage">
+                            Entourage
+                        </a>
+                </div>
+
+                <!--CO REPRESENTANTS"-->
+                    <div id="divCoRepresentantsTitre" class="span-sectionprofilfamilletitre">
+                        <h2 id="hCoRepresentantsTitre" class="titre-style3">
+                            Co-représentants
+                        </h2>
+                    </div>
+                    <div id="divCoRepresentants" class="rowpersonne" role="list">
+                            <!--encadré personne-->
+                            <div id="divCoRepresentantsDalle_Julie2" class="dallepersonne" role="listitem">
+                                <div class="arrow_box1">
+                                    <div id="divCoRepresentantsImage_Julie2" class="imgpersonne">
+<a alt="Accéder à la fiche de Julie" href="/pouceetpuce/espace-citoyens/FichePersonne/DetailPersonne?idDynamic=2" id="lnkCoRepresentantsdetailPersonne_Julie2" title="Accéder à la fiche de Julie"><img alt="Julie" id="imgCoRepresentantsDetailPersonne_Julie2" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/mere.png"></a>
+                                    </div>
+                                            <img class="imgPictoDalle alt-access" alt="Clé Espace Citoyens Enfance : Cette personne sera contactée prioritairement en cas d'urgence" role="img" tabindex="0" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/dalleInfo.png" width="20">
+                                </div>
+                                <div id="divCoRepresentantsPrenom_Julie2" class="prenom" role="presentation" style="overflow-wrap: anywhere;">Julie</div>
+                            </div>
+                    </div>
+                <!--MEMBRES FOYER"-->
+                    <div id="divMembresTitre" class="span-sectionprofilfamilletitre">
+                        <h2 id="hMembresTitre" class="titre-style3">Membres foyer</h2>
+                    </div>
+                    <div id="divMembres" class="rowpersonne" role="list">
+                            <!--encadré personne-->
+                            <div id="divMembresDalle_William3" class="dallepersonne" role="listitem">
+                                <div class="arrow_box1">
+                                    <div id="divMembresImage_William3" class="imgpersonne">
+<a alt="Accéder à la fiche de William" href="/pouceetpuce/espace-citoyens/FichePersonne/DetailPersonne?idDynamic=3" id="lnkMembresDetailPersonne_William3" title="Accéder à la fiche de William"><img alt="William" id="imgMembresDetailPersonne_William3" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/garcon.png"></a>
+                                    </div>
+                                </div>
+                                <div id="divMembresPrenom_William3" class="prenom" style="overflow-wrap: anywhere;">William</div>
+                            </div>
+                            <!--encadré personne-->
+                            <div id="divMembresDalle_Raphael4" class="dallepersonne" role="listitem">
+                                <div class="arrow_box1">
+                                    <div id="divMembresImage_Raphael4" class="imgpersonne">
+<a alt="Accéder à la fiche de Raphael" href="/pouceetpuce/espace-citoyens/FichePersonne/DetailPersonne?idDynamic=4" id="lnkMembresDetailPersonne_Raphael4" title="Accéder à la fiche de Raphael"><img alt="Raphael" id="imgMembresDetailPersonne_Raphael4" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/garcon.png"></a>
+                                    </div>
+                                </div>
+                                <div id="divMembresPrenom_Raphael4" class="prenom" style="overflow-wrap: anywhere;">Raphael</div>
+                            </div>
+                    </div>
+
+                <!--CONTACTS -->
+            </div>
+        </div>
+
+                    <div id="ActueTableauDeBord" class="sectionMonEspace">
+
+                            <div id="divFocusActu" class="div-style1 span-sectionprincipale">
+                                
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnFocusActuPriveArticleFermer').click(function () {
+            $('#divFocusActuPrive').slideUp();
+            sendInfoFermerFocus();
+        });
+
+        repositionneListeArticle();
+
+        $(window).resize(function () {
+            repositionneListeArticle();
+        });
+
+        var imgActuPriveeFocus = document.querySelector('#imgFocusActuPriveImage');
+        var spanActuPriveeFocusDatePubliee = document.querySelector('#spanFocusActuPriveDate');
+        if (imgActuPriveeFocus && spanActuPriveeFocusDatePubliee) {
+            var imgHeight = imgActuPriveeFocus.clientHeight;
+            var marginTop = -(imgHeight * 0.9);
+            document.querySelector('#spanFocusActuPriveDate').style.marginTop = marginTop.toString() + "px";
+        }
+    });
+
+    function sendInfoFermerFocus() {
+        $.ajax({
+            type: "GET",
+            url: '/pouceetpuce/espace-citoyens/Actualites/SendInfo/',
+            dataType: 'json',
+            success: function () {
+            },
+            error: function (xhr, errorType, exception) {
+                var errorMessage = exception || xhr.statusText;
+                jAlert("Erreur: " + errorMessage);
+            }
+        });
+    }
+
+    function repositionneListeArticle() {
+        $('#divFocusActu .article-principale-resume').width(arpInt($('#divFocusActu').width() - 90));
+    }
+</script>
+
+
+                            </div>
+                            
+
+
+    <script>
+        /* EricM201118-1 la règle "display: flex" est ajoutée ICI à la classe .dalle, plutôt que dans le .css, pour éviter les effets de bord !!!*/
+        /* EricM121118-1 ajout pour centrer le texte des dalles qui n'ont pas d'image
+        (attention: il faut aussi que la classe ".dalle" ait la règle "display: flex;" => NON effets de bord !!!*/
+        $(document).ready(function () {
+            // EricM201118-1 ajout
+            $('.dalle').css({
+                'display': 'flex'
+            });
+
+            $('.dalle > .label-radio:not(:has(span.image-illustrative))').css({
+                'height': 'auto',
+                'margin': 'auto'
+            });            
+
+            function chargerDemandeSiteExterne(type, codeSite, nomSite) {
+                //$("#divDalleDetail_DernieresDem").append('<div style="margin-left:10px;" id="titreSite_' + codeSite + '">' + nomSite + '</div>');
+                //$("#divDalleDetail_DernieresDem").append('<span class="spanAucuneDemande" id="chargementSite_' + codeSite + '">Chargement en cours....</span>');
+
+                $.ajax({
+                    type: "GET",
+                    url: '/pouceetpuce/espace-citoyens/Demande/RecupererDemandeSurSiteExterne',
+                    dataType: 'json',
+                    data: {
+                        typeSite: type,
+                        codeSite: codeSite
+                    },
+                    success: function(siteData) {
+                        if (siteData.IsSuccess && siteData.Data.length > 0) {
+                            var tableStr = '<table id="tblDalleDetail_DernieresDem_' + codeSite + '" class="menu_deroulant">';
+
+                            tableStr += siteData.Data.join('');
+
+                            tableStr += '</table>';
+
+                            $('#chargementSite_' + codeSite).replaceWith(tableStr);
+
+                            $('span[data-tooltip]').each(function () {
+                                $(this).qtip({
+                                    content: $(this).attr('data-tooltip'), // Use the tooltip attribute of the element for the content
+                                    position: {
+                                        my: 'right top',
+                                        at: 'left bottom'
+                                    },
+                                    style: {
+                                        classes: 'ui-tooltip-cream'
+                                    },
+                                    show: {
+                                        event: 'mouseover focus'
+                                    },
+                                    hide: {
+                                        event: 'mouseout blur'
+                                    }
+                                });
+                            });
+
+                            $("span[data-tooltip]").on('mouseenter focus', function () {
+                                const isSelected = $(this);
+                                $(window).on('keydown', function (e) {
+                                    if (e.keyCode == 27 && isSelected) {
+                                        isSelected.qtip('hide')
+                                    }
+                                });
+                            });                            
+
+                            $('a.supprimerDemande').click(function (e) {
+                                e.stopPropagation();
+                                let ticket = $(this).data("ticket");
+                                let codesaf = $(this).data("codesaf");
+                                let uriAnnuler = $(this)[0].href + "/" + ticket;
+                                if (codesaf != null && codesaf.length > 0) {
+                                    uriAnnuler = uriAnnuler + "?codeSaf=" + codesaf;
+                                }
+                                //MatthieuB 300123-1 Jira GRC2-5205 On récupère le bouton cliqué pour pouvoir le refocus en cas de non comfirmation
+                                var elementDeclencheur = $(this);
+                                jConfirmWithButtons("Etes-vous sûr de vouloir annuler cette demande ?", 'Annulation de la demande', '&nbsp;Oui&nbsp;', '&nbsp;Non&nbsp;', function (r) {
+                                    if (r) {
+                                        jsAjaxEnCours();
+                                        $.ajax({
+                                            url: uriAnnuler,
+                                            type: 'POST',
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                jsAjaxFin();
+                                                jAlert($.parseJSON(jqXHR.responseText).errormessage, "Erreur");
+                                            },
+                                            success: function (data) {
+                                                jsAjaxFin();
+                                                if (data.IsSuccess) {
+                                                    window.location.reload();
+                                                } else {
+                                                    jAlert(data.LibErreur, "Erreur");
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        //MatthieuB 300123-1 Jira GRC2-5205 On met le focus sur le bouton qui a permit d'ouvrir la modal si on clique sur non
+                                        elementDeclencheur.focus();
+                                    }
+                                });
+                                return false;
+                            });
+
+                        } else {
+                            $('#divDetailWrapping').unwrap();
+                            $('#chargementSite_' + codeSite).remove();
+                            $('#titreSite_' + codeSite).remove();
+                            $('#divDetailWrapping').wrap('<div id="divDalleDetail_DernieresDem" class="span-sectionprincipale bloc-dalledetail" style="display:block;">');
+                            if(!$('#inpDalle_DernieresDem').attr('checked')){
+                                $('#divDalleDetail_DernieresDem').hide();
+                            }
+                        }
+                    },
+                    error: function(xhr, errorType, exception) {
+                        console.log(exception)
+                        $('#chargementSite_' + codeSite).remove();
+                        $('#titreSite_' + codeSite).remove();
+                    }
+                });
+            }
+
+            //Jonathanbl 20112019-1: Mantis #46481: On charge de manière async les demandes Multi Communes
+            $.ajax({
+                type: "GET",
+                url: '/pouceetpuce/espace-citoyens/Demande/RecupererSiteAffilie',
+                dataType: 'json',
+                success: function (jsonData) {
+                    if (jsonData.IsSuccess) {
+                        for (var site of jsonData.Data) {
+                            chargerDemandeSiteExterne("SITEAFFILIE", site.LibCodeSaf, site.LibNomSaf);
+                        }
+                    }
+                },
+                error: function (xhr, errorType, exception) {
+                    console.log(exception);
+                }
+        });
+
+        $('.detailDemarche').click(function () {
+            // on recherche le lien
+            if (typeof $(this).find('a').attr("href") != 'undefined') {
+                let element = $(this).find('a');
+                let target = element.attr("target") != undefined ? element.attr("target") : "_self";
+                window.open(element.attr("href"), target);
+            }
+            return false;
+        });
+
+
+        });
+
+    </script>
+    <div id="div_Tableau" class="divBlocDalles">
+        <div id="divTitre_Tableau" class="" aria-hidden="true">
+            <h2 id="hTitre_Tableau">
+Mon tableau de bord            </h2>
+        </div>
+
+                                <div role="button" id="divDalle_DernieresDem" class="dalle dalle-radio_TableauDeBord " tabindex="0" style="display: flex;">
+
+                                    <input id="inpDalle_DernieresDem" name="accordion-1" type="radio" class="sr-only" aria-labelledby="lblDalle_DernieresDem">
+                                    <span id="lblDalle_DernieresDem" for="inpDalle_DernieresDem" class="label-radio"><span class="image-illustrative">
+                                                
+                                                
+                                                <img id="imgDalle_DernieresDem" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/picto_dernieres_demarches.varcouleur.png" alt="accueilprive.damier.dalle.dernieresdemandes.titre" aria-hidden="true">
+                                            </span>Dernières démarches</span>
+                                </div>
+                                <div id="divDalle_MesFactures" class="dalle dalle-radio_TableauDeBord " role="button" tabindex="0" style="display: flex;">
+                                    <input id="inpDalle_MesFactures" name="accordion-1" type="radio" class="sr-only" aria-labelledby="lblDalle_MesFactures">
+                                    <span id="lblDalle_MesFactures" for="inpDalle_MesFactures" class="label-radio"><span class="image-illustrative">
+                                                
+                                                
+                                                <img id="imgDalle_MesFactures" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/picto_mon_compte.varcouleur.png" alt="accueilprive.damier.dalle.moncompte.titre" aria-hidden="true">
+                                            </span>Mes factures</span>
+                                </div>
+                                    <div id="divDalle_ChgtCoordonnees" class="dalle dalle-radio_TableauDeBord " role="button" tabindex="0" style="display: flex;">
+
+                                        <input id="inpDalle_ChgtCoordonnees" name="accordion-1" type="radio" class="sr-only" aria-labelledby="lblDalle_ChgtCoordonnees">
+                                        <span id="lblDalle_ChgtCoordonnees" for="inpDalle_ChgtCoordonnees" class="label-radio"><span class="image-illustrative">
+                                                    
+                                                    
+                                                    <img id="imgDalle_ChgtCoordonnees" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/picto_coordonnees.varcouleur.png" alt="Changement de coordonnées" aria-hidden="true">
+                                                </span>Coordonnées</span>
+                                    </div>
+                                    <div id="divDalle_EditionDoc" class="dalle dalle-radio_TableauDeBord " role="button" tabindex="0" style="display: flex;">
+
+                                        <input id="inpDalle_EditionDoc" name="accordion-1" type="radio" class="sr-only" aria-labelledby="lblDalle_EditionDoc">
+                                        <span id="lblDalle_EditionDoc" for="inpDalle_EditionDoc" class="label-radio"><span class="image-illustrative">
+                                                    
+                                                    
+                                                    
+                                                    <img id="imgDalle_MesDocumentsPublies" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/picto_edition_documents.varcouleur.png" alt="Edition de documents" aria-hidden="true">
+                                                </span>Edition de documents</span>
+                                    </div>
+
+
+                <!--Menu déroulant : échanges à lire -->
+                <div id="divDalleDetail_Ech" class="span-sectionprincipale bloc-dalledetail" style="display: none;">
+                    <span id="spanDalleDetailTitre_Ech_0" class="date_titre_calendrier">Echanges à lire</span>
+                        <div role="alert" class="menu_deroulant">
+                            <div id="tdDalleDetailAucun_Ech_0" class="aucuneactionpossible">
+                                Aucun échange à lire.
+                            </div>
+                        </div>
+                </div>
+                <!--Menu déroulant : rendez-vous planifiés -->
+                <div id="divDalleDetail_Rdv" class="span-sectionprincipale bloc-dalledetail" style="display: none;">
+                    <span id="spanDalleDetailTitre_Rdv" class="date_titre_calendrier">Rendez-vous proches</span>
+                        <div class="menu_deroulant">
+                            <ul>
+                                <li id="tdDalleDetailAucun_Rdv" class="aucuneactionpossible">
+                                    Vous n'avez aucun rendez-vous prochainement.
+                                </li>
+                            </ul>
+                        </div>
+                </div>
+                <!--Menu déroulant : dernières démarches-->
+                <div id="divDalleDetail_DernieresDem" class="span-sectionprincipale bloc-dalledetail" style="display: none;">
+                    <div id="divDetailWrapping">
+                        <span id="spanDalleDetailTitre_DernieresDem" class="date_titre_calendrier">Dernières démarches effectuées</span>
+
+
+
+                                <ul id="trDalleDetail_DernieresDem_115369" class="passed ulPourSynthese">
+    <li id="tdDalleDetail_DernieresDemDate_115369" class="dateDemarche">
+        <input type="hidden" value="20250701-840">
+        <div class="dateDemarche">
+            <div id="divDernieresDemJour_115369" class="dateJour">1</div>
+            <div id="divDernieresDemMois_115369" class="dateMois">juil.</div>
+            <div id="divDernieresDemAn_115369" class="dateAn">2025</div>
+        </div>
+    </li>
+    <li id="tdDalleDetail_DernieresDemHeure_115369" class="heureDemarche">
+        08:40
+    </li>
+    <li id="tdDalleDetail_DernieresDemType_115369" class="typeDemarche">
+            <img id="imgDalleDetail_DernieresDemType_115369" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/GRC2_reservation_simple.png" alt="Le type de demande">
+    </li>
+    <li id="tdDalleDetail_DernieresDemMetier_115369" class="metierDemarche">
+        <ul class="DetailMetierSynthese">
+            <li><span id="spanDaleDetail_DernieresDemNumDem_115369" class="numDemande">DEMANDE N° 115369</span></li>
+            <li><span id="spanDalleDetail_DernieresDemMetier_115369" class="titreMetier">Enfance</span>Réservation</li>
+                <li id="liDalleDetail_DernieresDemMetierTitre_115369">Raphael - CAL Mercredi - CAL CHARLIE CHAPLIN - du 03/09 au 15/10/2025</li>
+                                            </ul>
+            </li>
+    <li id="tdDalleDetail_DernieresDemEtat_115369" class="etatDemarche">
+
+            <img id="imgDalleDetail_DernieresDemEtat_115369" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/img_DemandePositive.png" alt="Demande Traitée positivement">
+Traitée positivement
+    </li>
+
+                        <li id="tdDalleDetail_DernieresDemDetail_115369" class="detailDemarche alt-access" alt="Suivre la demande n°115369" tabindex="0">
+                            <a alt="Suivre la demande" href="/pouceetpuce/espace-citoyens/Demande/SuiviDemande/1wCv5KSLmHnFd2Zfd5uckFtZK5ujtgme" id="lnkDalleDetail_DernieresDemDetail_115369" tabindex="-1"><img alt="Détails de la demande" id="imgDalleDetail_DernieresDemDetail_115369" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/loupe_recherche.png"></a>
+                        </li>
+</ul><ul id="trDalleDetail_DernieresDem_115370" class="passed ulPourSynthese">
+    <li id="tdDalleDetail_DernieresDemDate_115370" class="dateDemarche">
+        <input type="hidden" value="20250701-840">
+        <div class="dateDemarche">
+            <div id="divDernieresDemJour_115370" class="dateJour">1</div>
+            <div id="divDernieresDemMois_115370" class="dateMois">juil.</div>
+            <div id="divDernieresDemAn_115370" class="dateAn">2025</div>
+        </div>
+    </li>
+    <li id="tdDalleDetail_DernieresDemHeure_115370" class="heureDemarche">
+        08:40
+    </li>
+    <li id="tdDalleDetail_DernieresDemType_115370" class="typeDemarche">
+            <img id="imgDalleDetail_DernieresDemType_115370" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/GRC2_reservation_simple.png" alt="Le type de demande">
+    </li>
+    <li id="tdDalleDetail_DernieresDemMetier_115370" class="metierDemarche">
+        <ul class="DetailMetierSynthese">
+            <li><span id="spanDaleDetail_DernieresDemNumDem_115370" class="numDemande">DEMANDE N° 115370</span></li>
+            <li><span id="spanDalleDetail_DernieresDemMetier_115370" class="titreMetier">Enfance</span>Réservation</li>
+                <li id="liDalleDetail_DernieresDemMetierTitre_115370">William - CAL Mercredi - CAL CHARLIE CHAPLIN - du 03/09 au 15/10/2025</li>
+                                            </ul>
+            </li>
+    <li id="tdDalleDetail_DernieresDemEtat_115370" class="etatDemarche">
+
+            <img id="imgDalleDetail_DernieresDemEtat_115370" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/img_DemandePositive.png" alt="Demande Traitée positivement">
+Traitée positivement
+    </li>
+
+                        <li id="tdDalleDetail_DernieresDemDetail_115370" class="detailDemarche alt-access" alt="Suivre la demande n°115370" tabindex="0">
+                            <a alt="Suivre la demande" href="/pouceetpuce/espace-citoyens/Demande/SuiviDemande/YvwYUCqXElWn9Is164Rs17wWMHyO7KHq" id="lnkDalleDetail_DernieresDemDetail_115370" tabindex="-1"><img alt="Détails de la demande" id="imgDalleDetail_DernieresDemDetail_115370" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/loupe_recherche.png"></a>
+                        </li>
+</ul><a class="lien-style4" href="/pouceetpuce/espace-citoyens/CompteCitoyen/MesDemandes" id="lnkDalleDetail_VoirToutesMesDemarches" title="Voir toutes mes demandes">Voir toutes mes demandes</a><table id="tblDalleDetail_DernieresDem" class="menu_deroulant">
+
+<script>
+    $(function () {
+        $('img[title]').each(function () {
+            $(this).qtip({
+                content: $(this).attr('title'),
+                position: {
+                    my: 'right top',
+                    at: 'left bottom'
+                },
+                style: {
+                    classes: 'ui-tooltip-cream'
+                },
+                show: {
+                    event: 'focus'
+                },
+                hide: {
+                    event: 'blur'
+                }
+            });
+        });
+    });
+</script>
+
+
+
+<script>
+    $(function () {
+        $('img[title]').each(function () {
+            $(this).qtip({
+                content: $(this).attr('title'),
+                position: {
+                    my: 'right top',
+                    at: 'left bottom'
+                },
+                style: {
+                    classes: 'ui-tooltip-cream'
+                },
+                show: {
+                    event: 'focus'
+                },
+                hide: {
+                    event: 'blur'
+                }
+            });
+        });
+    });
+</script>
+
+
+                                    
+                                </table>
+                    </div>
+                </div>
+                <!--Menu déroulant : coordonnées -->
+                <div id="divDalleDetail_ChgtCoordonnees" class="span-sectionprincipale bloc-dalledetail" style="display: none;">
+                    <span id="spanDalleDetailTitre_ChgtCoordonnees" class="date_titre_calendrier">Coordonnées</span>
+                    <table id="tblDalleDetail_ChgtCoordonnees" class="menu_deroulant">
+                                <tbody><tr id="trDalleDetail_AdressePostale" class="alt-access" alt="Changer d'adresses postales" tabindex="0">
+                                    <td style="width:60px;">
+                                        <span class="detailDemarche">
+                                                <img id="imgDalle_AdressePostale" class="picto_coordonnees_PA" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/GRC2_changement_adresse_postale_simple.png" alt="Changement de coordonnées">
+                                        </span>
+                                    </td>
+                                    <td id="tdDalleDetail_AdressePostaleLibelle">Changement d'adresse postale</td>
+                                    <td id="tdDalleDetail_AdressePostaleEtat" class="etat_demande">
+                                        <a alt="Changer d'adresses postales" href="/pouceetpuce/espace-citoyens/DemandeMultiSystemes/NouvelleDemandeChangementAdressePostale" id="lnkDalleDetail_AdressePostale" tabindex="-1"><img alt="Accéder au changement d'adresse postale" class="adressepostale" id="imgDalleDetail_AdressePostale" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                    </td>
+                                </tr>
+                                                        <tr id="trDalleDetail_CoordCourriel" class="alt-access" alt="Changer de courriels" tabindex="0">
+                                    <td style="width:60px;">
+                                        <span class="detailDemarche">
+                                                <img id="imgDalle_CoordCourriel" class="picto_coordonnees_PA" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/GRC2_changement_adresse_postale_simple.png" alt="Changement de courriel">
+                                        </span>
+                                    </td>
+                                    <td id="tdDalleDetail_CoordCourrielLibelle">Changement de courriel</td>
+                                    <td id="tdDalleDetail_CoordCourrielEtat" class="etat_demande">
+                                        <a href="/pouceetpuce/espace-citoyens/DemandeMultiSystemes/NouvelleDemandeChangementCourriel" id="lnkDalleDetail_CoordCourriel" tabindex="-1" title="Changer de courriels"><img alt="Accéder au changement de courriels" class="courriel" id="imgDalleDetail_CoordCourriel" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                    </td>
+                                </tr>
+                                                        <tr id="trDalleDetail_CoordTel" class="alt-access" alt="Changer de téléphones" tabindex="0">
+                                    <td style="width:60px;">
+                                        <span class="detailDemarche">
+                                                <img id="imgDalle_CoordTel" class="picto_coordonnees_PA" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/GRC2_changement_adresse_postale_simple.png" alt="Changement de téléphone">
+                                        </span>
+                                    </td>
+                                    <td id="tdDalleDetail_CoordTelLibelle">Changement de téléphone</td>
+                                    <td id="tdDalleDetail_CoordTelEtat" class="etat_demande">
+                                        <a href="/pouceetpuce/espace-citoyens/DemandeMultiSystemes/NouvelleDemandeChangementTelephones" id="lnkDalleDetail_CoordTel" tabindex="-1" title="Changer de téléphones"><img alt="Accéder au changement de téléphones" class="telephone" id="imgDalleDetail_CoordTel" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                    </td>
+                                </tr>
+                    </tbody></table>
+                </div>
+    </div>
+
+                            
+
+                                <div id="div_MaFamille" class="divBlocDalles">
+                                    <div id="divTitre_MaFamille" class="span-sectionprincipale">
+                                        <h2>Ma famille</h2>
+                                    </div>
+
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                                <!-- Réservation -->
+                                                    <div id="divDalle_Reservation" class="dalle dalle-radio_MaFamille " role="button" tabindex="0" style="display: flex;" aria-expanded="true">
+                                                        <input id="inpDalle_Reservation" name="accordion-1" type="radio">
+                                                        <span id="lblDalle_Reservation" for="inpDalle_Reservation" class="label-radio"><span class="image-illustrative">
+                                                                    <img id="imgDalle_Reservation" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/GRC2_reservation_simple.png" alt="" aria-hidden="true">
+                                                                </span>Modifier mes réservations</span>
+                                                    </div>
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                            <!--BULLETIN D'INSCRIPTION-->
+                                                <div id="divDalle_BulletinInscr_0" class="dalle dalle-radio_MaFamille " role="button" tabindex="0" style="display: flex;">
+                                                    <input id="inpDalle_BulletinInscr_0" name="accordion-1" type="radio">
+                                                    <span id="lblDalle_BulletinInscr_0" for="inpDalle_BulletinInscr_0" class="label-radio"><span class="image-illustrative">
+                                                                <img id="imgDalle_BulletinInscr_0" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/GRC2_bulletin_inscription_simple.png" alt="" aria-hidden="true">
+                                                            </span>Inscription / Actualisation</span>
+
+                                                </div>
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                                <!-- Perte de carte -->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                                <!-- Signalement d'absence -->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                                <!-- Simulation des tarifs -->
+                                                    <div id="divDalle_SimuTar" class="dalle dalle-radio_MaFamille " role="button" tabindex="0" style="display: flex;">
+                                                        <input id="inpDalle_SimuTar" name="accordion-1" type="radio">
+                                                        <span id="lblDalle_SimuTar" for="inpDalle_SimuTar" class="label-radio"><span class="image-illustrative">
+                                                                    <img id="imgDalle_SimuTar" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/ECP_b2_simulation_tarifs.png" alt="" aria-hidden="true">
+                                                                </span>Simulation des tarifs</span>
+                                                    </div>
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                            <!--DEMARCHE GENERIQUE-->
+                                                <div id="divDalle_DemAutre_0" class="dalle dalle-radio_MaFamille " role="button" tabindex="0" style="display: flex;">
+                                                    <input id="inpDalle_DemAutre_0" name="accordion-1" type="radio">
+                                                    <span id="lblDalle_DemAutre_0" for="inpDalle_DemAutre_0" class="label-radio"><span class="image-illustrative">
+                                                                <img id="imgDalle_DemAutre_0" src="/pouceetpuce/espace-citoyens/App_Ressources/Images/GRC2_demandes_generiques.png" alt="" aria-hidden="true">
+                                                            </span>Autres démarches</span>
+
+                                                </div><div id="divDalleDetail_Reservation" class="span-sectionprincipale bloc-dalledetail" tabindex="0" style="display: block;">
+                                            <span id="spanDalleDetailTitre_Reservation" class="date_titre_calendrier">Modifier mes réservations</span>
+
+
+
+
+                                                <table id="tblDalleDetail_Reservation" class="menu_deroulant">
+
+                                                                <tbody><tr id="trDalleDetail_Reservation_0">
+                                                                    <td class="image_personne"></td>
+                                                                    <td id="tdDalleDetail_ReservationPrenom_0">Raphael</td>
+                                                                    <td id="tdDalleDetail_ReservationActivite_0">CAL Mercredi</td>
+                                                                    <td id="tdDalleDetail_ReservationLieu_0">CAL CHARLIE CHAPLIN</td>
+                                                                    <td id="tdDalleDetail_ReservationPeriode_0">du 01/09/2025 au 03/07/2026</td>
+                                                                    <td id="tdDalleDetail_ReservationEtat_0" class="etat_demande">
+                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservation/4/1768381/33/4283" id="lnkDalleDetail_Reservation_0"><img alt="Accéder à la démarche" class="reservation" id="imgDalleDetail_Reservation_0" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr id="trDalleDetail_Reservation_1">
+                                                                    <td class="image_personne"></td>
+                                                                    <td id="tdDalleDetail_ReservationPrenom_1">William</td>
+                                                                    <td id="tdDalleDetail_ReservationActivite_1">CAL Mercredi</td>
+                                                                    <td id="tdDalleDetail_ReservationLieu_1">CAL CHARLIE CHAPLIN</td>
+                                                                    <td id="tdDalleDetail_ReservationPeriode_1">du 01/09/2025 au 03/07/2026</td>
+                                                                    <td id="tdDalleDetail_ReservationEtat_1" class="etat_demande">
+                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservation/3/1767221/33/4283" id="lnkDalleDetail_Reservation_1"><img alt="Accéder à la démarche" class="reservation" id="imgDalleDetail_Reservation_1" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                    </td>
+                                                                </tr>
+                                                                                                                <tr id="trDalleDetail_Reservation_2" class="trModifSeance">
+                                                                <td class="image_panier"></td>
+                                                                <td id="tdDalleDetail_ReservationActivite_2" colspan="2">Centre de loisirs traditionnel ou culturel</td>
+                                                                <td id="tdDalleDetail_ReservationLieu_2" colspan="2"></td>
+                                                                <td id="tdDalleDetail_ReservationEtat_2" class="etat_demande">
+                                                                    <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/79" id="lnkDalleDetail_Reservation_2"><img alt="Accéder à la démarche" class="reservation" id="imgDalleDetail_Reservation_2" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="trDalleDetail_Reservation_3" class="trModifSeance">
+                                                                <td class="image_panier"></td>
+                                                                <td id="tdDalleDetail_ReservationActivite_3" colspan="2">Centre de loisirs sportif</td>
+                                                                <td id="tdDalleDetail_ReservationLieu_3" colspan="2"></td>
+                                                                <td id="tdDalleDetail_ReservationEtat_3" class="etat_demande">
+                                                                    <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeReservationSeances/83" id="lnkDalleDetail_Reservation_3"><img alt="Accéder à la démarche" class="reservation" id="imgDalleDetail_Reservation_3" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                </td>
+                                                            </tr>
+                                                    
+                                                </tbody></table>
+                                        </div>
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+
+
+                                    
+                                    
+
+                                    
+                                    
+
+
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                            <!--BULLETIN D'INSCRIPTION-->
+                                                <div id="divDalleDetail_BulletinInscr_0" class="span-sectionprincipale bloc-dalledetail" tabindex="0" style="display: none;">
+                                                    <span id="spanDalleDetailTitre_BulletinInscr_0" class="date_titre_calendrier">Inscription / Actualisation</span>
+
+
+                                                        <table id="tblDalleDetail_BulletinInscr_0" class="menu_deroulant">
+
+                                                                                <tbody><tr id="trDalleDetail_BulletinInscr_0_0">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_0">Adrien</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_0">Pour les non Villeneuvois ayant un lien familial ou professionnel sur la ville - Mise à jour des ressources pour les prestations Pouce Et Puce - Année 2025</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_0" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=1&amp;IdBulletin=27&amp;GuidPaf=367ba3ed-e8e2-42d4-8701-5f9474fea6c6" id="lnkDalleDetail_BulletinInscr_0_0"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_0" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_1">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_1">Adrien</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_1">Pour les Villeneuvois - Mise à jour des ressources pour les prestations Pouce Et Puce - 2025</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_1" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=1&amp;IdBulletin=167&amp;GuidPaf=16962659-f01c-4e2b-8e61-1e331becbe2f" id="lnkDalleDetail_BulletinInscr_0_1"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_1" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_2">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_2">Adrien</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_2">Pour les non Villeneuvois n'ayant aucun lien sur la Ville - Mise à jour des ressources pour les prestations Pouce Et Puce - 2025</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_2" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=1&amp;IdBulletin=168&amp;GuidPaf=4b75bd17-9cb5-42b2-b421-5345408fe8d0" id="lnkDalleDetail_BulletinInscr_0_2"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_2" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_3">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_3">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_3">[INSCRIPTION] CMIS - VOLTAIRE mercredi 10h15-11h30</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_3" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=74&amp;GuidPaf=2a4aa747-919f-4f89-8184-7b11972a5c02" id="lnkDalleDetail_BulletinInscr_0_3"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_3" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_4">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_4">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_4">[INSCRIPTION] CMIS - ESUM mercredi 10h30-11h45</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_4" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=77&amp;GuidPaf=2f96e644-006e-4ea2-b0bc-b211d97ae5d0" id="lnkDalleDetail_BulletinInscr_0_4"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_4" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_5">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_5">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_5">[INSCRIPTION] CMIS - VENDEMIAIRE mercredi 13h45-15h</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_5" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=78&amp;GuidPaf=042e8445-74c7-4618-bfaa-1ac1ce0fb306" id="lnkDalleDetail_BulletinInscr_0_5"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_5" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_6">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_6">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_6">[INSCRIPTION] CMIS - LEO LAGRANGE mercredi 9h-10h15</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_6" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=81&amp;GuidPaf=35e0c271-99bc-4921-9218-64ea0a76cdb1" id="lnkDalleDetail_BulletinInscr_0_6"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_6" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_7">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_7">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_7">[INSCRIPTION] CMIS - GEORGES MARTIN mardi 16h45-18h</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_7" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=82&amp;GuidPaf=e96e6945-ffc5-45c2-833f-f7f196ee413e" id="lnkDalleDetail_BulletinInscr_0_7"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_7" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_8">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_8">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_8">[INSCRIPTION] CMIS - CANTELEU mercredi 14h-15h15</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_8" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=69&amp;GuidPaf=9f044c1a-20f9-4858-a55a-f60db5a4bbbb" id="lnkDalleDetail_BulletinInscr_0_8"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_8" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_9">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_9">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_9">2025-26 - Demande de dérogation scolaire élémentaire Hors Période</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_9" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=264&amp;GuidPaf=49df0a93-61fb-4cef-bf59-fe9e2dc4a950" id="lnkDalleDetail_BulletinInscr_0_9"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_9" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_10">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_10">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_10">2025-26 - Préinscription scolaire élémentaire Hors Période</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_10" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=272&amp;GuidPaf=e02ccc6f-b696-4413-b26c-ae8f1559037b" id="lnkDalleDetail_BulletinInscr_0_10"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_10" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_11">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_11">Raphael</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_11">2025-26 - Préinscription scolaire maternelle Hors Période</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_11" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=4&amp;IdBulletin=274&amp;GuidPaf=399d364a-f29c-4a49-96db-0da55eb87f3f" id="lnkDalleDetail_BulletinInscr_0_11"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_11" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_12">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_12">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_12">[INSCRIPTION] CMIS - VOLTAIRE mercredi 9h-10h15</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_12" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=75&amp;GuidPaf=9cacb9e8-35eb-4460-a1ed-1e10e1420275" id="lnkDalleDetail_BulletinInscr_0_12"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_12" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_13">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_13">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_13">[INSCRIPTION] CMIS - ESUM mercredi 9h-10h15</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_13" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=76&amp;GuidPaf=5e3427f6-7515-479b-892d-e2525551c214" id="lnkDalleDetail_BulletinInscr_0_13"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_13" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_14">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_14">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_14">[INSCRIPTION] CMIS - VENDEMIAIRE mercredi 15h15-16h30</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_14" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=79&amp;GuidPaf=ffa3e0e9-f81d-436e-9609-d262e5824cd1" id="lnkDalleDetail_BulletinInscr_0_14"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_14" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_15">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_15">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_15">[INSCRIPTION] CMIS - CENTRE NAUTIQUE BABYLONE mercredi 9h45-10h30</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_15" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=80&amp;GuidPaf=ede9187d-0a86-4ecf-af5c-aa09332216fb" id="lnkDalleDetail_BulletinInscr_0_15"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_15" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_16">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_16">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_16">[INSCRIPTION] CMIS - GEORGES MARTIN mardi 16h45-18h</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_16" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=82&amp;GuidPaf=b1e1c44c-592c-49b7-a845-ce72ff563f3c" id="lnkDalleDetail_BulletinInscr_0_16"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_16" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_17">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_17">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_17">[INSCRIPTION] CMIS - TAMISE lundi 16h45-18h</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_17" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=83&amp;GuidPaf=6b7a09ad-dbd4-475c-bd55-86ce60dda85f" id="lnkDalleDetail_BulletinInscr_0_17"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_17" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_18">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_18">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_18">[INSCRIPTION] CMIS - CANTELEU mercredi 15h15-16h30</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_18" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=73&amp;GuidPaf=b7a04120-5b28-4e63-a18d-99cdab34c122" id="lnkDalleDetail_BulletinInscr_0_18"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_18" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_19">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_19">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_19">[INSCRIPTION] CMIS - LEO LAGRANGE mercredi 10h15-11h30</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_19" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=166&amp;GuidPaf=8679c982-7acb-4c36-9e33-c4f4d0fb1cf4" id="lnkDalleDetail_BulletinInscr_0_19"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_19" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_20">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_20">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_20">2025-26 - Demande de dérogation scolaire élémentaire Hors Période</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_20" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=264&amp;GuidPaf=15cd2880-6dac-4fdd-90c7-e711b4ef60ed" id="lnkDalleDetail_BulletinInscr_0_20"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_20" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_21">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_21">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_21">2025-26 - Préinscription scolaire élémentaire Hors Période</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_21" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=272&amp;GuidPaf=036b972d-f63a-4637-829f-cec18077e842" id="lnkDalleDetail_BulletinInscr_0_21"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_21" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr id="trDalleDetail_BulletinInscr_0_22">
+                                                                                    <td class="image_personne"></td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrPrenom_0_22">William</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrBulletin_0_22">[INSCRIPTION] CMIS - TAMISE mardi 16h45-18h15</td>
+                                                                                    <td id="tdDalleDetail_BulletinInscrEtat_0_22" class="etat_demande">
+                                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeBulletinInscription?IdDynamic=3&amp;IdBulletin=241&amp;GuidPaf=e91db496-039f-4346-ab41-2b80d9758c81" id="lnkDalleDetail_BulletinInscr_0_22"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_BulletinInscr_0_22" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                                                    </tbody></table>
+                                                </div>
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                            <!--DEMARCHE GENERIQUE-->
+                                                <div id="divDalleDetail_DemAutre_0" class="span-sectionprincipale bloc-dalledetail" tabindex="0" style="display: none;">
+                                                    <span id="spanDalleDetailTitre_DemAutre_0" class="date_titre_calendrier">Autres démarches</span>
+
+
+                                                        <table id="tblDalleDetail_DemAutre_0" class="menu_deroulant">
+                                                                <tbody><tr id="trDalleDetail_DemAutre_0_0">
+                                                                    <td class="image_DemarcheGenerique"></td>
+                                                                    <td id="tdDalleDetail_DemAutre_0_0">Signaler un changement de situation familiale ou professionnelle</td>
+                                                                    <td id="tdDalleDetail_DemAutreEtat_0_0" class="etat_demande">
+
+                                                                        <a href="/pouceetpuce/espace-citoyens/DemandeEnfance/NouvelleDemandeGenerique/CONCERTO/CHANG_SIT_" id="lnkDalleDetail_DemAutre_0_0"><img alt="Accéder à la démarche" class="bulletin" id="imgDalleDetail_DemAutre_0_0" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/fleche.png"></a>
+                                                                    </td>
+                                                                </tr>
+                                                        </tbody></table>
+                                                </div>
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                        <!--DEMARCHE GENERIQUE-->
+                                        <!--BULLETIN D'INSCRIPTION-->
+                                    <!--Menu déroulant : j'ai perdu ma carte"-->
+
+                                    <!--Menu déroulant : signalement d'absence"-->
+
+                                    <!--Menu déroulant : informations santé"-->
+
+                                    <!--Menu déroulant : Listes d'attente-->
+
+                                    <!--Menu déroulant : Autorisations-->
+
+                                    <!--Menu déroulant : réservation"-->
+                                        
+                                    <!--Menu déroulant : Démarches génériques"-->
+                                    
+
+                                </div>
+
+
+
+
+
+
+                            <!--portails partenaires"-->
+
+                        </div>
+            </div>
+        </div>
+</form>
+<div id="tmpEspaceConnexionEnCours" hidden="hidden"></div>
+                </main>
+            </div>
+                    <div class="row">
+                        <!--pied_de_page-->
+                        <footer id="footer">
+                            
+<script>
+    $(document).ready(function () {
+        if (false) {
+            $(".aide-large").on("click", function () {
+                let link = $("a", this).attr("href");
+                window.open(link, "_blank");
+            });
+        }
+    });
+</script>
+<div id="siteinfo" class="pied">
+    <ul class="footer-list">
+                    <li id="spanLienTypeAucun_0">© 2015 Ville de Villeneuve d'Ascq</li>
+                
+                    <li aria-hidden="true">|</li>
+                
+                    <li>
+                        <a id="lnkLienTypeUrl_1" target="_blank" href="http://www.villeneuvedascq.fr/ ">Retour au site de la ville</a>
+                    </li>
+                
+                    <li aria-hidden="true">|</li>
+                
+                    <li>
+                        <a href="/pouceetpuce/espace-citoyens/PageInfosDiverses/Index/8" target="_blank">Mentions légales</a>
+                    </li>
+                
+                    <li aria-hidden="true">|</li>
+                
+                    <li>
+                        <a href="/pouceetpuce/espace-citoyens/PageInfosDiverses/Index/2" target="_blank">Conditions générales d'utilisation</a>
+                    </li>
+                
+                    <li aria-hidden="true">|</li>
+                
+                    <li>
+                        <a id="lnkLienTypeCourriel_4" href="mailto:poucepuce@villeneuvedascq.fr">Contact</a>
+                    </li>
+        <li aria-hidden="true">|</li>
+        <li><a href="/pouceetpuce/espace-citoyens/PlanDuSite">Plan du site</a></li>
+    </ul>
+    <div class="aidePiedPage">
+        <a href="/pouceetpuce/espace-citoyens/PageInfosDiverses/Index/1" target="_blank">AIDE</a>
+    </div>
+</div>
+
+
+
+                        </footer>
+                    </div>
+        </div>
+        <div class="dialog-overlay">
+        </div>
+        <div id="appelEnCoursFond">
+        </div>
+        <div id="appelEnCours">
+            <span role="alert" aria-live="assertive" aria-busy="true" aria-label="Chargement en cours">Merci de patienter...</span>
+            <img src="/pouceetpuce/espace-citoyens/Content/themes/_courant/Images/0.png" width="150" height="150" role="presentation" alt="Chargement en cours...">
+
+        </div>
+     
+
+
+<div id="qtip-rcontainer"></div><div style="display: none;" tabindex="-1" role="dialog" class="ui-dialog ui-corner-all ui-widget ui-widget-content ui-front ui-draggable" aria-describedby="expirationSession" aria-labelledby="ui-id-1"><div class="ui-dialog-titlebar ui-corner-all ui-widget-header ui-helper-clearfix ui-draggable-handle"><span id="ui-id-1" class="ui-dialog-title">&nbsp;</span><button type="button" class="ui-dialog-titlebar-close"><span class="sr-only">Fermer</span></button></div><div id="expirationSession" class="dialog-demandes-form ui-draggable ui-dialog-content ui-widget-content" style="">
+                <h2 id="popup_title_session" class="ui-draggable-handle" style="cursor: move;">La session va expirer</h2>
+                <div style="width: 100%; display: flex">
+                    <div style="margin: 18px 10px">
+                        <img style="max-width: none !important;" src="/pouceetpuce/espace-citoyens/Content/themes/_courant/images/alerte.png" alt="">
+                    </div>
+                    <div style="padding: 18px 8px">
+                        <p>Votre session se termine dans <span id="sessionTimeout" style="font-weight: bold">19 minutes et 30 secondes</span></p>
+                        <p>Si votre session expire, vous risquez de perdre ce que vous n'avez pas validé. Vous pouvez cliquer sur le bouton pour la prolonger.</p>
+                    </div>
+                </div>
+                <div>
+                    <span>
+                        <button class="btn btn-style3" style="margin: 0 18px 18px 0" id="btnActualiserSession" title="Prolonger la session" alt="Prolonger la session">
+                            <span>Prolonger ma session</span>
+                        </button>
+                    </span>
+                </div>
+            </div></div></body></html>
