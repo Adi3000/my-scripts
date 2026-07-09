@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     ffmpeg \
-    postgresql-client \
     build-essential \
     unzip \
     && rm -rf /var/lib/apt/lists/*

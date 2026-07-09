@@ -1,0 +1,16 @@
+services:
+  ffxivv-notifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+        - traefik
+        - postgres
+
+networks:
+  postgres:
+    name: postgres
+    external: true
+  traefik:
+    name: traefik
+    external: true
