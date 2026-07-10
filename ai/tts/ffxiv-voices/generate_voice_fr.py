@@ -84,7 +84,7 @@ if __name__ == "__main__":
             print(f"\n========> line {current_line}/{nb_lines} : {line[0]} ({CSV_LINES})\n")
             wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
             save_audio(wav, wav_output, model.sr)
-            subprocess.call(["ffmpeg", "-loglevel", "warning" ,-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
+            subprocess.call(["ffmpeg", "-loglevel", "warning" ,"-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
             upload_audio(f"{OUTPUT_DIR}/{line[0]}.ogg", f"{line[0]}.ogg")
             subprocess.call(["rm", "-f", wav_output])
             response = requests.put(f"{FFXIVV_NOTIFIER_URL}/update/{line[0]}")
