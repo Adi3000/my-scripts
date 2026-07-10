@@ -5,10 +5,20 @@ wget https://raw.githubusercontent.com/Adi3000/my-scripts/refs/heads/main/ai/tts
 wget https://nextcloud.adi3000.com/public.php/dav/files/$NEXTCLOUD_SHARE_TOKEN/voices?accept=zip -O /data/voices.zip
 unzip -o  /data/voices.zip -d  /data 
 
+max_thread_running=${NB_THREADS:-1}
+
 find /data/voices -maxdepth 1 -type f -name "*.csv" -print0 |
 while IFS= read -r -d '' voice; do
-    wav_file="${voice%.csv}.wav"
-    echo "####### PROCESSING VOICE $voice ($wav_file|$csv_file)########"
-    python /workspace/generate_voice_fr.py "$wav_file" "$voice"
+    (
+        wav_file="${voice%.csv}.wav"
+        echo "####### PROCESSING VOICE $voice ($wav_file|$csv_file)########"
+        python /workspace/generate_voice_fr.py "$wav_file" "$voice"
+    ) &
+    ((running++))
+
+    if (( running >= NB_THREADS )); then
+        wait -n
+        ((running--))
+    fi
 done
 
