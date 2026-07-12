@@ -2,7 +2,7 @@
 services:
   immich:
     profiles: [ compute ]
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-v2}
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-v3}
     restart: unless-stopped
     container_name: immich
     env_file: /etc/default/immich
@@ -29,7 +29,7 @@ services:
 
   photos:
     profiles: [ server ]
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-v2}
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-v3}
     restart: unless-stopped
     container_name: photos
     env_file: /etc/default/immich
@@ -47,7 +47,7 @@ services:
   immich-ml:
     profiles: [ compute ]
     container_name: immich-machine-learning
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-v2}-cuda
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-v3}-cuda
     runtime: nvidia
     deploy:
       resources:
