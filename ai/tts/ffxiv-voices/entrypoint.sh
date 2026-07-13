@@ -21,4 +21,4 @@ while IFS= read -r -d '' voice; do
         ((running--))
     fi
 done
-
+wait
