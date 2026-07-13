@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.9.2-cudnn-runtime-ubuntu24.04
+FROM nvidia/cuda:13.0.3-cudnn-runtime-ubuntu24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -41,7 +41,7 @@ RUN echo "source ${CONDA_DIR}/etc/profile.d/conda.sh" >> /etc/bash.bashrc && \
 WORKDIR /workspace
 
 ENV CONDA_DEFAULT_ENV=py314
-RUN pip3 install "torch==2.11.0" "torchaudio==2.11.0" --index-url https://download.pytorch.org/whl/cu129 &&\
+RUN pip3 install "torch==2.11.0" "torchaudio==2.11.0" --index-url https://download.pytorch.org/whl/cu130 &&\
     pip3 install chatterbox-tts peft
 
 CMD ["/bin/bash"]
