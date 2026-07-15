@@ -61,7 +61,10 @@ services:
     labels:
       - "traefik.enable=true"
   telegram:
-      image: zulizzz/cerbinou-telegram:1.1
+      image: zulizzz/cerbinou-telegram:v1.2.2
       container_name: cerbinou-telegram
       restart: unless-stopped
       env_file: /etc/default/cerbinou
+      volumes:      
+      - /home/adi/cerbinou/telegram/data:/data:rw
+
