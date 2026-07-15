@@ -3,6 +3,8 @@ import torch
 import os
 import subprocess
 import sys
+from urllib.parse import urlparse
+from pathlib import PurePosixPath
 import csv
 import soundfile as sf
 from pathlib import Path
@@ -21,6 +23,7 @@ NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL', "https://cloud.example.com" )
 NEXTCLOUD_SHARE_TOKEN = os.environ.get('NEXTCLOUD_SHARE_TOKEN')
 NEXTCLOUD_SHARE_PASSWORD = os.environ.get('NEXTCLOUD_SHARE_PASSWORD', '')
 FFXIVV_NOTIFIER_URL= os.environ.get('FFXIVV_NOTIFIER_URL', "https://ffxivv.example.com" )
+BATCH_START_DATE= os.environ.get('BATCH_START_DATE', datetime(1970, 1, 1).isoformat() )
 
 def get_device() -> str:
     return "cuda" if torch.cuda.is_available() else "cpu"
@@ -66,29 +69,65 @@ def upload_audio(ogg_file: str, file_name: str):
             },
         )
         print(f"Uploaded : {response}")
+        return response.ok
+    return False
+
+def commit_voice(csv_file: str):
+    
+    file_name = PurePosixPath(urlparse(csv_file).path).name
+    file_path = f"/voices/{file_name}"
+    remote_path = (
+        f"{NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}"
+        file_path
+    )
+    print(f"\n========> Will move {csv_file} to : {remote_path})\n")
+
+    response = requests.put(
+        remote_path,
+        data="{" +
+            f"\"source\": \"{file_path}\","+
+            f"\"destination\": \"{file_path}.done\""+
+        "}",
+        headers={
+            "Content-Type": "audio/ogg",
+        },
+    )
+    printf(f"Committed voices {file_name} : {response}")
+
+
 
 if __name__ == "__main__":
 
     AUDIO_PROMPT_PATH = sys.argv[1]
-    CSV_LINES = sys.argv[2]
+    voice_id = sys.argv[2]
+
+    latest_generation = ## TODO
+    csv_reponse = requests.get(
+        f"{FFXIVV_NOTIFIER_URL}/voicelines/{voice_id}"
+    )
+    csv_reponse.raise_for_status()
+
+    csvfile = io.StringIO(csv_reponse.text)
     model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
-
     print(f"Reading CSV {CSV_LINES} to process through audio prompt {AUDIO_PROMPT_PATH}")
-    with open(CSV_LINES, newline='') as csvfile:
-        lines = csv.reader(csvfile, delimiter='|')
-        nb_lines=int(subprocess.check_output(['wc', '-l', CSV_LINES]).split()[0])
-        current_line=1
-        for line in lines:
-            wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
-            text = line[1].replace("_NAME_", "Coton")
-            print(f"\n========> line {current_line}/{nb_lines} : {line[0]} ({CSV_LINES})\n")
-            wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
-            save_audio(wav, wav_output, model.sr)
-            subprocess.call(["ffmpeg", "-loglevel", "warning" ,"-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
-            upload_audio(f"{OUTPUT_DIR}/{line[0]}.ogg", f"{line[0]}.ogg")
-            subprocess.call(["rm", "-f", wav_output])
-            response = requests.put(f"{FFXIVV_NOTIFIER_URL}/update/{line[0]}")
-            print(f"notified to {FFXIVV_NOTIFIER_URL}/update/{line[0]} : {response}")
-            current_line=current_line+1
+    lines = csv.reader(csvfile, delimiter='|')
+    nb_lines=int(subprocess.check_output(['wc', '-l', CSV_LINES]).split()[0])
+    current_line=1
+    for line in lines:
+        wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
+        text = line[1].replace("_NAME_", "Coton")
+        print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({CSV_LINES})\n")
+        wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
+        save_audio(wav, wav_output, model.sr)
+        subprocess.call(["ffmpeg", "-loglevel", "warning" ,"-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
+        upload_ok = upload_audio(f"{OUTPUT_DIR}/{line[0]}.ogg", f"{line[0]}.ogg")
+        subprocess.call(["rm", "-f", wav_output])
+        if upload_ok:
+            notif_ok = requests.put(f"{FFXIVV_NOTIFIER_URL}/voicelines/{line[0]}/last-generation-date")
+            print(f"notified to {FFXIVV_NOTIFIER_URL}/voicelines/{line[0]}/last-generation-date : {notif_ok}")
+        else: 
+            print(f"[ERROR] Didn't manage to upload {line[0]}, still skipping")
+        current_line=current_line+1
 
+    commit_voice(CSV_LINES)
     subprocess.call(["mv", CSV_LINES, f"{CSV_LINES}.done"])

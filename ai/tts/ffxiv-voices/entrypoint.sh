@@ -7,11 +7,11 @@ unzip -o  /data/voices.zip -d  /data
 
 max_thread_running=${NB_THREADS:-1}
 
-find /data/voices -maxdepth 1 -type f -name "*.csv" -print0 |
-while IFS= read -r -d '' voice; do
+find /data/voices -maxdepth 1 -type f -name "*.wav" -print0 |
+while IFS= read -r -d '' wav_file; do
     (
-        wav_file="${voice%.csv}.wav"
-        echo "####### PROCESSING VOICE $voice ($wav_file|$csv_file)########"
+        voice="${wav_file%.wav}"
+        echo "####### PROCESSING VOICE $voice ($wav_file)########"
         python /workspace/generate_voice_fr.py "$wav_file" "$voice"
     ) &
     ((running++))
