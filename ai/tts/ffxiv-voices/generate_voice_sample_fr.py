@@ -60,7 +60,7 @@ def upload_audio(ogg_file: str, file_name: str):
         f"{NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}"
         f"/voices_fr/{file_name}"
     )
-    print(f"\n========> Will upload {ogg_file} to : {remote_path})\n")
+    print(f"\n========> Will upload {ogg_file} to : {remote_path}\n")
 
     with open(ogg_file, "rb") as f:
         response = requests.put(
