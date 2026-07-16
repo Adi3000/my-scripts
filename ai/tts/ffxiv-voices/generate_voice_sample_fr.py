@@ -92,6 +92,6 @@ if __name__ == "__main__":
         print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({line[1]})  \n")
         wav =  synthesize_speech(model, text, audio_prompt_path=voice_en)
         save_audio(wav, wav_output, model.sr)
-        upload_ok = upload_audio(f"{OUTPUT_FR_DIR}/{line[0]}.wav", f"{line[0]}.wav")
+        upload_ok = upload_audio(wav_output, f"{line[1]}.wav")
         current_line=current_line+1
 
