@@ -88,7 +88,7 @@ if __name__ == "__main__":
     csvfile = io.StringIO(csv_reponse.text)
     model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
     print(f"Reading CSV {voice_id} to process through audio prompt {AUDIO_PROMPT_PATH}")
-    lines = csv.reader(csvfile, delimiter='|')
+    lines = list(csv.reader(csvfile, delimiter='|'))
     nb_lines=len(lines)
     current_line=1
     for line in lines:
