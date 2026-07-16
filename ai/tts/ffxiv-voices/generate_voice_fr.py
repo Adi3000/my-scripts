@@ -87,9 +87,9 @@ if __name__ == "__main__":
 
     csvfile = io.StringIO(csv_reponse.text)
     model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
-    print(f"Reading CSV {voice_id} to process through audio prompt {AUDIO_PROMPT_PATH}")
     lines = list(csv.reader(csvfile, delimiter='|'))
     nb_lines=len(lines)
+    print(f"Reading CSV {voice_id}:{nb_lines} lines to process through audio prompt {AUDIO_PROMPT_PATH}")
     current_line=1
     for line in lines:
         wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
