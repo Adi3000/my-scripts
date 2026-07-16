@@ -24,7 +24,10 @@ DB_CONFIG = {
     response_class=PlainTextResponse,
 )
 def get_last_generation_date():
-    return os.getenv("BATCH_GENERATION_DATE","2070-12-31")
+    
+    return PlainTextResponse(
+            content=os.getenv("BATCH_GENERATION_DATE","2070-12-31")
+        )
 
 
 @app.get(
