@@ -25,7 +25,6 @@ NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL', "https://cloud.example.com" )
 NEXTCLOUD_SHARE_TOKEN = os.environ.get('NEXTCLOUD_SHARE_TOKEN')
 NEXTCLOUD_SHARE_PASSWORD = os.environ.get('NEXTCLOUD_SHARE_PASSWORD', '')
 FFXIVV_NOTIFIER_URL= os.environ.get('FFXIVV_NOTIFIER_URL', "https://ffxivv.example.com" )
-BATCH_START_DATE= os.environ.get('BATCH_START_DATE', datetime(1970, 1, 1).isoformat() )
 
 def get_device() -> str:
     return "cuda" if torch.cuda.is_available() else "cpu"
@@ -80,10 +79,12 @@ if __name__ == "__main__":
     voice_id = sys.argv[2]
 
     last_generation_date = requests.get(f"{FFXIVV_NOTIFIER_URL}/voicelines/latest-generation").text
+    BATCH_START_DATE= os.environ.get('BATCH_START_DATE', last_generation_date )
     csv_reponse = requests.get(
         f"{FFXIVV_NOTIFIER_URL}/voicelines/{voice_id}?last_update_date={BATCH_START_DATE}&last_generation_date={last_generation_date}"
     )
     csv_reponse.raise_for_status()
+    
 
     csvfile = io.StringIO(csv_reponse.text)
     model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
