@@ -89,7 +89,7 @@ if __name__ == "__main__":
         voice_en = f"{INPUT_EN_DIR}/{line[0]}.wav"
         wav_output=f"{OUTPUT_FR_DIR}/{line[1]}.wav"
         text = line[2].replace("_NAME_", "Coton")
-        print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({{line[1]})  \n")
+        print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({line[1]})  \n")
         wav =  synthesize_speech(model, text, audio_prompt_path=voice_en)
         save_audio(wav, wav_output, model.sr)
         upload_ok = upload_audio(f"{OUTPUT_DIR}/{line[0]}.wav", f"{line[0]}.wav")
