@@ -20,7 +20,7 @@ DB_CONFIG = {
 
 
 @app.get(
-    "/voicelines/lastest-generation",
+    "/voicelines/latest-generation",
     response_class=PlainTextResponse,
 )
 def get_last_generation_date():
