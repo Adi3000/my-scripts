@@ -24,28 +24,7 @@ DB_CONFIG = {
     response_class=PlainTextResponse,
 )
 def get_last_generation_date():
-    try:
-        with psycopg.connect(**DB_CONFIG) as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                    SELECT MAX(last_generation_date)
-                    FROM ffxivv_data
-                    """
-                )
-
-                last_generation_date = cur.fetchone()[0]
-
-        if last_generation_date is None:
-            return PlainTextResponse("", media_type="text/plain")
-
-        return PlainTextResponse(
-            content=last_generation_date.isoformat(),
-            media_type="text/plain",
-        )
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return os.getenv("BATCH_GENERATION_DATE","2070-12-31")
 
 
 @app.get(
