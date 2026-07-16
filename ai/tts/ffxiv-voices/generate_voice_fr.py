@@ -11,6 +11,7 @@ from pathlib import Path
 from chatterbox.tts import ChatterboxTTS
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
+from datetime import datetime
 import requests
 
 
@@ -72,38 +73,14 @@ def upload_audio(ogg_file: str, file_name: str):
         return response.ok
     return False
 
-def commit_voice(csv_file: str):
-    
-    file_name = PurePosixPath(urlparse(csv_file).path).name
-    file_path = f"/voices/{file_name}"
-    remote_path = (
-        f"{NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}"
-        file_path
-    )
-    print(f"\n========> Will move {csv_file} to : {remote_path})\n")
-
-    response = requests.put(
-        remote_path,
-        data="{" +
-            f"\"source\": \"{file_path}\","+
-            f"\"destination\": \"{file_path}.done\""+
-        "}",
-        headers={
-            "Content-Type": "audio/ogg",
-        },
-    )
-    printf(f"Committed voices {file_name} : {response}")
-
-
-
 if __name__ == "__main__":
 
     AUDIO_PROMPT_PATH = sys.argv[1]
     voice_id = sys.argv[2]
 
-    latest_generation = ## TODO
+    latest_generation = requests.get(f"{FFXIVV_NOTIFIER_URL}/voicelines/lastest-generation")
     csv_reponse = requests.get(
-        f"{FFXIVV_NOTIFIER_URL}/voicelines/{voice_id}"
+        f"{FFXIVV_NOTIFIER_URL}/voicelines/{voice_id}?last_update_date={BATCH_START_DATE}&last_generation_date={last_generation_date}"
     )
     csv_reponse.raise_for_status()
 
@@ -111,23 +88,21 @@ if __name__ == "__main__":
     model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
     print(f"Reading CSV {CSV_LINES} to process through audio prompt {AUDIO_PROMPT_PATH}")
     lines = csv.reader(csvfile, delimiter='|')
-    nb_lines=int(subprocess.check_output(['wc', '-l', CSV_LINES]).split()[0])
+    nb_lines=len(lines)
     current_line=1
     for line in lines:
         wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
         text = line[1].replace("_NAME_", "Coton")
-        print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({CSV_LINES})\n")
+        print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({CSV_LINES}) from U {BATCH_START_DATE} G {last_generation_date} \n")
         wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
         save_audio(wav, wav_output, model.sr)
         subprocess.call(["ffmpeg", "-loglevel", "warning" ,"-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
         upload_ok = upload_audio(f"{OUTPUT_DIR}/{line[0]}.ogg", f"{line[0]}.ogg")
         subprocess.call(["rm", "-f", wav_output])
         if upload_ok:
-            notif_ok = requests.put(f"{FFXIVV_NOTIFIER_URL}/voicelines/{line[0]}/last-generation-date")
-            print(f"notified to {FFXIVV_NOTIFIER_URL}/voicelines/{line[0]}/last-generation-date : {notif_ok}")
+            notif_ok = requests.put(f"{FFXIVV_NOTIFIER_URL}/voicelines/line/{line[0]}/last-generation-date")
+            print(f"notified to {FFXIVV_NOTIFIER_URL}/voicelines/line/{line[0]}/last-generation-date : {notif_ok}")
         else: 
             print(f"[ERROR] Didn't manage to upload {line[0]}, still skipping")
         current_line=current_line+1
 
-    commit_voice(CSV_LINES)
-    subprocess.call(["mv", CSV_LINES, f"{CSV_LINES}.done"])
