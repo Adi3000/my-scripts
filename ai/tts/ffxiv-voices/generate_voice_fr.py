@@ -79,7 +79,7 @@ if __name__ == "__main__":
     AUDIO_PROMPT_PATH = sys.argv[1]
     voice_id = sys.argv[2]
 
-    last_generation_date = requests.get(f"{FFXIVV_NOTIFIER_URL}/voicelines/lastest-generation").text
+    last_generation_date = requests.get(f"{FFXIVV_NOTIFIER_URL}/voicelines/latest-generation").text
     csv_reponse = requests.get(
         f"{FFXIVV_NOTIFIER_URL}/voicelines/{voice_id}?last_update_date={BATCH_START_DATE}&last_generation_date={last_generation_date}"
     )
