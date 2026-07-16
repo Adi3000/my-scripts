@@ -71,7 +71,7 @@ def get_voice_csv(
                     WHERE voice_id = %s
                       AND sentence_fr is not null
                       AND last_update_date > %s 
-                      AND (last_generation_date > %s or last_generation_date is null)
+                      AND (last_generation_date < %s or last_generation_date is null)
                     """,
                     (
                         str(voice_id),
