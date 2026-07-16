@@ -1,7 +1,13 @@
 import os
 
 import psycopg
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import PlainTextResponse
+from datetime import datetime
+from io import StringIO
+from uuid import UUID
+import csv
+
 
 app = FastAPI()
 
@@ -41,15 +47,6 @@ def update_generation_date(voice_id: str):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-from datetime import datetime
-from io import StringIO
-from uuid import UUID
-import csv
-
-from fastapi import HTTPException, Query
-from fastapi.responses import PlainTextResponse
-
 
 @app.get(
     "/voicelines/{voice_id}",
@@ -101,11 +98,6 @@ def get_voice_csv(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-from fastapi import HTTPException
-from fastapi.responses import PlainTextResponse
-
 
 @app.get(
     "/voicelines/lastest-generation",
