@@ -5,7 +5,6 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 from datetime import datetime
 from io import StringIO
-from uuid import UUID
 import csv
 
 
@@ -48,41 +47,13 @@ def get_last_generation_date():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-        
-@app.put("/voicelines/{voice_id}/last-generation-date")
-def update_generation_date(voice_id: str):
-    nb_row_updated = 0
-    try:
-        with psycopg.connect(**DB_CONFIG) as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                    UPDATE ffxivv_data
-                    SET last_generation_date = CURRENT_TIMESTAMP
-                    WHERE id = %s
-                    """,
-                    (voice_id,),
-                )
-                nb_row_updated = cur.rowcount
-                print(f"Updated {nb_row_updated} for {voice_id}")
-        return {
-            "status": "ok",
-            "id": voice_id,
-            "count": nb_row_updated
-
-        }
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get(
     "/voicelines/{voice_id}",
     response_class=PlainTextResponse,
 )
 def get_voice_csv(
-    voice_id: UUID,
+    voice_id: str,
     last_update_date: datetime = Query(
         default=datetime(1970, 1, 1)
     ),
@@ -125,5 +96,34 @@ def get_voice_csv(
             media_type="text/csv",
         )
 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.put("/voicelines/line/{line_id}/last-generation-date")
+def update_generation_date(line_id: str):
+    nb_row_updated = 0
+    try:
+        with psycopg.connect(**DB_CONFIG) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    UPDATE ffxivv_data
+                    SET last_generation_date = CURRENT_TIMESTAMP
+                    WHERE id = %s
+                    """,
+                    (line_id,),
+                )
+                nb_row_updated = cur.rowcount
+                print(f"Updated {nb_row_updated} for {line_id}")
+        return {
+            "status": "ok",
+            "id": line_id,
+            "count": nb_row_updated
+
+        }
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
