@@ -10,7 +10,7 @@ max_thread_running=${NB_THREADS:-1}
 find /data/voices -maxdepth 1 -type f -name "*.wav" -print0 |
 while IFS= read -r -d '' wav_file; do
     (
-        voice="${wav_file%.wav}"
+        voice="$(basename "${wav_file%.wav}")"
         echo "####### PROCESSING VOICE $voice ($wav_file)########"
         python /workspace/generate_voice_fr.py "$wav_file" "$voice"
     ) &
