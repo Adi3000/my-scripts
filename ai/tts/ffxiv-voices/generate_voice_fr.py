@@ -87,14 +87,14 @@ if __name__ == "__main__":
 
     csvfile = io.StringIO(csv_reponse.text)
     model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
-    print(f"Reading CSV {CSV_LINES} to process through audio prompt {AUDIO_PROMPT_PATH}")
+    print(f"Reading CSV {voice_id} to process through audio prompt {AUDIO_PROMPT_PATH}")
     lines = csv.reader(csvfile, delimiter='|')
     nb_lines=len(lines)
     current_line=1
     for line in lines:
         wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
         text = line[1].replace("_NAME_", "Coton")
-        print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({CSV_LINES}) from U {BATCH_START_DATE} G {last_generation_date} \n")
+        print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({voice_id}) from U {BATCH_START_DATE} G {last_generation_date} \n")
         wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
         save_audio(wav, wav_output, model.sr)
         subprocess.call(["ffmpeg", "-loglevel", "warning" ,"-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
