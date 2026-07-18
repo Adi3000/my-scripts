@@ -23,6 +23,7 @@ CHECKPOINT_FILENAME = "t3_cfg.safetensors"
 OUTPUT_DIR=os.environ.get('GENERATED_VOICES_DIR', "/data/voices_overrides")
 NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL', "https://cloud.example.com" )
 NEXTCLOUD_SHARE_TOKEN = os.environ.get('NEXTCLOUD_SHARE_TOKEN')
+YOUR_NAME = os.environ.get('YOUR_NAME',"Coton")
 NEXTCLOUD_SHARE_PASSWORD = os.environ.get('NEXTCLOUD_SHARE_PASSWORD', '')
 FFXIVV_NOTIFIER_URL= os.environ.get('FFXIVV_NOTIFIER_URL', "https://ffxivv.example.com" )
 
@@ -93,7 +94,7 @@ if __name__ == "__main__":
         current_line=1
         for line in lines:
             wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
-            text = line[1].replace("_NAME_", "Coton")
+            text = line[1].replace("_NAME_", YOUR_NAME)
             print(f"({voice_id}) line {current_line}/{nb_lines+1} : {line[0]} from U {BATCH_START_DATE} G {last_generation_date} \n")
             wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
             save_audio(wav, wav_output, model.sr)
