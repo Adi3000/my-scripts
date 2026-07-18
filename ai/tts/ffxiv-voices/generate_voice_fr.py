@@ -46,7 +46,7 @@ def synthesize_speech(model: ChatterboxTTS, text: str, audio_prompt_path:str, **
             audio_prompt_path=audio_prompt_path,
             exaggeration=1.0,
             temperature=0.7,
-            cfg_weight=0.0,
+            cfg_weight=0.1,
             **kwargs
         )
 
