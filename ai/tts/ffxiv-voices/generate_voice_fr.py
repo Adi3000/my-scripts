@@ -94,7 +94,7 @@ if __name__ == "__main__":
         for line in lines:
             wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
             text = line[1].replace("_NAME_", "Coton")
-            print(f"({voice_id}) \n========> line {current_line}/{nb_lines+1} : {line[0]} from U {BATCH_START_DATE} G {last_generation_date} \n")
+            print(f"({voice_id}) line {current_line}/{nb_lines+1} : {line[0]} from U {BATCH_START_DATE} G {last_generation_date} \n")
             wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
             save_audio(wav, wav_output, model.sr)
             subprocess.call(["ffmpeg", "-loglevel", "warning" ,"-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
