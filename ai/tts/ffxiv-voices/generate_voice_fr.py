@@ -84,27 +84,26 @@ if __name__ == "__main__":
         f"{FFXIVV_NOTIFIER_URL}/voicelines/{voice_id}?last_update_date={BATCH_START_DATE}&last_generation_date={last_generation_date}"
     )
     csv_reponse.raise_for_status()
-    
-
     csvfile = io.StringIO(csv_reponse.text)
-    model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
     lines = list(csv.reader(csvfile, delimiter='|'))
     nb_lines=len(lines)
-    print(f"Reading CSV {voice_id}:{nb_lines} lines to process through audio prompt {AUDIO_PROMPT_PATH}")
-    current_line=1
-    for line in lines:
-        wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
-        text = line[1].replace("_NAME_", "Coton")
-        print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({voice_id}) from U {BATCH_START_DATE} G {last_generation_date} \n")
-        wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
-        save_audio(wav, wav_output, model.sr)
-        subprocess.call(["ffmpeg", "-loglevel", "warning" ,"-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
-        upload_ok = upload_audio(f"{OUTPUT_DIR}/{line[0]}.ogg", f"{line[0]}.ogg")
-        subprocess.call(["rm", "-f", wav_output])
-        if upload_ok:
-            notif_ok = requests.put(f"{FFXIVV_NOTIFIER_URL}/voicelines/line/{line[0]}/last-generation-date")
-            print(f"notified to {FFXIVV_NOTIFIER_URL}/voicelines/line/{line[0]}/last-generation-date : {notif_ok}")
-        else: 
-            print(f"[ERROR] Didn't manage to upload {line[0]}, still skipping")
-        current_line=current_line+1
-
+    if nb_lines > 0:
+        model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
+        print(f"Reading CSV {voice_id}:{nb_lines} lines to process through audio prompt {AUDIO_PROMPT_PATH}")
+        current_line=1
+        for line in lines:
+            wav_output=f"{OUTPUT_DIR}/{line[0]}.wav"
+            text = line[1].replace("_NAME_", "Coton")
+            print(f"\n========> line {current_line}/{nb_lines+1} : {line[0]} ({voice_id}) from U {BATCH_START_DATE} G {last_generation_date} \n")
+            wav =  synthesize_speech(model, text, audio_prompt_path=AUDIO_PROMPT_PATH)
+            save_audio(wav, wav_output, model.sr)
+            subprocess.call(["ffmpeg", "-loglevel", "warning" ,"-nostdin","-hide_banner", "-i", wav_output, "-acodec","libopus", "-f", "ogg", "-y", f"{OUTPUT_DIR}/{line[0]}.ogg"])
+            upload_ok = upload_audio(f"{OUTPUT_DIR}/{line[0]}.ogg", f"{line[0]}.ogg")
+            subprocess.call(["rm", "-f", wav_output])
+            if upload_ok:
+                notif_ok = requests.put(f"{FFXIVV_NOTIFIER_URL}/voicelines/line/{line[0]}/last-generation-date")
+                print(f"notified to {FFXIVV_NOTIFIER_URL}/voicelines/line/{line[0]}/last-generation-date : {notif_ok}")
+            else: 
+                print(f"[ERROR] Didn't manage to upload {line[0]}, still skipping")
+            current_line=current_line+1
+    
