@@ -3,6 +3,7 @@ import torch
 import os
 import sys
 import io
+import base64
 from chatterbox.tts import ChatterboxTTS
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
@@ -43,7 +44,9 @@ def handler(job):
     name_value = input.get('name_value', YOUR_NAME)  
     text = prompt.replace("_NAME_", name_value)
     voice_id = input.get('voice_id')
-    return synthesize_speech(model, text, audio_prompt_path=f"{VOICES_DIR}/{voice_id}.wav")
+    waveform = synthesize_speech(model, text, audio_prompt_path=f"{VOICES_DIR}/{voice_id}.wav")
+    wav = io.BytesIO(waveform.squeeze().cpu().numpy())  
+    return { "wav": base64.b64encode(wav.getvalue()).decode("utf-8"), "sample_rate": model.sr }
 
 if __name__ == "__main__":
     model = load_tts_model(MODEL_REPO, CHECKPOINT_FILENAME, "cuda")
