@@ -7,6 +7,7 @@ import base64
 from chatterbox.tts import ChatterboxTTS
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
+import soundfile as sf
 import runpod
 
 MODEL_REPO = os.environ.get("MODEL_REPO","Thomcles/Chatterbox-TTS-French")
@@ -45,7 +46,8 @@ def handler(job):
     text = prompt.replace("_NAME_", name_value)
     voice_id = input.get('voice_id')
     waveform = synthesize_speech(model, text, audio_prompt_path=f"{VOICES_DIR}/{voice_id}.wav")
-    wav = io.BytesIO(waveform.squeeze().cpu().numpy())  
+    wav = io.BytesIO()
+    sf.write(wav, waveform.squeeze().cpu().numpy(), sample_rate)
     return { "wav": base64.b64encode(wav.getvalue()).decode("utf-8"), "sample_rate": model.sr }
 
 if __name__ == "__main__":
