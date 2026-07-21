@@ -47,7 +47,7 @@ def handler(job):
     voice_id = input.get('voice_id')
     waveform = synthesize_speech(model, text, audio_prompt_path=f"{VOICES_DIR}/{voice_id}.wav")
     wav = io.BytesIO()
-    sf.write(wav, waveform.squeeze().cpu().numpy(), sample_rate)
+    sf.write(wav, waveform.squeeze().cpu().numpy(), sample_rate, format="WAV")
     return { "wav": base64.b64encode(wav.getvalue()).decode("utf-8"), "sample_rate": model.sr }
 
 if __name__ == "__main__":
