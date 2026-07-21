@@ -7,4 +7,4 @@ wget https://raw.githubusercontent.com/Adi3000/my-scripts/refs/heads/main/server
 wget https://nextcloud.adi3000.com/public.php/dav/files/$NEXTCLOUD_SHARE_TOKEN/voices?accept=zip -O /data/voices.zip
 unzip -o  /data/voices.zip -d  /data
 
-python /workspace/generate_voice_fr.py
+python /workspace/handler.py
