@@ -2,11 +2,12 @@ import os
 
 import psycopg
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, StreamingResponse
 from datetime import datetime
 from io import StringIO
 import csv
-
+import base64
+import soundfile as sf
 
 app = FastAPI()
 
@@ -18,6 +19,9 @@ DB_CONFIG = {
     "port": int(os.getenv("PGPORT", "5432")),
 }
 
+RUNPOD_ENDPOINT_ID = os.getenv("RUNPOD_ENDPOINT_ID", "abcdef12345678")
+RUNPOD_APIKEY = os.getenv("RUNPOD_APIKEY", "apikey_not_defined")
+
 
 @app.get(
     "/voicelines/latest-generation",
@@ -28,6 +32,53 @@ def get_last_generation_date():
     return PlainTextResponse(
             content=os.getenv("BATCH_GENERATION_DATE","2070-12-31")
         )
+
+
+
+@app.get(
+    "/voicelines/tts",
+    response_class=PlainTextResponse,
+)
+def tts_call(
+    voice_id: str,
+    npc_id: str,
+    speaker: str,
+    text: str,
+    local_voice_id: str,
+):
+    print(f"Speaker : {speaker}, voice_id : {voice_id}, npc_id : {npc_id}, local_voice : {local_voice_id}, :\n=======> [{text}]")
+    if voice_id == nil or voice_id == 'null':
+        raise HTTPException(
+            status_code=403,
+            detail=f"Voice_id is mandatory for now, received   Speaker : {speaker}, voice_id : {voice_id}, npc_id : {npc_id}, local_voice : {local_voice_id}, :\n=======> [{text}]"
+        )
+    runpod_response = requests.post(
+        f"https://api.runpod.ai/v2/{RUNPOD_ENDPOINT_ID}/runsync",
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {RUNPOD_APIKEY}",
+        },
+        json={
+            "input": {
+                "text": text,
+                "voice_id": voice_id
+            }
+        }
+    )
+    runpod_response.raise_for_status()
+
+    runpod_output = runpod_output.json()
+    output = response.json()["output"]
+    wav_bytes = base64.b64decode(output["wav"])
+
+    return StreamingResponse(
+        io.BytesIO(wav_bytes),
+        media_type="audio/wav",
+        headers={
+            "Content-Disposition": "inline; filename=output.wav"
+        }
+    )
+    
 
 
 @app.get(
