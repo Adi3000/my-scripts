@@ -1,10 +1,11 @@
 import os
 
 import psycopg
+import requests
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from datetime import datetime
-from io import StringIO
+from io import StringIO, BytesIO
 import csv
 import base64
 import soundfile as sf
@@ -40,14 +41,14 @@ def get_last_generation_date():
     response_class=PlainTextResponse,
 )
 def tts_call(
-    voice_id: str,
-    npc_id: str,
-    speaker: str,
     text: str,
-    local_voice_id: str,
+    voice_id: str,
+    npc_id: str = 'null',
+    speaker: str = 'null',
+    local_voice_id: str = 'null',
 ):
-    print(f"Speaker : {speaker}, voice_id : {voice_id}, npc_id : {npc_id}, local_voice : {local_voice_id}, :\n=======> [{text}]")
-    if voice_id == nil or voice_id == 'null':
+    print(f"Speaker : {speaker}, voice_id : {voice_id}, npc_id : {npc_id}, local_voice : {local_voice_id} :\n=======> [{text}]")
+    if voice_id == 'null':
         raise HTTPException(
             status_code=403,
             detail=f"Voice_id is mandatory for now, received   Speaker : {speaker}, voice_id : {voice_id}, npc_id : {npc_id}, local_voice : {local_voice_id}, :\n=======> [{text}]"
@@ -67,12 +68,12 @@ def tts_call(
     )
     runpod_response.raise_for_status()
 
-    runpod_output = runpod_output.json()
-    output = response.json()["output"]
+    runpod_output = runpod_response.json()
+    output = runpod_response.json()["output"]
     wav_bytes = base64.b64decode(output["wav"])
 
     return StreamingResponse(
-        io.BytesIO(wav_bytes),
+        BytesIO(wav_bytes),
         media_type="audio/wav",
         headers={
             "Content-Disposition": "inline; filename=output.wav"
