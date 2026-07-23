@@ -1,6 +1,5 @@
 
 #!/bin/bash
-pip3 install runpod
 mkdir -p /data/voices /data/voices_overrides /root/.cache /workspace/cache/huggingface
 ln -s /runpod-volume/huggingface-cache/hub /workspace/cache/huggingface/hub  || true
 ln -s /workspace/cache/huggingface /root/.cache/huggingface  || true
