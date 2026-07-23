@@ -51,7 +51,7 @@ def handler(job):
     name_value = input.get('name_value', YOUR_NAME)  
     text = prompt.replace("_NAME_", name_value)
     voice_id = input.get('voice_id')
-    if not os.path.isfile(fname): 
+    if not os.path.isfile(f"{VOICES_DIR}/{voice_id}.wav"): 
         print(f"Dowloading <{voice_id}> from {NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}/voices/{voice_id}.wav")
         download_file = urllib.URLopener()
         download_file.retrieve(f"{NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}/voices/{voice_id}.wav", f"{VOICES_DIR}/{voice_id}.wav")
