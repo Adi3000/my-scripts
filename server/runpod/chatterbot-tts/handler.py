@@ -5,6 +5,7 @@ import sys
 import io
 import base64
 import urllib.request
+import urllib.parse
 from chatterbox.tts import ChatterboxTTS
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
@@ -51,9 +52,10 @@ def handler(job):
     name_value = input.get('name_value', YOUR_NAME)  
     text = prompt.replace("_NAME_", name_value)
     voice_id = input.get('voice_id')
-    if not os.path.isfile(f"{VOICES_DIR}/{voice_id}.wav"): 
-        print(f"Dowloading <{voice_id}> from {NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}/voices/{voice_id}.wav")
-        urllib.request.urlretrieve(f"{NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}/voices/{voice_id}.wav", f"{VOICES_DIR}/{voice_id}.wav")
+    if not os.path.isfile(f"{VOICES_DIR}/{voice_id}.wav"):
+        file_to_download = urllib.parse.quote(f"{voice_id}.wav")
+        print(f"Dowloading <{voice_id}> from {NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}/voices/{file_to_download}")
+        urllib.request.urlretrieve(f"{NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}/voices/{file_to_download}", f"{VOICES_DIR}/{voice_id}.wav")
 
     waveform = synthesize_speech(model, text, audio_prompt_path=f"{VOICES_DIR}/{voice_id}.wav")
     wav = io.BytesIO()
