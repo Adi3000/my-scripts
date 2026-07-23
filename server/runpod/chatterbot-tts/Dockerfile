@@ -42,6 +42,6 @@ WORKDIR /workspace
 
 ENV CONDA_DEFAULT_ENV=py314
 RUN pip3 install "torch==2.11.0" "torchaudio==2.11.0" --index-url https://download.pytorch.org/whl/cu130 &&\
-    pip3 install chatterbox-tts peft
+    pip3 install chatterbox-tts peft runpod
 
 CMD ["/bin/bash"]
