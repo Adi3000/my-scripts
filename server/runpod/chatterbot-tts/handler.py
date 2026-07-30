@@ -18,7 +18,7 @@ import os.path
 MODEL_REPO = os.environ.get("MODEL_REPO","Thomcles/Chatterbox-TTS-French")
 CHECKPOINT_FILENAME = "t3_cfg.safetensors"
 VOICES_DIR = os.environ.get('VOICES_DIR', "/data/voices")
-YOUR_NAME = os.environ.get('YOUR_NAME',"Notre cher ami")
+YOUR_NAME = os.environ.get('YOUR_NAME',"Notre ami")
 NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL', "https://cloud.example.com" )
 NEXTCLOUD_SHARE_TOKEN = os.environ.get('NEXTCLOUD_SHARE_TOKEN')
 CHATTERBOX_EXGERATION = float(os.environ.get('CHATTERBOX_EXGERATION',"0.8"))
