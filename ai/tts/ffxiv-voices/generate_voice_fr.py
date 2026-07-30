@@ -21,7 +21,7 @@ import requests
 MODEL_REPO = "Thomcles/Chatterbox-TTS-French"
 CHECKPOINT_FILENAME = "t3_cfg.safetensors"
 OUTPUT_DIR=os.environ.get('GENERATED_VOICES_DIR', "/data/voices_overrides")
-NEXTCLOUD_OUTPUT_DIR=os.environ.get('GENERATED_VOICES_DIR', "voices_overrides")
+NEXTCLOUD_OUTPUT_DIR=os.environ.get('NEXTCLOUD_OUTPUT_DIR', "voices_overrides")
 NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL', "https://cloud.example.com" )
 NEXTCLOUD_SHARE_TOKEN = os.environ.get('NEXTCLOUD_SHARE_TOKEN')
 YOUR_NAME = os.environ.get('YOUR_NAME',"Coton")
