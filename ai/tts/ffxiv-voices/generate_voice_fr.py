@@ -21,6 +21,7 @@ import requests
 MODEL_REPO = "Thomcles/Chatterbox-TTS-French"
 CHECKPOINT_FILENAME = "t3_cfg.safetensors"
 OUTPUT_DIR=os.environ.get('GENERATED_VOICES_DIR', "/data/voices_overrides")
+NEXTCLOUD_OUTPUT_DIR=os.environ.get('GENERATED_VOICES_DIR', "voices_overrides")
 NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL', "https://cloud.example.com" )
 NEXTCLOUD_SHARE_TOKEN = os.environ.get('NEXTCLOUD_SHARE_TOKEN')
 YOUR_NAME = os.environ.get('YOUR_NAME',"Coton")
@@ -58,7 +59,7 @@ def upload_audio(ogg_file: str, file_name: str):
     
     remote_path = (
         f"{NEXTCLOUD_URL}/public.php/dav/files/{NEXTCLOUD_SHARE_TOKEN}"
-        f"/voices_overrides/{file_name}"
+        f"/{NEXTCLOUD_OUTPUT_DIR}/{file_name}"
     )
     print(f"\n========> Will upload {ogg_file} to : {remote_path})\n")
 
