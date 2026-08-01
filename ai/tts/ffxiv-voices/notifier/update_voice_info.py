@@ -37,7 +37,7 @@ def update_manifest(original_manifest):
             cur.execute(
                 """
                 select
-                    distinct npc_id_en as id,
+                    distinct npc_id_fr as id,
                     speaker_fr
                 from
                     ffxivv_data
@@ -61,7 +61,7 @@ def update_manifest(original_manifest):
             cur.execute(
                 """
                 select
-                    npc_id_en as npc_id,
+                    npc_id_fr as npc_id,
                     sentence_fr,
                     speaker_fr
                 from
