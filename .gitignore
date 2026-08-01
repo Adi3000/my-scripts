@@ -3,3 +3,4 @@
 cerbinou/tts
 server/runpod/chatterbot-tts/data
 **/.venv
+**/.env

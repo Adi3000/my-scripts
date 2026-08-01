@@ -1,9 +1,10 @@
 import os
 
 import psycopg
+from psycopg.rows import dict_row
 import requests
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import PlainTextResponse, StreamingResponse
+from fastapi.responses import PlainTextResponse, Response, StreamingResponse
 from datetime import datetime
 from io import StringIO, BytesIO
 import csv
@@ -11,6 +12,7 @@ import base64
 import soundfile as sf
 
 app = FastAPI()
+
 
 DB_CONFIG = {
     "host": os.getenv("PGHOST", "localhost"),
@@ -22,7 +24,100 @@ DB_CONFIG = {
 
 RUNPOD_ENDPOINT_ID = os.getenv("RUNPOD_ENDPOINT_ID", "abcdef12345678")
 RUNPOD_APIKEY = os.getenv("RUNPOD_APIKEY", "apikey_not_defined")
+XIVVOICES_URL = os.getenv("XIVVOICES_URL", "https://xivv.example.com")
+XIVVOICES_AUTH_ACCESS = os.getenv("XIVVOICES_AUTH_ACCESS", "x")
+XIVVOICES_AUTH_REFRESH = os.getenv("XIVVOICES_AUTH_REFRESH", "y")
 
+
+def update_manifest(original_manifest):
+    modified_npcs = original_manifest["npcs"]
+    npc_to_merge = {npc["id"]: npc for npc in original_manifest["npcs"]}
+    with psycopg.connect(**DB_CONFIG, row_factory=dict_row) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                select
+                    distinct npc_id_en as id,
+                    speaker_fr
+                from
+                    ffxivv_data
+                where
+                    npc_id_en <> speaker_fr
+                    and npc_id_en <> 'Bubble'
+                    and speaker_fr not in ('Voix familière', '???');
+                """
+            )
+            npcs = cur.fetchall()
+
+    for npc in npcs:
+        npc_id = npc["id"]
+        if npc_id in npc_to_merge:
+            existing_npc = npc_to_merge[npc_id]
+            if not npc["speaker_fr"] in existing_npc["speakers"]:
+                existing_npc["speakers"] += [npc["speaker_fr"]]
+
+    with psycopg.connect(**DB_CONFIG, row_factory=dict_row) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                select
+                    npc_id_en as npc_id,
+                    sentence_fr,
+                    speaker_fr
+                from
+                    ffxivv_data
+                where
+                    npc_id_en <> speaker_fr
+                    and npc_id_en <> 'Bubble'
+                    and speaker_fr in ('Voix familière', '???');
+                """
+            )
+            sentences = cur.fetchall()
+
+    for sentence in sentences:
+        original_manifest["speaker_mappings"] += [{
+            "speaker": sentence["speaker_fr"],
+            "sentence": sentence["sentence_fr"],
+            "type": "nameless",
+            "npc_id": sentence["npc_id"]
+        }]
+    return original_manifest
+
+
+@app.get("/files/manifest.json")
+def get_manifest():
+    response = requests.get(
+        f"{XIVVOICES_URL}/files/manifest.json",
+        cookies={
+            "auth_access": XIVVOICES_AUTH_ACCESS,
+            "auth_refresh": XIVVOICES_AUTH_REFRESH,
+        }
+    )
+    response.raise_for_status()
+
+    return update_manifest(response.json())
+
+
+@app.get("/files/{filename}")
+def get_file(filename: str):
+    try:
+        response = requests.get(
+            f"{XIVVOICES_URL}/files/{filename}",
+            cookies={
+                "auth_access": XIVVOICES_AUTH_ACCESS,
+                "auth_refresh": XIVVOICES_AUTH_REFRESH,
+            }
+        )
+        response.raise_for_status()
+
+    except requests.exceptions.HTTPError as e:
+        if response.status_code == 404:
+            print(f"File {filename} not found (404)")
+            return Response(status_code=404, content=f"File {filename} not found")
+        else:
+            return Response(status_code=response.status_code, content=response.content)
+
+    return Response(content=response.content, media_type="application/octet-stream")
 
 @app.get(
     "/voicelines/latest-generation",
@@ -161,3 +256,25 @@ def update_generation_date(line_id: str):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("_status")
+def status():
+    return PlainTextResponse(
+            content="xivv",
+            media_type="text/html",
+        )
+
+@app.get("/auth/oauth2/discord")
+def login(state: str):
+    return PlainTextResponse(
+            content="You can close this window",
+            media_type="text/html",
+        )
+
+
+@app.get("/auth/oauth2/discord/authorized")
+def login(state: str):
+    return PlainTextResponse(
+            content=f"Fake authentication done with {state}",
+            media_type="text/html",
+        )
