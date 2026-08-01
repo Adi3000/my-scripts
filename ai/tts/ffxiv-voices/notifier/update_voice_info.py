@@ -44,7 +44,7 @@ def update_manifest(original_manifest):
                 where
                     npc_id_en <> speaker_fr
                     and npc_id_en <> 'Bubble'
-                    and speaker_fr not in ('Voix familière', '???');
+                    and speaker_fr not in ('Voix familière', '???') and (type <> 'nameless' or type is null);
                 """
             )
             npcs = cur.fetchall()
@@ -69,7 +69,7 @@ def update_manifest(original_manifest):
                 where
                     npc_id_en <> speaker_fr
                     and npc_id_en <> 'Bubble'
-                    and speaker_fr in ('Voix familière', '???');
+                    and ( speaker_fr in ('Voix familière', '???') or type = 'nameless');
                 """
             )
             sentences = cur.fetchall()
