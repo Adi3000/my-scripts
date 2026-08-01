@@ -257,7 +257,7 @@ def update_generation_date(line_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.put("_status")
+@app.get("/_status")
 def status():
     return PlainTextResponse(
             content="xivv",
