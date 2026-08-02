@@ -27,11 +27,18 @@ RUNPOD_APIKEY = os.getenv("RUNPOD_APIKEY", "apikey_not_defined")
 XIVVOICES_URL = os.getenv("XIVVOICES_URL", "https://xivv.example.com")
 XIVVOICES_AUTH_ACCESS = os.getenv("XIVVOICES_AUTH_ACCESS", "x")
 XIVVOICES_AUTH_REFRESH = os.getenv("XIVVOICES_AUTH_REFRESH", "y")
+DELETED_NPC_IDS = os.getenv("DELETED_NPC_IDS", "")
 
+def update_manifest(manifest):
+    modified_npcs = manifest["npcs"]
+    ids_to_remove = DELETED_NPC_IDS.split("|")
+    manifest["npcs"] = [
+        npc for npc in manifest["npcs"]
+        if npc["id"] not in ids_to_remove
+    ]
 
-def update_manifest(original_manifest):
-    modified_npcs = original_manifest["npcs"]
-    npc_to_merge = {npc["id"]: npc for npc in original_manifest["npcs"]}
+    npc_to_merge = {npc["id"]: npc for npc in manifest["npcs"]}
+
     with psycopg.connect(**DB_CONFIG, row_factory=dict_row) as conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -75,13 +82,13 @@ def update_manifest(original_manifest):
             sentences = cur.fetchall()
 
     for sentence in sentences:
-        original_manifest["speaker_mappings"] += [{
+        manifest["speaker_mappings"] += [{
             "speaker": sentence["speaker_fr"],
             "sentence": sentence["sentence_fr"],
             "type": "nameless",
             "npc_id": sentence["npc_id"]
         }]
-    return original_manifest
+    return manifest
 
 
 @app.get("/files/manifest.json")
