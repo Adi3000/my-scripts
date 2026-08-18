@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import PlainTextResponse, Response, StreamingResponse
 from datetime import datetime
 from io import StringIO, BytesIO
+import re
 import csv
 import base64
 import soundfile as sf
@@ -29,8 +30,41 @@ XIVVOICES_AUTH_ACCESS = os.getenv("XIVVOICES_AUTH_ACCESS", "x")
 XIVVOICES_AUTH_REFRESH = os.getenv("XIVVOICES_AUTH_REFRESH", "y")
 DELETED_NPC_IDS = os.getenv("DELETED_NPC_IDS", "")
 
+import re
+
+FRENCH_STOPWORDS = {
+    'le', 'la', 'les', 'de', 'du', 'des', 'et', 'ou', 'un', 'une',
+    'à', 'au', 'aux', 'par', 'pour', 'dans', 'avec', 'sans', 'sur', 'sous',
+    'entre', 'jusqu', 'jusque', 'pendant', 'depuis', 'avant', 'après',
+    'en', 'y', 'ne', 'pas', 'plus', 'moins'
+}
+
+def lowercase_middle_stopwords(title):
+    """Convert French stopwords to lowercase when they appear in the middle of a title."""
+    if not title or len(title.split()) <= 1:
+        return title
+
+    words = title.split()
+    result = [words[0]]  # Keep first word as-is
+
+    for word in words[1:]:
+        # Handle contractions like "d'" or "l'"
+        if re.match(r"^([dDlL])'(.+)", word):
+            match = re.match(r"^([dDlL])'(.+)", word)
+            prefix = match.group(1).lower()
+            rest = match.group(2)
+            result.append(f"{prefix}'{rest}")
+        else:
+            # Check if word is a stopword
+            clean_word = word.lower().strip('.,!?;:')
+            if clean_word in FRENCH_STOPWORDS:
+                result.append(word.lower())
+            else:
+                result.append(word)
+
+    return ' '.join(result)
+
 def update_manifest(manifest):
-    modified_npcs = manifest["npcs"]
     ids_to_remove = DELETED_NPC_IDS.split("|")
     manifest["npcs"] = [
         npc for npc in manifest["npcs"]
@@ -60,8 +94,8 @@ def update_manifest(manifest):
         npc_id = npc["id"]
         if npc_id in npc_to_merge:
             existing_npc = npc_to_merge[npc_id]
-            if not npc["speaker_fr"] in existing_npc["speakers"]:
-                existing_npc["speakers"] += [npc["speaker_fr"]]
+            if npc["speaker_fr"] not in existing_npc["speakers"]:
+                existing_npc["speakers"] += [lowercase_middle_stopwords(npc["speaker_fr"])]
 
     with psycopg.connect(**DB_CONFIG, row_factory=dict_row) as conn:
         with conn.cursor() as cur:
@@ -117,7 +151,7 @@ def get_file(filename: str):
         )
         response.raise_for_status()
 
-    except requests.exceptions.HTTPError as e:
+    except requests.exceptions.HTTPError:
         if response.status_code == 404:
             print(f"File {filename} not found (404)")
             return Response(status_code=404, content=f"File {filename} not found")
@@ -131,7 +165,7 @@ def get_file(filename: str):
     response_class=PlainTextResponse,
 )
 def get_last_generation_date():
-    
+
     return PlainTextResponse(
             content=os.getenv("BATCH_GENERATION_DATE","2070-12-31")
         )
@@ -150,38 +184,10 @@ def tts_call(
     local_voice_id: str = 'null',
 ):
     print(f"Speaker : {speaker}, voice_id : {voice_id}, npc_id : {npc_id}, local_voice : {local_voice_id} :\n=======> [{text}]")
-    if voice_id == 'null':
-        raise HTTPException(
-            status_code=403,
-            detail=f"Voice_id is mandatory for now, received   Speaker : {speaker}, voice_id : {voice_id}, npc_id : {npc_id}, local_voice : {local_voice_id}, :\n=======> [{text}]"
-        )
-    runpod_response = requests.post(
-        f"https://api.runpod.ai/v2/{RUNPOD_ENDPOINT_ID}/runsync",
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {RUNPOD_APIKEY}",
-        },
-        json={
-            "input": {
-                "text": text,
-                "voice_id": voice_id
-            }
-        }
+    raise HTTPException(
+        status_code=501,
+        detail=f"Not implemented yet :  received   Speaker : {speaker}, voice_id : {voice_id}, npc_id : {npc_id}, local_voice : {local_voice_id}, :\n=======> [{text}]"
     )
-    runpod_response.raise_for_status()
-
-    runpod_output = runpod_response.json()
-    output = runpod_response.json()["output"]
-    wav_bytes = base64.b64decode(output["wav"])
-
-    return StreamingResponse(
-        BytesIO(wav_bytes),
-        media_type="audio/wav",
-        headers={
-            "Content-Disposition": "inline; filename=output.wav"
-        }
-    )
-    
 
 
 @app.get(
