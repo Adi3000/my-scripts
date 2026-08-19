@@ -95,7 +95,7 @@ def update_manifest(manifest):
         if npc_id in npc_to_merge:
             existing_npc = npc_to_merge[npc_id]
             if npc["speaker_fr"] not in existing_npc["speakers"]:
-                existing_npc["speakers"] += [lowercase_middle_stopwords(npc["speaker_fr"])]
+                existing_npc["speakers"] += [npc["speaker_fr"]]
 
     with psycopg.connect(**DB_CONFIG, row_factory=dict_row) as conn:
         with conn.cursor() as cur:
