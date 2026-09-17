@@ -20,7 +20,7 @@ SWITCH_BOT_DEVICE="F0:4A:DF:AA:72:AA"
 
 PC_SALON_MAC="B4:2E:99:D5:D6:2A"
 IP_WOL_BROADCAST="192.168.0.255"
-PHONE_IPS = [ ("Phone Adi 1", "192.168.0.34"), ("Phone Zuliz 2", "192.168.0.26"), ("Phone Zuliz 1", "192.168.0.27"), ("Phone PC", "192.168.0.21")]
+PHONE_IPS = [ ("Phone Adi 1", "192.168.0.34"), ("Phone Zuliz 2", "192.168.0.26"), ("Phone Tojo 1", "192.168.0.168"), ("Phone PC", "192.168.0.21")]
 #PHONE_IPS = [ ("Phone Adi 1", "192.168.0.34"), ("Phone Adi 2", "192.168.0.18"), ("Phone Adi 3", "192.168.0.28"),("Phone PC", "192.168.0.21")]
 
 configs = {}
