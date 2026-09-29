@@ -1,26 +1,48 @@
 #!/bin/bash
 export DISPLAY=:0.0
+export WAYLAND_DISPLAY=wayland-0
 
-echo "[$(date '+%F %T.%N')] Checking lock file" >> /home/adi/.cache/screen-sleep.log
-if [ -f /tmp/.screen-sleep.lck ]; then
-    echo "[$(date '+%F %T.%N')] Lockfile found, will not wake screen" >> /home/adi/.cache/screen-sleep.log
-    exit 0
-fi
 
-echo "[$(date '+%F %T.%N')] Starting waking screen" >> /home/adi/.cache/screen-sleep.log
-xrandr --output DP-5 --auto --primary
-xrandr --output DP-1 --mode 1920x1080 --same-as DP-5
-xrandr --output HDMI-0 --auto --left-of DP-5
-echo "[$(date '+%F %T.%N')] Waiting for audio to be available" >> /home/adi/.cache/screen-sleep.log
-sleep 2
+wlopm --on HDMI-A-1
+wlopm --on DP-3
+wlopm --on DP-1
+
+output_profile_id=$(pw-dump | jq -r '
+  .[]
+  | select(.type == "PipeWire:Interface:Device")
+  | .info.params.EnumRoute[]
+  | select(
+      (.info | tostring | contains("EP-HDMI-RX"))
+      or
+      (.info | tostring | contains("TOSHIBA-TV"))
+    )
+  | .devices[]
+')
+output_profile_name=$(pw-dump | jq -r '
+  .[]
+  | select(
+      .type == "PipeWire:Interface:Device"
+      and .info.props["device.name"] == "alsa_card.pci-0000_06_00.1"
+    )
+  | .info.params.EnumProfile[]
+  | select(
+      any(
+        .classes[];
+        type == "array"
+        and .[0] == "Audio/Sink"
+        and .[1] == 1
+        and .[2] == "card.profile.devices"
+        and .[3] == ['$output_profile_id']
+      )
+    )
+  | .name
+')
+pactl set-card-profile alsa_card.pci-0000_06_00.1 $output_profile_name
+
 output_sink=$(pactl -f json list sinks | jq '.[] | select( .properties."device.bus_path" == "pci-0000:06:00.1") | .index')
-sink_input=$(pactl -f json list sink-inputs | jq '.[] | select( .properties."application.name" == "Waterfox") | .index')
-echo "Want to execute : pactl move-sink-input $sink_input $output_sink"
-#outputlink=$(pw-dump | jq -r '.[].info.props["node.name"]' | grep alsa_output.pci-0000_06_00.1.hdmi-stereo)
-#echo "[$(date '+%F %T.%N')] Force linking Watefox to $outputlink" >> /home/adi/.cache/screen-sleep.log
-#pw-link "Waterfox:output_FL" "${outputlink}:playback_FL"
-#pw-link "Waterfox:output_FR" "${outputlink}:playback_FR"
-#pw-link -d "Waterfox:output_FR" "alsa_output.usb-SteelSeries_Arctis_Pro_Wireless-00.stereo-game:playback_FR" 2> /dev/null || echo "No old Arctis playback_FR audio link found, continue ..."
-#pw-link -d "Waterfox:output_FL" "alsa_output.usb-SteelSeries_Arctis_Pro_Wireless-00.stereo-game:playback_FL" 2> /dev/null || echo "No old Arctis playback_FR audio link found, continue ..."
-#echo "[$(date '+%F %T.%N')] Waterfox linked to $outputlink" >> /home/adi/.cache/screen-sleep.log
+outputlink=$(pw-dump | jq -r '.[].info.props["node.name"]' | grep alsa_output.pci-0000_06_00.1.hdmi-stereo)
+pw-link "Waterfox:output_FL" "${outputlink}:playback_FL"
+pw-link "Waterfox:output_FR" "${outputlink}:playback_FR"
+pw-link -d "Waterfox:output_FR" "alsa_output.usb-SteelSeries_Arctis_Pro_Wireless-00.stereo-game:playback_FR" 2> /dev/null || echo "No old Arctis playback_FR audio link found, continue ..."
+pw-link -d "Waterfox:output_FL" "alsa_output.usb-SteelSeries_Arctis_Pro_Wireless-00.stereo-game:playback_FL" 2> /dev/null || echo "No old Arctis playback_FR audio link found, continue ..."
 
