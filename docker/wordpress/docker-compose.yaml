@@ -1,7 +1,7 @@
 ---
 services:
   laprisedetete:
-    image: wordpress:apache
+    image: wordpress:7.1.3-php8.3-fpm
     restart: unless-stopped
     container_name: laprisedetete
     volumes:
@@ -15,7 +15,7 @@ services:
     - traefik
 
   lazapette:
-    image: wordpress:apache
+    image: wordpress:7.1.3-php8.3-fpm
     restart: unless-stopped
     container_name: lazapette
     volumes:
@@ -29,7 +29,7 @@ services:
     - traefik
 
   papadevgeek:
-    image: wordpress:apache
+    image: wordpress:7.1.3-php8.3-fpm
     restart: unless-stopped
     container_name: papadevgeek
     volumes:
