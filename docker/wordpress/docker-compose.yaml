@@ -45,8 +45,17 @@ services:
     depends_on: [laprisedetete, lazapette, papadevgeek]
     volumes:
       - laprisedetete-wordpress:/var/www/laprisedetete:ro
+      - /home/www/laprisedetete.fr/wordpress/wp-content/themes:/var/www/laprisedetete/wp-content/themes:ro
+      - /home/www/laprisedetete.fr/wordpress/wp-content/uploads:/var/www/laprisedetete/wp-content/uploads:ro
+      - /home/www/laprisedetete.fr/wordpress/wp-content/plugins:/var/www/laprisedetete/wp-content/plugins:ro
       - lazapette-wordpress:/var/www/lazapette:ro
+      - /home/www/lazapette.net/wordpress/wp-content/themes:/var/www/lazapette/wp-content/themes:ro
+      - /home/www/lazapette.net/wordpress/wp-content/uploads:/var/www/lazapette/wp-content/uploads:ro
+      - /home/www/lazapette.net/wordpress/wp-content/plugins:/var/www/lazapette/wp-content/plugins:ro
       - papadevgeek-wordpress:/var/www/papadevgeek:ro
+      - /home/www/papadevgeek.fr/wordpress/wp-content/themes:/var/www/papadevgeek/wp-content/themes:ro
+      - /home/www/papadevgeek.fr/wordpress/wp-content/uploads:/var/www/papadevgeek/wp-content/uploads:ro
+      - /home/www/papadevgeek.fr/wordpress/wp-content/plugins:/var/www/papadevgeek/wp-content/plugins:ro
       - ./nginx:/etc/nginx/conf.d:ro
     networks: 
       - wordpress
@@ -66,5 +75,4 @@ networks:
   wordpress:
     name: wordpress
     driver: bridge
-
-
+    
