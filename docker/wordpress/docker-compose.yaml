@@ -1,46 +1,63 @@
----
 services:
   laprisedetete:
     image: wordpress:7.1.3-php8.3-fpm
     restart: unless-stopped
     container_name: laprisedetete
     volumes:
-      - /etc/wordpress/laprisedetete.fr.php:/var/www/html/wp-config.php
+      - laprisedetete-wordpress:/var/www/html
+      - /etc/wordpress/laprisedetete.fr.php:/var/www/html/wp-config.php:ro
       - /home/www/laprisedetete.fr/wordpress/wp-content/themes:/var/www/html/wp-content/themes
       - /home/www/laprisedetete.fr/wordpress/wp-content/uploads:/var/www/html/wp-content/uploads
       - /home/www/laprisedetete.fr/wordpress/wp-content/plugins:/var/www/html/wp-content/plugins
-    labels:
-      - "traefik.enable=true"
     networks:
-    - traefik
+      - wordpress
 
   lazapette:
     image: wordpress:7.1.3-php8.3-fpm
     restart: unless-stopped
     container_name: lazapette
     volumes:
-      - /etc/wordpress/lazapette.net.php:/var/www/html/wp-config.php
+      - lazapette-wordpress:/var/www/html
+      - /etc/wordpress/lazapette.net.php:/var/www/html/wp-config.php:ro
       - /home/www/lazapette.net/wordpress/wp-content/themes:/var/www/html/wp-content/themes
       - /home/www/lazapette.net/wordpress/wp-content/uploads:/var/www/html/wp-content/uploads
       - /home/www/lazapette.net/wordpress/wp-content/plugins:/var/www/html/wp-content/plugins
-    labels:
-      - "traefik.enable=true"
     networks:
-    - traefik
+      - wordpress
 
   papadevgeek:
     image: wordpress:7.1.3-php8.3-fpm
     restart: unless-stopped
     container_name: papadevgeek
     volumes:
-      - /etc/wordpress/papadevgeek.fr.php:/var/www/html/wp-config.php
+      - papadevgeek-wordpress:/var/www/html
+      - /etc/wordpress/papadevgeek.fr.php:/var/www/html/wp-config.php:ro
       - /home/www/papadevgeek.fr/wordpress/wp-content/themes:/var/www/html/wp-content/themes
       - /home/www/papadevgeek.fr/wordpress/wp-content/uploads:/var/www/html/wp-content/uploads
       - /home/www/papadevgeek.fr/wordpress/wp-content/plugins:/var/www/html/wp-content/plugins
+    networks:
+      - wordpress
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    container_name: wordpress-nginx
+    depends_on: [laprisedetete, lazapette, papadevgeek]
+    volumes:
+      - laprisedetete-wordpress:/var/www/laprisedetete:ro
+      - lazapette-wordpress:/var/www/lazapette:ro
+      - papadevgeek-wordpress:/var/www/papadevgeek:ro
+      - ./nginx:/etc/nginx/conf.d:ro
+    networks: 
+      - wordpress
+      - traefik
     labels:
       - "traefik.enable=true"
-    networks:
-    - traefik
+
+volumes:
+  laprisedetete-wordpress:
+  lazapette-wordpress:
+  papadevgeek-wordpress:
 
 networks:
   traefik:
