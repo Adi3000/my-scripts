@@ -63,3 +63,8 @@ networks:
   traefik:
     name: traefik
     external: true
+  wordpress:
+    name: wordpress
+    driver: bridge
+
+
