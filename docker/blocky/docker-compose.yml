@@ -20,6 +20,7 @@ services:
   blocky-frontend:
     depends_on:
       - blocky
+    restart: unless-stopped    
     image: adi3000/blocky-frontend:main
     ports:
       - '4080:80'
