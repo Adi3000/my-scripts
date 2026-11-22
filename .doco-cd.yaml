@@ -1,0 +1,38 @@
+name: authentik
+working_dir: docker/authentik
+---
+name: home-automation
+working_dir: docker/home-automation
+---
+name: immich
+working_dir: docker/immich
+---
+name: isbg
+working_dir: docker/isbg
+---
+name: joplin
+working_dir: docker/joplin
+---
+name: moonlight
+working_dir: docker/moonlight
+---
+name: nextcloud
+working_dir: docker/nextcloud
+---
+name: postgresql
+working_dir: docker/postgresql
+---
+name: qbittorrent
+working_dir: docker/qbittorrent
+---
+name: streaming
+working_dir: docker/streaming
+---
+name: traefik
+working_dir: docker/traefik
+---
+name: wordpress
+working_dir: docker/wordpress
+---
+name: zabbix
+working_dir: docker/zabbix
