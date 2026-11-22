@@ -1,0 +1,22 @@
+services:
+  doco-cd:
+    container_name: doco-cd
+    image: ghcr.io/kimdre/doco-cd:latest
+    restart: unless-stopped
+    env_file: "/etc/default/doco-cd"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/docker/doco-cd/data:/data
+    cap_drop:
+      - ALL
+    healthcheck: # runs the image's built-in /healthcheck command
+      start_period: 15s
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  traefik:
+    driver: bridge
+    name: traefik
+    external: true
