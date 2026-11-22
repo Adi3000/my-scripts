@@ -3,7 +3,7 @@ working_dir: docker/doco-cd
 webhook_filter: ^refs/heads/main$
 ---
 name: blocky
-working_dir: docker/streaming
+working_dir: docker/blocky
 webhook_filter: ^refs/heads/main$
 ---
 name: traefik
