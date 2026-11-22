@@ -12,7 +12,8 @@ services:
     - "/etc/letsencrypt:/etc/certs:ro"
     networks:
     - traefik
-
+    env_file: /etc/default/traefik
+    
 networks:
   traefik:
     driver: bridge
