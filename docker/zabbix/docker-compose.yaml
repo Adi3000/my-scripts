@@ -1,7 +1,7 @@
 services:
 
   zabbix-server:
-    image: zabbix/zabbix-server-pgsql:latest
+    image: zabbix/zabbix-server-pgsql:8.0-alpine-latest
     container_name: zabbix-server
     restart: unless-stopped
     env_file: /etc/default/zabbix
@@ -11,7 +11,7 @@ services:
      - zabbix
      - postgres
   web:
-    image: zabbix/zabbix-web-apache-pgsql:latest
+    image: zabbix/zabbix-web-apache-pgsql:8.0-alpine-latest
     container_name: zabbix
     restart: unless-stopped
     env_file: /etc/default/zabbix
@@ -24,7 +24,7 @@ services:
       - zabbix
       - postgres
   agent:
-    image: zabbix/zabbix-agent2:latest
+    image: zabbix/zabbix-agent2:8.0-alpine-latest
     container_name: zabbix-agent
     restart: unless-stopped
     env_file: /etc/default/zabbix
