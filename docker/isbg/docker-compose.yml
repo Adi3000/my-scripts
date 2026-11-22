@@ -1,6 +1,6 @@
 services:
   isbg:
-    image: user4711/isbg:latest
+    image: user4711/isbg:v1.2.1
     environment:
       TZ: Europe/Paris
       CRON_HOUR: 1
