@@ -17,7 +17,7 @@ services:
 #      postgres
 #      -c shared_preload_libraries='pg_stat_statements' -c pg_stat_statements.track=all -c max_connections=200
   valkey:
-    image: valkey/valkey:alpine
+    image: valkey/valkey:9.2.0-alpine
     container_name: valkey
     restart: unless-stopped
     networks:
