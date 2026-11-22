@@ -44,7 +44,7 @@ services:
     - server
 
   proxy:
-    image: ghcr.io/goauthentik/proxy:2025.12.5
+    image: ghcr.io/goauthentik/proxy:2025.12.6
     restart: unless-stopped
     container_name: authentik-proxy
     env_file: /etc/default/authentik
