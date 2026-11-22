@@ -1,6 +1,9 @@
 name: authentik
 working_dir: docker/authentik
 ---
+name: doco-cd
+working_dir: docker/doco-cd
+---
 name: home-automation
 working_dir: docker/home-automation
 ---
