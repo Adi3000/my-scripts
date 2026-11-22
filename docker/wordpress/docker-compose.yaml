@@ -1,6 +1,6 @@
 services:
   laprisedetete:
-    image: wordpress:fpm
+    image: wordpress:7.1.5-fpm
     restart: unless-stopped
     container_name: laprisedetete
     volumes:
@@ -13,7 +13,7 @@ services:
       - wordpress
 
   lazapette:
-    image: wordpress:fpm
+    image: wordpress:7.1.5-fpm
     restart: unless-stopped
     container_name: lazapette
     volumes:
@@ -26,7 +26,7 @@ services:
       - wordpress
 
   papadevgeek:
-    image: wordpress:fpm
+    image: wordpress:7.1.5-fpm
     restart: unless-stopped
     container_name: papadevgeek
     volumes:
@@ -39,7 +39,7 @@ services:
       - wordpress
 
   nginx:
-    image: nginx:alpine
+    image: nginx:1.31.9-alpine
     restart: unless-stopped
     container_name: wordpress-nginx
     depends_on: [laprisedetete, lazapette, papadevgeek]
