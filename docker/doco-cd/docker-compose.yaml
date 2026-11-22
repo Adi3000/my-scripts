@@ -7,6 +7,18 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/docker/doco-cd/data:/data
+      - type: bind
+        source: /etc/default
+        target: /etc/default
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /home/domoticz/.config/domoticz.conf
+        target: /home/domoticz/.config/domoticz.conf
+        read_only: true
+        bind:
+          create_host_path: false
     cap_drop:
       - ALL
     healthcheck: # runs the image's built-in /healthcheck command
