@@ -1,7 +1,7 @@
 ---
 services:
   jellyfin-server:
-    image: jellyfin/jellyfin
+    image: jellyfin/jellyfin:2026111613
     container_name: jellyfin-server
     volumes:
       - /home/jellyfin/config:/config
@@ -18,7 +18,7 @@ services:
 
   jellyfin:
     container_name: jellyfin
-    image: jellyfin/jellyfin-vue:unstable
+    image: jellyfin/jellyfin-vue:unstable.2026-11-21.a3e4bd5
     restart: unless-stopped
     environment:
     - DEFAULT_SERVERS=https://jellyfin-server.adi3000.com
