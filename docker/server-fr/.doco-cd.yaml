@@ -1,38 +1,50 @@
 name: authentik
 working_dir: docker/authentik
+webhook_filter: ^refs/heads/main$
 ---
 name: doco-cd
 working_dir: docker/doco-cd
 ---
 name: home-automation
 working_dir: docker/home-automation
+webhook_filter: ^refs/heads/main$
 ---
 name: immich
 working_dir: docker/immich
+webhook_filter: ^refs/heads/main$
 ---
 name: isbg
 working_dir: docker/isbg
+webhook_filter: ^refs/heads/main$
 ---
 name: joplin
 working_dir: docker/joplin
+webhook_filter: ^refs/heads/main$
 ---
 name: nextcloud
 working_dir: docker/nextcloud
+webhook_filter: ^refs/heads/main$
 ---
 name: postgresql
 working_dir: docker/postgresql
+webhook_filter: ^refs/heads/main$
 ---
 name: qbittorrent
 working_dir: docker/qbittorrent
+webhook_filter: ^refs/heads/main$
 ---
 name: streaming
 working_dir: docker/streaming
+webhook_filter: ^refs/heads/main$
 ---
 name: traefik
 working_dir: docker/traefik
+webhook_filter: ^refs/heads/main$
 ---
 name: wordpress
 working_dir: docker/wordpress
+webhook_filter: ^refs/heads/main$
 ---
 name: zabbix
 working_dir: docker/zabbix
+webhook_filter: ^refs/heads/main$
