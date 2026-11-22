@@ -30,7 +30,7 @@ services:
     - postgres
     - authentik
   ldap:
-    image: ghcr.io/goauthentik/ldap:2025.12.5
+    image: ghcr.io/goauthentik/ldap:2025.12.6
     restart: unless-stopped
     container_name: ldap
     ports:
