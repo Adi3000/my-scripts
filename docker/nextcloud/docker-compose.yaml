@@ -1,6 +1,6 @@
 services:
   nextcloud:
-    image: nextcloud:stable-apache
+    image: nextcloud:34.0.6-apache
     container_name: nextcloud
     restart: unless-stopped
     ports:
@@ -21,7 +21,7 @@ services:
     env_file: /etc/default/nextcloud
 
   nextcloud-cron:
-    image: nextcloud:stable-apache
+    image: nextcloud:34.0.6-apache
     container_name: nextcloud-cron
     restart: always
     command: ["busybox","crond","-f","-L","/dev/stdout"]
