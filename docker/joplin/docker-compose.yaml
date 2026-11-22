@@ -17,7 +17,7 @@ services:
     - /etc/joplin:/etc/joplin
   joplin-transcribe:
     restart: unless-stopped
-    image: joplin/transcribe:amd64-3.7
+    image: joplin/transcribe:amd64-3.6
     volumes:
        - /mnt/nanopi/data/joplin/images:/app/packages/transcribe/images
     env_file: /etc/default/joplin-transcribe
