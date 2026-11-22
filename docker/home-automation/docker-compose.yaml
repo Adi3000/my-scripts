@@ -1,7 +1,7 @@
 services:
 
   mosquitto:
-    image: eclipse-mosquitto
+    image: eclipse-mosquitto:2.1.4-alpine
     container_name: mosquitto
     restart: unless-stopped
     volumes:
@@ -15,19 +15,8 @@ services:
     networks:
       - zigbee
 
-#  nodered:
-#    image: nodered/node-red
-#    container_name: nodered
-#    restart: unless-stopped
-#    ports:
-#      - "1880:1880"
-#    volumes:
-#      - /home/nodered/data:/data:rw
-#    networks:
-#      - zigbee
-
   maman-zigbee:
-    image: ghcr.io/koenkk/zigbee2mqtt
+    image: ghcr.io/koenkk/zigbee2mqtt:2.14.3
     container_name: maman-zigbee
     restart: unless-stopped
     volumes:
@@ -43,7 +32,7 @@ services:
       - traefik
 
   maman-ha:
-    image: homeassistant/home-assistant:stable
+    image: homeassistant/home-assistant:2026.11.2
     container_name: maman-ha
     restart: unless-stopped
     environment:
