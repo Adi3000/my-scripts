@@ -13,9 +13,6 @@ working_dir: docker/isbg
 name: joplin
 working_dir: docker/joplin
 ---
-name: moonlight
-working_dir: docker/moonlight
----
 name: nextcloud
 working_dir: docker/nextcloud
 ---
