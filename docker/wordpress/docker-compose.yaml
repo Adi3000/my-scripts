@@ -39,7 +39,7 @@ services:
       - wordpress
 
   nginx:
-    image: nginx:1.31.9-alpine
+    image: nginx:1.31.10-alpine
     restart: unless-stopped
     container_name: wordpress-nginx
     depends_on: [laprisedetete, lazapette, papadevgeek]
