@@ -1,7 +1,7 @@
 ---
 services:
   server:
-    image: ghcr.io/goauthentik/server:2026.5.8
+    image: ghcr.io/goauthentik/server:2026.8.6
     restart: unless-stopped
     container_name: authentik
     command: server
@@ -19,7 +19,7 @@ services:
     - authentik
 
   worker:
-    image: ghcr.io/goauthentik/server:2026.5.8
+    image: ghcr.io/goauthentik/server:2026.8.6
     restart: unless-stopped
     container_name: authentik-worker
     volumes:
@@ -30,7 +30,7 @@ services:
     - postgres
     - authentik
   ldap:
-    image: ghcr.io/goauthentik/ldap:2026.5.8
+    image: ghcr.io/goauthentik/ldap:2026.8.6
     restart: unless-stopped
     container_name: ldap
     ports:
@@ -44,7 +44,7 @@ services:
     - server
 
   proxy:
-    image: ghcr.io/goauthentik/proxy:2026.5.8
+    image: ghcr.io/goauthentik/proxy:2026.8.6
     restart: unless-stopped
     container_name: authentik-proxy
     env_file: /etc/default/authentik
