@@ -32,7 +32,7 @@ services:
       - traefik
 
   maman-ha:
-    image: homeassistant/home-assistant:2026.11.2
+    image: homeassistant/home-assistant:2026.11.3
     container_name: maman-ha
     restart: unless-stopped
     environment:
